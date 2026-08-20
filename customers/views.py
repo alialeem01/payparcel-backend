@@ -24,3 +24,22 @@ def login_customer(request):
             'refresh': str(refresh),
         })
     return Response({'error': 'Invalid credentials'}, status=401)
+
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
+from .models import Customer
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_current_customer(request):
+    try:
+        customer = Customer.objects.get(customer_user=request.user.username)
+        return Response({
+            'business_name': customer.customer_brand_name,
+            'contact_person': customer.customer_name,
+            'email': customer.customer_email,
+            'phone': customer.customer_phone_number,
+            'address': customer.customer_address,
+        })
+    except Customer.DoesNotExist:
+        return Response({'error': 'Customer profile not found'}, status=404)
