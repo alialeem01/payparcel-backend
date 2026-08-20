@@ -1,0 +1,45 @@
+admin interface
+Log entries	
+00 Company	
+01 Customers	
+02 Third Party Riders	
+03 Courier Booking Jobs	
+03 Customer Parcels	
+03 Pickup Sheet	
+04 Arrival	
+04 Loadsheet	
+04 Manifest	
+05 Demanifest	
+06 Delivery Sheet	
+06 Return Delivery Sheet	
+07 Customer Payment Invoices	
+08 Flyer Size List	
+	
+10 Area	
+11 Parcel Status Tracking	
+11 Third Party Tracking	
+	
+13 Destinations	
+14 Departments	
+15 Status Narration List	
+17 Rate Template Form	
+18 Tax Template Form	
+19 Shopify App Config	
+20 Theme Appearance	
+21 Vehicles	
+	
+23 E-Commerce Store	
+24 Website Page	
+25 Our Service	
+26 Pricing	
+27 Web Gallery	
+28 Corn Jobs Log	
+29 Franchise Applications	
+30 Reasons List	
+31 TPL Status Mapping	
+40 Portal Service Type	
+41 Invoice Selected Statuses	
+41 User Column Preferences	
+Groups	
+Users	
+
