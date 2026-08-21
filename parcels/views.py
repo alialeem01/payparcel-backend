@@ -1,3 +1,5 @@
+from rest_framework import serializers
+from customers.models import Customer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import CustomerParcel
@@ -27,3 +29,24 @@ def list_my_orders(request):
         return Response(serializer.data)
     except Customer.DoesNotExist:
         return Response({'error': 'Customer profile not found'}, status=404)
+
+class BookOrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomerParcel
+        fields = ['consignee', 'consignee_phone', 'alternate_phone', 'address',
+                   'destination', 'cod', 'parcel_weight', 'number_of_pieces',
+                   'service_type', 'product', 'instructions', 'flyer_size']
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def book_order(request):
+    try:
+        customer = Customer.objects.get(customer_user=request.user.username)
+    except Customer.DoesNotExist:
+        return Response({'error': 'Customer profile not found'}, status=404)
+
+    serializer = BookOrderSerializer(data=request.data)
+    if serializer.is_valid():
+        parcel = serializer.save(shipper=customer)
+        return Response({'message': 'Order booked successfully', 'cn': parcel.cn}, status=201)
+    return Response(serializer.errors, status=400)
