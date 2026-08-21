@@ -103,3 +103,119 @@ def dashboard_summary(request):
         ),
     }
     return Response(data)
+
+import openpyxl
+from django.core.files.uploadedfile import InMemoryUploadedFile
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def bulk_book_orders(request):
+    try:
+        customer = Customer.objects.get(customer_user=request.user.username)
+    except Customer.DoesNotExist:
+        return Response({'error': 'Customer profile not found'}, status=404)
+
+    file = request.FILES.get('file')
+    if not file:
+        return Response({'error': 'No file uploaded'}, status=400)
+
+    wb = openpyxl.load_workbook(file)
+    sheet = wb.active
+    rows = list(sheet.iter_rows(min_row=2, values_only=True))  # skip header row
+
+    if len(rows) > 100:
+        return Response({'error': 'Bulk Booking Limit is 100'}, status=400)
+
+    created = []
+    errors = []
+    for i, row in enumerate(rows, start=2):
+        if not row or not row[0]:
+            continue
+        try:
+            # Expected column order: Receiver Name, Receiver Phone, Alt Receiver Phone,
+            # Order ID, Service Type, Destination City, Address, COD Amount, Product,
+            # Instructions, Parcel Weight, Pcs
+            parcel = CustomerParcel.objects.create(
+                shipper=customer,
+                consignee=row[0],
+                consignee_phone=row[1],
+                alternate_phone=row[2] or '',
+                order_number=row[3] or '',
+                service_type=row[4] or 'COD',
+                destination=row[5],
+                address=row[6],
+                cod=row[7] or 0,
+                product=row[8] or '',
+                instructions=row[9] or '',
+                parcel_weight=row[10] or 0,
+                number_of_pieces=row[11] or 1,
+            )
+            created.append(parcel.cn)
+        except Exception as e:
+            errors.append({'row': i, 'error': str(e)})
+
+    return Response({'created': created, 'errors': errors, 'total_created': len(created)}, status=201)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def parcel_report(request):
+    try:
+        customer = Customer.objects.get(customer_user=request.user.username)
+    except Customer.DoesNotExist:
+        return Response({'error': 'Customer profile not found'}, status=404)
+
+    qs = CustomerParcel.objects.filter(shipper=customer)
+
+    cn = request.GET.get('cn')
+    service_type = request.GET.get('service_type')
+    destination = request.GET.get('destination')
+    status_filter = request.GET.get('status')
+    active = request.GET.get('active')
+    consignee_phone = request.GET.get('consignee_phone')
+    date_from = request.GET.get('from')
+    date_to = request.GET.get('to')
+
+    if cn:
+        qs = qs.filter(cn__icontains=cn)
+    if service_type:
+        qs = qs.filter(service_type=service_type)
+    if destination:
+        qs = qs.filter(destination__icontains=destination)
+    if status_filter:
+        qs = qs.filter(status=status_filter)
+    if active:
+        qs = qs.filter(active=active)
+    if consignee_phone:
+        qs = qs.filter(consignee_phone__icontains=consignee_phone)
+    if date_from:
+        qs = qs.filter(created_at__gte=date_from)
+    if date_to:
+        qs = qs.filter(created_at__lte=date_to)
+
+    data = []
+    total_weight = 0
+    total_pieces = 0
+    for p in qs:
+        total_weight += float(p.parcel_weight or 0)
+        total_pieces += p.number_of_pieces or 0
+        data.append({
+            'cn': p.cn,
+            'shipper_name': customer.customer_name,
+            'shipment_date': p.shipment_date,
+            'service_type': p.service_type,
+            'consignee': p.consignee,
+            'consignee_phone': p.consignee_phone,
+            'destination': p.destination,
+            'status': p.status,
+            'address': p.address,
+            'parcel_weight': float(p.parcel_weight or 0),
+            'pieces': p.number_of_pieces,
+            'product': p.product,
+        })
+
+    return Response({
+        'results': data,
+        'total_parcels': qs.count(),
+        'total_weight': total_weight,
+        'total_pieces': total_pieces,
+    })
