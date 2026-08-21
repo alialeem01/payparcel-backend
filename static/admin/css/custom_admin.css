@@ -274,3 +274,50 @@ table, tbody, tr, td, th {
     background-color: var(--pp-blue) !important;
     color: #ffffff !important;
 }
+
+/* ===== FIX: Filter sidebar text visibility ===== */
+#changelist-filter li a {
+    color: var(--pp-text) !important;
+    opacity: 1 !important;
+}
+#changelist-filter li.selected a {
+    color: var(--pp-blue) !important;
+    font-weight: 600;
+}
+#changelist-filter details summary {
+    color: var(--pp-text) !important;
+}
+
+/* ===== FIX: Hide sidebar app section headings ===== */
+#nav-sidebar .module caption,
+#nav-sidebar .section {
+    display: none !important;
+}
+
+/* ===== FIX: Sidebar items as tight list, no extra spacing ===== */
+#nav-sidebar .module {
+    margin-bottom: 0 !important;
+    border-bottom: none !important;
+}
+#nav-sidebar table {
+    border-collapse: collapse;
+}
+#nav-sidebar tr {
+    border-bottom: 1px solid #f1f5f9;
+}
+#nav-sidebar th, #nav-sidebar td {
+    padding: 6px 18px !important;
+}
+#nav-sidebar th a {
+    font-size: 13.5px;
+    padding: 4px 0;
+}
+
+/* ===== Reorder: push Authentication (Groups/Users) module to bottom ===== */
+#nav-sidebar .app-auth {
+    order: 99;
+}
+#nav-sidebar > div {
+    display: flex;
+    flex-direction: column;
+}
