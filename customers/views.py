@@ -43,3 +43,18 @@ def get_current_customer(request):
         })
     except Customer.DoesNotExist:
         return Response({'error': 'Customer profile not found'}, status=404)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_customer_profile(request):
+    try:
+        customer = Customer.objects.get(customer_user=request.user.username)
+    except Customer.DoesNotExist:
+        return Response({'error': 'Customer profile not found'}, status=404)
+
+    customer.customer_brand_name = request.data.get('business_name', customer.customer_brand_name)
+    customer.customer_name = request.data.get('contact_person', customer.customer_name)
+    customer.customer_phone_number = request.data.get('phone', customer.customer_phone_number)
+    customer.customer_address = request.data.get('address', customer.customer_address)
+    customer.save()
+    return Response({'message': 'Profile updated successfully'})

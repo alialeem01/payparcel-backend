@@ -1,0 +1,4 @@
+git add .
+git commit -m "Fix filter text visibility, hide sidebar headings, tighten spacing"
+git push
+
