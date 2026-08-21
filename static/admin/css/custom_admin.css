@@ -195,3 +195,82 @@ a:hover { color: var(--pp-blue-dark); }
 #container, #content, .breadcrumbs + #content, body.dashboard, body.change-list, body.change-form {
     background: var(--pp-bg) !important;
 }
+/* ===== SEARCH BAR / TOOLBAR ===== */
+#toolbar {
+    background: #ffffff !important;
+    border: 1px solid var(--pp-border);
+    border-radius: 10px;
+    padding: 16px 20px !important;
+    box-shadow: var(--pp-shadow);
+    margin-bottom: 16px;
+}
+#toolbar form#changelist-search {
+    background: transparent !important;
+}
+#toolbar input[type="text"] {
+    background: #ffffff !important;
+    border: 1.5px solid var(--pp-border) !important;
+    color: var(--pp-text) !important;
+}
+#toolbar input[type="submit"] {
+    background: var(--pp-blue) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 6px;
+    padding: 8px 16px;
+}
+
+/* ===== ACTIONS BAR (bulk action dropdown) ===== */
+.actions {
+    background: #ffffff !important;
+    border: 1px solid var(--pp-border) !important;
+    border-radius: 10px;
+    padding: 14px 20px !important;
+    margin-bottom: 0 !important;
+    color: var(--pp-text) !important;
+}
+.actions label { color: var(--pp-text) !important; text-transform: none; font-size: 13px; }
+.actions select {
+    background: #ffffff !important;
+    color: var(--pp-text) !important;
+    border: 1.5px solid var(--pp-border) !important;
+}
+.actions .button {
+    background: var(--pp-blue) !important;
+    color: #ffffff !important;
+}
+
+/* ===== RESULT COUNT / PAGINATOR BAR ===== */
+.paginator, p.paginator {
+    background: #ffffff !important;
+    color: var(--pp-text) !important;
+    border-top: 1px solid var(--pp-border);
+}
+
+/* ===== SIDEBAR APP/MODEL LIST (Groups, Users, Customers rows) ===== */
+#nav-sidebar table,
+#nav-sidebar tbody,
+#nav-sidebar tr,
+#nav-sidebar td,
+#nav-sidebar th {
+    background: #ffffff !important;
+}
+#nav-sidebar tr:hover td {
+    background: var(--pp-blue-light) !important;
+}
+#nav-sidebar th a {
+    color: var(--pp-text) !important;
+    font-weight: 500;
+}
+#nav-sidebar th a:hover {
+    color: var(--pp-blue) !important;
+}
+
+/* ===== CATCH-ALL: force every table/row/cell in admin to light bg ===== */
+table, tbody, tr, td, th {
+    background-color: #ffffff !important;
+}
+#changelist table thead th {
+    background-color: var(--pp-blue) !important;
+    color: #ffffff !important;
+}
