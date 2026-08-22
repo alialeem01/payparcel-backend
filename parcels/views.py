@@ -10,7 +10,13 @@ def track_parcel(request, cn):
     try:
         parcel = CustomerParcel.objects.get(cn=cn)
         serializer = TrackingSerializer(parcel)
-        return Response(serializer.data)
+        data = serializer.data
+        try:
+            narration = StatusNarration.objects.get(status=parcel.status)
+            data['status_message'] = narration.narration
+        except StatusNarration.DoesNotExist:
+            data['status_message'] = ''
+        return Response(data)
     except CustomerParcel.DoesNotExist:
         return Response({'error': 'Tracking ID not found'}, status=404)
 
