@@ -1,3 +1,4 @@
+import payparcel.admin_config
 from django.contrib import admin
 from django.urls import path, include
 
