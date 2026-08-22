@@ -1,0 +1,77 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}
+{{ block.super }}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  #map-search-box { width: 100%; padding: 10px 13px; margin-bottom: 10px; border: 1.5px solid #e2e8f0; border-radius: 7px; font-size: 14px; }
+  #destination-map { height: 400px; border-radius: 8px; margin-bottom: 15px; }
+</style>
+{% endblock %}
+
+{% block after_field_sets %}
+{{ block.super }}
+<div class="module aligned" style="padding: 20px;">
+  <h2>Pick Location on Map</h2>
+  <input type="text" id="map-search-box" placeholder="Search for an address or place..." />
+  <div id="destination-map"></div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var locationField = document.getElementById('id_location');
+  var startLat = 24.8607, startLng = 67.0011; // default Karachi
+
+  if (locationField.value) {
+    var parts = locationField.value.split(',');
+    if (parts.length === 2) {
+      startLat = parseFloat(parts[0]);
+      startLng = parseFloat(parts[1]);
+    }
+  }
+
+  var map = L.map('destination-map').setView([startLat, startLng], 12);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  var marker = L.marker([startLat, startLng], { draggable: true }).addTo(map);
+
+  function updateField(lat, lng) {
+    locationField.value = lat.toFixed(6) + ',' + lng.toFixed(6);
+  }
+
+  marker.on('dragend', function(e) {
+    var pos = marker.getLatLng();
+    updateField(pos.lat, pos.lng);
+  });
+
+  map.on('click', function(e) {
+    marker.setLatLng(e.latlng);
+    updateField(e.latlng.lat, e.latlng.lng);
+  });
+
+  var searchBox = document.getElementById('map-search-box');
+  searchBox.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      var query = searchBox.value;
+      fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(query))
+        .then(res => res.json())
+        .then(results => {
+          if (results.length > 0) {
+            var lat = parseFloat(results[0].lat);
+            var lng = parseFloat(results[0].lon);
+            map.setView([lat, lng], 14);
+            marker.setLatLng([lat, lng]);
+            updateField(lat, lng);
+          } else {
+            alert('Location not found');
+          }
+        });
+    }
+  });
+});
+</script>
+{% endblock %}

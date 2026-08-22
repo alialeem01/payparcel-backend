@@ -6,6 +6,8 @@ class DestinationAdmin(admin.ModelAdmin):
     list_display = ('name', 'short_name', 'location', 'zone', 'date', 'status')
     search_fields = ('name', 'short_name')
     list_filter = ('status', 'zone')
+    change_form_template = 'admin/locations/destination/change_form.html'
+    add_form_template = 'admin/locations/destination/change_form.html'
 
 @admin.register(Branch)
 class BranchAdmin(admin.ModelAdmin):

@@ -2,7 +2,18 @@ from django.db import models
 
 class Destination(models.Model):
     STATUS_CHOICES = [('Active', 'Active'), ('Inactive', 'Inactive')]
-    ZONE_CHOICES = [('With in City', 'With in City'), ('Different', 'Different'), ('Same', 'Same')]
+    ZONE_CHOICES = [
+    ('With in City', 'With in City'),
+    ('Different', 'Different'),
+    ('Same', 'Same'),
+    ('Zone 1', 'Zone 1'),
+    ('Zone 2', 'Zone 2'),
+    ('Zone 3', 'Zone 3'),
+    ('Zone 4', 'Zone 4'),
+    ('Zone 5', 'Zone 5'),
+    ('Zone 6', 'Zone 6'),
+    ('Zone 7', 'Zone 7'),
+]
 
     name = models.CharField(max_length=150)
     short_name = models.CharField(max_length=50, blank=True, null=True)
