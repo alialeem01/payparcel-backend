@@ -6,14 +6,15 @@ class PickupSheet(models.Model):
     STATUS_CHOICES = [('Uncomplete', 'Uncomplete'), ('Complete', 'Complete')]
 
     sheet_number = models.CharField(max_length=50, blank=True, editable=False)
-    rider = models.CharField(max_length=100, blank=True, null=True)  # TODO: link to Third Party Riders later
+    rider = models.CharField(max_length=100, blank=True, null=True)
     shipper = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='pickup_sheets')
     parcels = models.ManyToManyField(CustomerParcel, related_name='pickup_sheets', blank=True)
     loadsheet = models.CharField(max_length=100, blank=True, null=True)
-    user = models.CharField(max_length=100, blank=True, null=True)
-    branch = models.CharField(max_length=100, blank=True, null=True)
+    user = models.CharField(max_length=100, blank=True, null=True, editable=False)
+    branch = models.CharField(max_length=100, blank=True, null=True, editable=False)
     pickup_status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='Uncomplete')
-    qr_code = models.ImageField(upload_to='pickup_qr/', blank=True, null=True)
+    qr_code = models.ImageField(upload_to='pickup_qr/', blank=True, null=True, editable=False)
+    last_update = models.DateTimeField(auto_now=True)
     date = models.DateTimeField(auto_now_add=True)
 
     @property

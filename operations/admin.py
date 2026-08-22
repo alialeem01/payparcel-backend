@@ -3,15 +3,22 @@ from .models import PickupSheet, Manifest, DeliverySheet
 
 @admin.register(PickupSheet)
 class PickupSheetAdmin(admin.ModelAdmin):
-    list_display = ('sheet_number', 'rider', 'shipper', 'loadsheet', 'total_pickup_parcel', 'user', 'branch', 'pickup_status', 'date')
+    list_display = ('sheet_number', 'rider', 'shipper', 'loadsheet', 'total_pickup_parcel', 'user', 'branch', 'pickup_status', 'qr_code', 'date')
+    list_editable = ('pickup_status',)
     filter_horizontal = ('parcels',)
-    readonly_fields = ('sheet_number', 'date')
+    readonly_fields = ('sheet_number', 'total_pickup_parcel', 'user', 'branch', 'qr_code', 'last_update', 'date')
     search_fields = ('sheet_number',)
     list_filter = ('pickup_status', 'branch')
 
+    fields = ('rider', 'shipper', 'parcels', 'user', 'branch', 'total_pickup_parcel', 'pickup_status', 'loadsheet', 'qr_code', 'last_update', 'date')
+
+    def save_model(self, request, obj, form, change):
+        if not obj.user:
+            obj.user = request.user.username.upper()
+        super().save_model(request, obj, form, change)
+
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
-        # Auto-update linked parcels to "Picked" status
         for parcel in form.instance.parcels.all():
             parcel.status = 'Picked'
             parcel.save()
