@@ -380,3 +380,23 @@ table, tbody, tr, td, th {
 #nav-sidebar th, #nav-sidebar td {
     padding: 7px 18px !important;
 }
+
+/* ===== Hide captions on main dashboard content module list too ===== */
+#content-main.app-list .module caption {
+    display: none !important;
+}
+
+/* ===== Compact spacing between dashboard module boxes ===== */
+#content-main.app-list .module {
+    margin-bottom: 12px !important;
+}
+#content-main.app-list .module table {
+    border-collapse: collapse;
+}
+#content-main.app-list .module tr {
+    border-bottom: 1px solid #f1f5f9;
+}
+#content-main.app-list .module th, 
+#content-main.app-list .module td {
+    padding: 8px 16px !important;
+}
