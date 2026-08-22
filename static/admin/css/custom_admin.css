@@ -416,3 +416,12 @@ select {
     width: 100% !important;
     min-width: 100px !important;
 }
+.flex-container {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+}
+.flex-container > div {
+    min-width: 0;
+    flex: 1 1 auto;
+}
