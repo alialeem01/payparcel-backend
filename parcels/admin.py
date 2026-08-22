@@ -52,3 +52,9 @@ class CustomerParcelAdmin(admin.ModelAdmin):
     def payment_status_display(self, obj):
         return obj.tpl_payment_status
     payment_status_display.short_description = 'Payment Status'
+
+from .models import StatusNarration
+
+@admin.register(StatusNarration)
+class StatusNarrationAdmin(admin.ModelAdmin):
+    list_display = ('status', 'narration')

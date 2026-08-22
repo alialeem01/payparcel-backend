@@ -126,3 +126,10 @@ class CustomerParcel(models.Model):
 
     def __str__(self):
         return self.cn or f"Parcel #{self.pk}"
+
+class StatusNarration(models.Model):
+    status = models.CharField(max_length=30, choices=CustomerParcel.STATUS_CHOICES, unique=True)
+    narration = models.TextField(help_text="Customer-facing message shown for this status")
+
+    def __str__(self):
+        return self.status
