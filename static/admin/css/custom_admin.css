@@ -434,3 +434,24 @@ select, option {
     letter-spacing: normal !important;
     line-height: normal !important;
 }
+
+/* ===== BIGGER dropdown cells ===== */
+.related-widget-wrapper select,
+select {
+    min-height: 44px !important;
+    padding: 10px 14px !important;
+    font-size: 15px !important;
+    line-height: 1.4 !important;
+}
+
+.related-widget-wrapper {
+    min-height: 44px;
+}
+
+.flex-container {
+    min-height: 44px;
+}
+
+.form-row .related-widget-wrapper select {
+    height: auto !important;
+}
