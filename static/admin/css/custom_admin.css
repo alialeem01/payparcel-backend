@@ -400,3 +400,19 @@ table, tbody, tr, td, th {
 #content-main.app-list .module td {
     padding: 8px 16px !important;
 }
+
+/* ===== FORCE all select dropdowns to never clip text ===== */
+select {
+    text-overflow: clip !important;
+    overflow: visible !important;
+    min-width: 0 !important;
+}
+.related-widget-wrapper {
+    min-width: 0 !important;
+    flex-wrap: nowrap;
+}
+.related-widget-wrapper select {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    min-width: 100px !important;
+}
