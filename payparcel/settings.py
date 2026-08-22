@@ -33,17 +33,19 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.onrender.com']
 
 # Application definition
 
-INSTALLED_APPS = ['loadsheets',
+INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'customers',
     'rest_framework',
-    'corsheaders',
     'rest_framework_simplejwt',
+    'corsheaders',
+    'customers',
+    'parcels',
+    'loadsheets',
 ]
 
 MIDDLEWARE = [
