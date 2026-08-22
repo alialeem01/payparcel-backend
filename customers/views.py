@@ -58,3 +58,41 @@ def update_customer_profile(request):
     customer.customer_address = request.data.get('address', customer.customer_address)
     customer.save()
     return Response({'message': 'Profile updated successfully'})
+
+from invoices.models import Invoice
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def billing_summary(request):
+    try:
+        customer = Customer.objects.get(customer_user=request.user.username)
+    except Customer.DoesNotExist:
+        return Response({'error': 'Customer profile not found'}, status=404)
+
+    invoices = Invoice.objects.filter(customer=customer).order_by('-date')
+
+    balance_payment = sum(inv.net_amount for inv in invoices.filter(status='Unpaid'))
+    cod_delivered_return = float(invoices.aggregate(t=models.Sum('cod'))['t'] or 0)
+    delivery_flyer_charges = float(invoices.aggregate(t=models.Sum('delivery_charges'))['t'] or 0)
+
+    invoice_list = [{
+        'invoice_number': inv.invoice_number,
+        'status': inv.status,
+        'date': inv.date,
+        'account_name': inv.account_name,
+        'cod': float(inv.cod),
+        'flyer_charges': float(inv.flyer_charges),
+        'total_tax': float(inv.total_tax),
+        'delivery_charges': float(inv.delivery_charges),
+        'net_amount': inv.net_amount,
+        'parcel_from': inv.parcel_from,
+        'parcel_to': inv.parcel_to,
+        'total_parcel': inv.total_parcel,
+    } for inv in invoices]
+
+    return Response({
+        'balance_payment': balance_payment,
+        'cod_delivered_return': cod_delivered_return,
+        'delivery_flyer_charges': delivery_flyer_charges,
+        'invoices': invoice_list,
+    })

@@ -219,3 +219,27 @@ def parcel_report(request):
         'total_weight': total_weight,
         'total_pieces': total_pieces,
     })
+
+from loadsheets.models import Loadsheet
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def loadsheet_list(request):
+    try:
+        customer = Customer.objects.get(customer_user=request.user.username)
+    except Customer.DoesNotExist:
+        return Response({'error': 'Customer profile not found'}, status=404)
+
+    sheets = Loadsheet.objects.filter(customer=customer).order_by('-loadsheet_date')
+    data = [{
+        'loadsheet_no': ls.loadsheet_no,
+        'customer': customer.customer_name,
+        'total_weight': ls.total_weight,
+        'total_consignee': ls.total_consignee,
+        'total_pieces': ls.total_pieces,
+        'total_cod': ls.total_cod,
+        'created_by': ls.created_by,
+        'loadsheet_date': ls.loadsheet_date,
+    } for ls in sheets]
+
+    return Response({'results': data})
