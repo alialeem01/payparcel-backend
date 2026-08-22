@@ -425,3 +425,12 @@ select {
     min-width: 0;
     flex: 1 1 auto;
 }
+
+/* ===== FORCE consistent font on all form elements ===== */
+select, option {
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif !important;
+    font-size: 14px !important;
+    font-style: normal !important;
+    letter-spacing: normal !important;
+    line-height: normal !important;
+}
