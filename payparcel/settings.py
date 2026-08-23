@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'django_admin_listfilter_dropdown',
+    'rangefilter',
     'customers',
     'locations',
     'parcels',
