@@ -531,3 +531,49 @@ input[type=date], input[type=time], select, textarea {
 .actions {
     padding: 8px 14px !important;
 }
+
+/* ===== Simplify breadcrumbs - hide middle app-level link ===== */
+div.breadcrumbs a:nth-child(2) {
+    display: none !important;
+}
+div.breadcrumbs a:nth-child(2) + text {
+    display: none !important;
+}
+
+/* ===== Fix table width and remove horizontal scroll ===== */
+#changelist-form {
+    overflow-x: visible !important;
+}
+.results {
+    overflow-x: visible !important;
+    width: 100% !important;
+}
+#result_list, #changelist table {
+    width: 100% !important;
+    table-layout: auto;
+}
+#changelist {
+    overflow-x: visible !important;
+}
+
+/* Reduce filter sidebar width to give table more room */
+#changelist-filter {
+    min-width: 180px !important;
+    max-width: 200px !important;
+}
+
+/* Make the two-column list+filter layout use full width properly */
+#content-main {
+    max-width: 100% !important;
+}
+.colMS {
+    display: flex;
+    gap: 16px;
+}
+#changelist-filter {
+    flex-shrink: 0;
+}
+#changelist {
+    flex: 1;
+    min-width: 0;
+}
