@@ -181,4 +181,5 @@ UNFOLD = {
         "show_search": True,
         "show_all_applications": False,
     },
+    "BORDER_RADIUS": "8px",
 }
