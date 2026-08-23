@@ -182,4 +182,5 @@ UNFOLD = {
         "show_all_applications": False,
     },
     "BORDER_RADIUS": "8px",
+    "THEME": "light",
 }
