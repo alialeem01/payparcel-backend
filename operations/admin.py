@@ -73,3 +73,4 @@ class DeliverySheetAdmin(admin.ModelAdmin):
             edit_url, delete_url
         )
     row_actions.short_description = 'Actions'
+

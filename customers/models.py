@@ -96,3 +96,4 @@ class CourierPickupList(models.Model):
     courier = models.CharField(max_length=100, blank=True, null=True)
     pickup_id = models.CharField(max_length=100, blank=True, null=True)
     date = models.DateField(auto_now_add=True)
+    
