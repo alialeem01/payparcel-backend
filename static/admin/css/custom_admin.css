@@ -468,3 +468,66 @@ select {
     grid-template-columns: 230px 1fr !important;
     align-items: start;
 }
+
+/* ===== COMPACT DENSITY PASS ===== */
+#header {
+    padding: 10px 24px !important;
+}
+div.breadcrumbs {
+    padding: 9px 24px !important;
+    font-size: 12px !important;
+}
+#content-main {
+    margin: 16px auto !important;
+    padding: 0 16px !important;
+}
+h1, .dashboard h1 {
+    font-size: 17px !important;
+    margin-bottom: 12px !important;
+}
+.module h2, fieldset.module h2, .inline-group h2 {
+    padding: 10px 16px !important;
+    font-size: 12px !important;
+}
+.form-row {
+    padding: 10px 16px !important;
+    gap: 16px !important;
+}
+label {
+    font-size: 10.5px !important;
+    margin-bottom: 4px !important;
+}
+input[type=text], input[type=email], input[type=password], input[type=number],
+input[type=date], input[type=time], select, textarea {
+    padding: 7px 10px !important;
+    font-size: 13px !important;
+    min-height: 34px !important;
+}
+.submit-row {
+    padding: 10px 16px !important;
+}
+.submit-row input, .button {
+    padding: 7px 14px !important;
+    font-size: 12px !important;
+}
+#changelist table thead th {
+    padding: 8px 10px !important;
+    font-size: 10px !important;
+}
+#changelist table tbody td {
+    padding: 7px 10px !important;
+    font-size: 12.5px !important;
+}
+#nav-sidebar th, #nav-sidebar td {
+    padding: 5px 16px !important;
+}
+#nav-sidebar a {
+    font-size: 12.5px !important;
+    padding: 6px 0 !important;
+}
+#toolbar {
+    padding: 10px 14px !important;
+}
+.actions {
+    padding: 8px 14px !important;
+}
