@@ -26,7 +26,7 @@ body {
     background: #ffffff !important;
     color: var(--pp-text) !important;
     border-bottom: 1px solid var(--pp-border);
-    padding: 14px 32px;
+    padding: 10px 24px !important;
     box-shadow: var(--pp-shadow);
 }
 #branding h1, #branding h1 a:link, #branding h1 a:visited {
@@ -42,8 +42,8 @@ body {
 div.breadcrumbs {
     background: var(--pp-blue) !important;
     color: #ffffff !important;
-    padding: 13px 32px;
-    font-size: 12.5px;
+    padding: 9px 24px !important;
+    font-size: 12px !important;
 }
 div.breadcrumbs a { color: rgba(255,255,255,0.85) !important; }
 div.breadcrumbs a:hover { color: #ffffff !important; }
@@ -53,20 +53,33 @@ div.breadcrumbs a:hover { color: #ffffff !important; }
     background: #ffffff !important;
     border-right: 1px solid var(--pp-border);
     padding-top: 16px;
+    position: sticky !important;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
 }
-#nav-sidebar .module caption, #nav-sidebar .section {
-    background: transparent !important;
-    color: var(--pp-text-muted) !important;
-    text-transform: uppercase;
-    font-weight: 700;
-    font-size: 10.5px;
-    letter-spacing: 0.6px;
-    padding: 16px 18px 6px;
+#nav-sidebar .module caption,
+#nav-sidebar .section {
+    display: none !important;
+}
+#nav-sidebar .module {
+    margin: 0 !important;
+    border: none !important;
+}
+#nav-sidebar table {
+    border-collapse: collapse;
+    width: 100%;
+}
+#nav-sidebar tr {
+    border-bottom: 1px solid #f1f5f9;
+}
+#nav-sidebar th, #nav-sidebar td {
+    padding: 5px 16px !important;
 }
 #nav-sidebar a {
     color: var(--pp-text) !important;
-    font-size: 13.5px;
-    padding: 8px 18px;
+    font-size: 12.5px !important;
+    padding: 6px 0 !important;
     display: block;
     border-left: 3px solid transparent;
 }
@@ -75,29 +88,68 @@ div.breadcrumbs a:hover { color: #ffffff !important; }
     border-left-color: var(--pp-blue);
     color: var(--pp-blue) !important;
 }
-#nav-sidebar table { background: transparent !important; }
 #nav-sidebar .addlink { color: var(--pp-blue) !important; font-size: 11px; }
 
+#main.grid {
+    display: grid !important;
+    grid-template-columns: 230px 1fr !important;
+    align-items: start;
+}
+
 /* ===== CONTENT LAYOUT ===== */
-#content-main { max-width: 1500px !important; margin: 32px auto !important; padding: 0 24px; }
-#main.grid { grid-template-columns: 230px 1fr !important; }
-h1, .dashboard h1 { font-size: 20px; font-weight: 700; color: var(--pp-text); }
+#content-main {
+    max-width: 1500px !important;
+    margin: 16px auto !important;
+    padding: 0 16px !important;
+}
+h1, .dashboard h1 {
+    font-size: 17px !important;
+    font-weight: 700;
+    color: var(--pp-text);
+    margin-bottom: 12px !important;
+}
 
 .module, fieldset.module {
     background: #ffffff !important;
     border: 1px solid var(--pp-border);
     border-radius: 10px;
     overflow: hidden;
-    margin-bottom: 22px;
+    margin-bottom: 16px;
     box-shadow: var(--pp-shadow);
+}
+
+/* ===== HIDE dashboard "Recent Actions" box ===== */
+#content-related, .dashboard #content-related {
+    display: none !important;
+}
+.dashboard #content-main {
+    max-width: 1500px !important;
+}
+
+/* ===== Hide app-list module captions on dashboard homepage ===== */
+#content-main.app-list .module caption {
+    display: none !important;
+}
+#content-main.app-list .module {
+    margin-bottom: 10px !important;
+}
+#content-main.app-list .module table {
+    border-collapse: collapse;
+}
+#content-main.app-list .module tr {
+    border-bottom: 1px solid #f1f5f9;
+}
+#content-main.app-list .module th,
+#content-main.app-list .module td {
+    padding: 7px 14px !important;
 }
 
 /* ===== SECTION HEADERS ===== */
 .module h2, fieldset.module h2, .inline-group h2 {
     background: var(--pp-blue-light) !important;
     color: var(--pp-blue) !important;
-    padding: 16px 22px;
-    font-size: 13.5px;
+    padding: 10px 16px !important;
+    font-size: 12px !important;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -106,49 +158,82 @@ h1, .dashboard h1 { font-size: 20px; font-weight: 700; color: var(--pp-text); }
 
 /* ===== FORM ROWS ===== */
 .form-row {
-    display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start;
-    padding: 15px 22px !important;
+    display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start;
+    padding: 10px 16px !important;
     border-bottom: 1px solid #f1f5f9;
-    background: #ffffff !important;
 }
 .form-row:last-child { border-bottom: none; }
 .form-row > div { flex: 1 1 260px; min-width: 0; }
 
 label {
     color: var(--pp-text-muted) !important;
-    font-size: 11.5px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.4px; margin-bottom: 7px; display: block;
+    font-size: 10.5px !important; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.4px; margin-bottom: 4px !important; display: block;
 }
 input[type=text], input[type=email], input[type=password], input[type=number],
 input[type=date], input[type=time], select, textarea {
     background: #ffffff !important;
     color: var(--pp-text) !important;
     border: 1.5px solid var(--pp-border) !important;
-    padding: 10px 13px; border-radius: 7px; font-size: 14px;
+    padding: 7px 10px !important;
+    border-radius: 7px;
+    font-size: 13px !important;
+    font-family: 'Inter', sans-serif !important;
+    font-style: normal !important;
     width: 100% !important; max-width: 100%; box-sizing: border-box;
+    min-height: 34px !important;
+}
+select, option {
+    font-family: 'Inter', 'Segoe UI', Arial, sans-serif !important;
+    line-height: normal !important;
 }
 input:focus, select:focus, textarea:focus {
     border-color: var(--pp-blue) !important; outline: none;
     box-shadow: 0 0 0 3px rgba(29,78,216,0.12);
 }
-textarea { min-height: 90px; }
+textarea { min-height: 80px; }
 
-/* ===== related-widget-wrapper ===== */
-.related-widget-wrapper { display: flex; align-items: center; gap: 6px; width: 100%; min-width: 0; }
-.related-widget-wrapper select { flex: 1 1 auto; min-width: 0; width: auto !important; }
-.related-widget-wrapper-link { flex: 0 0 auto; margin-top: 0 !important; }
+/* ===== related-widget-wrapper (dropdown + pencil/plus/eye icons) ===== */
+.related-widget-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    min-width: 0;
+    min-height: 40px;
+}
+.related-widget-wrapper select {
+    flex: 1 1 auto !important;
+    min-width: 100px !important;
+    width: 100% !important;
+}
+.related-widget-wrapper-link {
+    flex: 0 0 auto;
+    margin-top: 0 !important;
+}
+.flex-container {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    min-height: 40px;
+}
+.flex-container > div {
+    min-width: 0;
+    flex: 1 1 auto;
+}
 
 /* ===== SAVE BAR ===== */
 .submit-row {
     position: sticky !important; bottom: 0; z-index: 50;
     background: #ffffff !important;
     border-top: 1px solid var(--pp-border);
-    padding: 18px 22px; display: flex; gap: 10px; justify-content: flex-end;
+    padding: 10px 16px !important;
+    display: flex; gap: 10px; justify-content: flex-end;
     box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
 }
 .submit-row input, .button {
     background: var(--pp-blue) !important; color: #ffffff !important; border: none !important;
-    padding: 10px 20px; border-radius: 7px; font-size: 13px; font-weight: 600; cursor: pointer;
+    padding: 7px 14px !important; border-radius: 7px; font-size: 12px !important; font-weight: 600; cursor: pointer;
 }
 .submit-row input:hover, .button:hover { background: var(--pp-blue-dark) !important; }
 .submit-row input[name="_addanother"] {
@@ -160,72 +245,93 @@ textarea { min-height: 90px; }
 a:link, a:visited { color: var(--pp-blue); }
 a:hover { color: var(--pp-blue-dark); }
 
-/* ===== LIST VIEW ===== */
-#changelist { border-radius: 10px; overflow: hidden; border: 1px solid var(--pp-border); box-shadow: var(--pp-shadow); margin-right: 20px; }
-#changelist table { width: 100% !important; background: #ffffff !important; }
+/* ===== LIST + FILTER LAYOUT (verified against real DOM structure) ===== */
+.changelist-form-container {
+    display: flex !important;
+    flex-direction: row-reverse !important;
+    align-items: flex-start !important;
+    gap: 20px !important;
+    width: 100% !important;
+}
+#changelist-filter {
+    flex: 0 0 220px !important;
+    width: 220px !important;
+    max-width: 220px !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
+    border: 1px solid var(--pp-border);
+    border-radius: 10px;
+    box-shadow: var(--pp-shadow);
+    padding: 4px 0;
+}
+#changelist-filter h2, #changelist-filter-header {
+    color: var(--pp-blue) !important;
+    font-size: 12px !important;
+    text-transform: uppercase;
+    padding: 10px 16px;
+}
+#changelist-filter a { font-size: 12.5px; }
+#changelist-filter li.selected a { color: var(--pp-blue) !important; font-weight: 600; }
+#changelist-filter details summary { padding: 6px 16px; cursor: pointer; }
+#changelist-filter ul { padding-left: 16px; padding-right: 16px; }
+
+.changelist-form-container > div {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    width: auto !important;
+}
+
+#changelist {
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--pp-border);
+    box-shadow: var(--pp-shadow);
+}
+#result_list, #changelist table {
+    width: 100% !important;
+    table-layout: auto !important;
+    background: #ffffff !important;
+}
+.results {
+    overflow-x: auto !important;
+    width: 100% !important;
+}
 #changelist table thead th {
     background: var(--pp-blue) !important; color: #ffffff !important;
-    font-size: 10.5px; font-weight: 700; text-transform: uppercase;
-    padding: 12px 14px !important; border: none !important;
+    font-size: 10px !important; font-weight: 700; text-transform: uppercase;
+    padding: 8px 10px !important; border: none !important;
 }
 #changelist table tbody tr { background: #ffffff !important; }
 #changelist table tbody tr:nth-child(even) { background: #f8fafc !important; }
 #changelist table tbody tr:hover { background: var(--pp-blue-light) !important; }
-#changelist table tbody td { padding: 11px 14px !important; font-size: 13.5px; color: var(--pp-text) !important; }
-.paginator { padding: 14px 18px; color: var(--pp-text-muted); font-size: 13px; background: #fff; }
+#changelist table tbody td { padding: 7px 10px !important; font-size: 12.5px !important; color: var(--pp-text) !important; }
+.paginator { padding: 10px 14px; color: var(--pp-text-muted); font-size: 12px; background: #fff; }
 
-/* ===== FILTER SIDEBAR ===== */
-#changelist-filter {
-    background: #ffffff !important; border: 1px solid var(--pp-border);
-    border-radius: 10px; box-shadow: var(--pp-shadow); min-width: 220px;
-}
-#changelist-filter h2, #changelist-filter h3 { color: var(--pp-blue) !important; font-size: 12px; text-transform: uppercase; }
-#changelist-filter li.selected a { color: var(--pp-blue) !important; font-weight: 600; }
-
-/* ===== INLINE TABLES ===== */
-.inline-group { width: 100%; overflow-x: auto; background: #ffffff !important; }
-.inline-related { width: 100%; background: #ffffff !important; }
-
-/* ===== DASHBOARD ===== */
-.dashboard .module { background: #ffffff !important; }
-.dashboard td a, .dashboard th a { font-weight: 500; color: var(--pp-text) !important; }
-.dashboard td a:hover { color: var(--pp-blue) !important; }
-
-/* ===== FORCE OVERRIDE ANY REMAINING DARK BACKGROUNDS ===== */
-#container, #content, .breadcrumbs + #content, body.dashboard, body.change-list, body.change-form {
-    background: var(--pp-bg) !important;
-}
-/* ===== SEARCH BAR / TOOLBAR ===== */
+/* ===== TOOLBAR / SEARCH / ACTIONS ===== */
 #toolbar {
     background: #ffffff !important;
     border: 1px solid var(--pp-border);
     border-radius: 10px;
-    padding: 16px 20px !important;
+    padding: 10px 14px !important;
     box-shadow: var(--pp-shadow);
-    margin-bottom: 16px;
-}
-#toolbar form#changelist-search {
-    background: transparent !important;
+    margin-bottom: 12px;
 }
 #toolbar input[type="text"] {
     background: #ffffff !important;
     border: 1.5px solid var(--pp-border) !important;
-    color: var(--pp-text) !important;
 }
 #toolbar input[type="submit"] {
     background: var(--pp-blue) !important;
     color: #ffffff !important;
     border: none !important;
     border-radius: 6px;
-    padding: 8px 16px;
+    padding: 7px 14px;
 }
-
-/* ===== ACTIONS BAR (bulk action dropdown) ===== */
 .actions {
     background: #ffffff !important;
     border: 1px solid var(--pp-border) !important;
     border-radius: 10px;
-    padding: 14px 20px !important;
+    padding: 8px 14px !important;
     margin-bottom: 0 !important;
     color: var(--pp-text) !important;
 }
@@ -235,363 +341,13 @@ a:hover { color: var(--pp-blue-dark); }
     color: var(--pp-text) !important;
     border: 1.5px solid var(--pp-border) !important;
 }
-.actions .button {
-    background: var(--pp-blue) !important;
-    color: #ffffff !important;
-}
+.actions .button { background: var(--pp-blue) !important; color: #ffffff !important; }
 
-/* ===== RESULT COUNT / PAGINATOR BAR ===== */
-.paginator, p.paginator {
-    background: #ffffff !important;
-    color: var(--pp-text) !important;
-    border-top: 1px solid var(--pp-border);
-}
+/* ===== INLINE TABLES ===== */
+.inline-group { width: 100%; overflow-x: auto; background: #ffffff !important; }
+.inline-related { width: 100%; background: #ffffff !important; }
 
-/* ===== SIDEBAR APP/MODEL LIST (Groups, Users, Customers rows) ===== */
-#nav-sidebar table,
-#nav-sidebar tbody,
-#nav-sidebar tr,
-#nav-sidebar td,
-#nav-sidebar th {
-    background: #ffffff !important;
-}
-#nav-sidebar tr:hover td {
-    background: var(--pp-blue-light) !important;
-}
-#nav-sidebar th a {
-    color: var(--pp-text) !important;
-    font-weight: 500;
-}
-#nav-sidebar th a:hover {
-    color: var(--pp-blue) !important;
-}
-
-/* ===== CATCH-ALL: force every table/row/cell in admin to light bg ===== */
-table, tbody, tr, td, th {
-    background-color: #ffffff !important;
-}
-#changelist table thead th {
-    background-color: var(--pp-blue) !important;
-    color: #ffffff !important;
-}
-
-/* ===== FIX: Filter sidebar text visibility ===== */
-#changelist-filter li a {
-    color: var(--pp-text) !important;
-    opacity: 1 !important;
-}
-#changelist-filter li.selected a {
-    color: var(--pp-blue) !important;
-    font-weight: 600;
-}
-#changelist-filter details summary {
-    color: var(--pp-text) !important;
-}
-
-/* ===== FIX: Hide sidebar app section headings ===== */
-#nav-sidebar .module caption,
-#nav-sidebar .section {
-    display: none !important;
-}
-
-/* ===== FIX: Sidebar items as tight list, no extra spacing ===== */
-#nav-sidebar .module {
-    margin-bottom: 0 !important;
-    border-bottom: none !important;
-}
-#nav-sidebar table {
-    border-collapse: collapse;
-}
-#nav-sidebar tr {
-    border-bottom: 1px solid #f1f5f9;
-}
-#nav-sidebar th, #nav-sidebar td {
-    padding: 6px 18px !important;
-}
-#nav-sidebar th a {
-    font-size: 13.5px;
-    padding: 4px 0;
-}
-
-/* ===== Reorder: push Authentication (Groups/Users) module to bottom ===== */
-#nav-sidebar .app-auth {
-    order: 99;
-}
-#nav-sidebar > div {
-    display: flex;
-    flex-direction: column;
-}
-/* ===== HIDE "Recent Actions" box on dashboard ===== */
-#content-related, .dashboard #content-related {
-    display: none !important;
-}
-.dashboard #content-main {
-    max-width: 1500px !important;
-}
-
-/* ===== Already hiding section headings via earlier rule, reinforcing here ===== */
-#nav-sidebar .module caption,
-#nav-sidebar .section {
-    display: none !important;
-}
-
-/* ===== Compact sidebar list, no gaps between groups ===== */
-#nav-sidebar .module {
-    margin: 0 !important;
-    border: none !important;
-}
-#nav-sidebar table {
-    border-collapse: collapse;
-    width: 100%;
-}
-#nav-sidebar tr {
-    border-bottom: 1px solid #f1f5f9;
-}
-#nav-sidebar th, #nav-sidebar td {
-    padding: 7px 18px !important;
-}
-
-/* ===== HIDE "Recent Actions" box on dashboard ===== */
-#content-related, .dashboard #content-related {
-    display: none !important;
-}
-.dashboard #content-main {
-    max-width: 1500px !important;
-}
-
-/* ===== Hide sidebar app section headings (AUTHENTICATION, CUSTOMERS, etc.) ===== */
-#nav-sidebar .module caption,
-#nav-sidebar .section {
-    display: none !important;
-}
-
-/* ===== Compact sidebar list, no gaps between groups ===== */
-#nav-sidebar .module {
-    margin: 0 !important;
-    border: none !important;
-}
-#nav-sidebar table {
-    border-collapse: collapse;
-    width: 100%;
-}
-#nav-sidebar tr {
-    border-bottom: 1px solid #f1f5f9;
-}
-#nav-sidebar th, #nav-sidebar td {
-    padding: 7px 18px !important;
-}
-
-/* ===== Hide captions on main dashboard content module list too ===== */
-#content-main.app-list .module caption {
-    display: none !important;
-}
-
-/* ===== Compact spacing between dashboard module boxes ===== */
-#content-main.app-list .module {
-    margin-bottom: 12px !important;
-}
-#content-main.app-list .module table {
-    border-collapse: collapse;
-}
-#content-main.app-list .module tr {
-    border-bottom: 1px solid #f1f5f9;
-}
-#content-main.app-list .module th, 
-#content-main.app-list .module td {
-    padding: 8px 16px !important;
-}
-
-/* ===== FORCE all select dropdowns to never clip text ===== */
-select {
-    text-overflow: clip !important;
-    overflow: visible !important;
-    min-width: 0 !important;
-}
-.related-widget-wrapper {
-    min-width: 0 !important;
-    flex-wrap: nowrap;
-}
-.related-widget-wrapper select {
-    flex: 1 1 auto !important;
-    width: 100% !important;
-    min-width: 100px !important;
-}
-.flex-container {
-    display: flex;
-    width: 100%;
-    min-width: 0;
-}
-.flex-container > div {
-    min-width: 0;
-    flex: 1 1 auto;
-}
-
-/* ===== FORCE consistent font on all form elements ===== */
-select, option {
-    font-family: 'Inter', 'Segoe UI', Arial, sans-serif !important;
-    font-size: 14px !important;
-    font-style: normal !important;
-    letter-spacing: normal !important;
-    line-height: normal !important;
-}
-
-/* ===== BIGGER dropdown cells ===== */
-.related-widget-wrapper select,
-select {
-    min-height: 44px !important;
-    padding: 10px 14px !important;
-    font-size: 15px !important;
-    line-height: 1.4 !important;
-}
-
-.related-widget-wrapper {
-    min-height: 44px;
-}
-
-.flex-container {
-    min-height: 44px;
-}
-
-.form-row .related-widget-wrapper select {
-    height: auto !important;
-}
-
-/* ===== Fixed left sidebar ===== */
-#nav-sidebar {
-    position: sticky !important;
-    top: 0;
-    height: 100vh;
-    overflow-y: auto;
-}
-#main.grid {
-    display: grid !important;
-    grid-template-columns: 230px 1fr !important;
-    align-items: start;
-}
-
-/* ===== COMPACT DENSITY PASS ===== */
-#header {
-    padding: 10px 24px !important;
-}
-div.breadcrumbs {
-    padding: 9px 24px !important;
-    font-size: 12px !important;
-}
-#content-main {
-    margin: 16px auto !important;
-    padding: 0 16px !important;
-}
-h1, .dashboard h1 {
-    font-size: 17px !important;
-    margin-bottom: 12px !important;
-}
-.module h2, fieldset.module h2, .inline-group h2 {
-    padding: 10px 16px !important;
-    font-size: 12px !important;
-}
-.form-row {
-    padding: 10px 16px !important;
-    gap: 16px !important;
-}
-label {
-    font-size: 10.5px !important;
-    margin-bottom: 4px !important;
-}
-input[type=text], input[type=email], input[type=password], input[type=number],
-input[type=date], input[type=time], select, textarea {
-    padding: 7px 10px !important;
-    font-size: 13px !important;
-    min-height: 34px !important;
-}
-.submit-row {
-    padding: 10px 16px !important;
-}
-.submit-row input, .button {
-    padding: 7px 14px !important;
-    font-size: 12px !important;
-}
-#changelist table thead th {
-    padding: 8px 10px !important;
-    font-size: 10px !important;
-}
-#changelist table tbody td {
-    padding: 7px 10px !important;
-    font-size: 12.5px !important;
-}
-#nav-sidebar th, #nav-sidebar td {
-    padding: 5px 16px !important;
-}
-#nav-sidebar a {
-    font-size: 12.5px !important;
-    padding: 6px 0 !important;
-}
-#toolbar {
-    padding: 10px 14px !important;
-}
-.actions {
-    padding: 8px 14px !important;
-}
-
-/* ===== Simplify breadcrumbs - hide middle app-level link ===== */
-div.breadcrumbs a:nth-child(2) {
-    display: none !important;
-}
-div.breadcrumbs a:nth-child(2) + text {
-    display: none !important;
-}
-
-/* ===== Fix table width and remove horizontal scroll ===== */
-#changelist-form {
-    overflow-x: visible !important;
-}
-.results {
-    overflow-x: visible !important;
-    width: 100% !important;
-}
-#result_list, #changelist table {
-    width: 100% !important;
-    table-layout: auto;
-}
-#changelist {
-    overflow-x: visible !important;
-}
-
-/* Reduce filter sidebar width to give table more room */
-#changelist-filter {
-    min-width: 180px !important;
-    max-width: 200px !important;
-}
-
-/* Make the two-column list+filter layout use full width properly */
-#content-main {
-    max-width: 100% !important;
-}
-
-/* ===== PERMANENT LAYOUT FIX: list view with filter sidebar (verified via DOM inspection) ===== */
-.changelist-form-container {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: flex-start !important;
-    gap: 20px;
-    width: 100% !important;
-}
-
-#changelist-filter {
-    order: 2;
-    flex: 0 0 220px !important;
-    width: 220px !important;
-    max-width: 220px !important;
-    box-sizing: border-box;
-}
-
-#changelist {
-    order: 1;
-    flex: 1 1 auto !important;
-    min-width: 0 !important;
-    width: auto !important;
-}
-
-#changelist table {
-    width: 100% !important;
-    table-layout: auto;
-}
+/* ===== DASHBOARD ===== */
+.dashboard .module { background: #ffffff !important; }
+.dashboard td a, .dashboard th a { font-weight: 500; color: var(--pp-text) !important; }
+.dashboard td a:hover { color: var(--pp-blue) !important; }
