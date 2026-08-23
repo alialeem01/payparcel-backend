@@ -494,57 +494,33 @@ a:hover { color: var(--pp-blue-dark); }
 }
 
 /* =========================================================
-   CUSTOMER LIST PAGE ONLY: filter moves to TOP, horizontal
-   (scoped so it doesn't affect Pickup Sheets / other pages)
+   CUSTOMER LIST PAGE ONLY — filter as single scrollable row
    ========================================================= */
 body.app-customers.model-customer .changelist-form-container {
     display: flex !important;
     flex-direction: column !important;
     gap: 12px !important;
+    height: auto !important;
 }
+
 body.app-customers.model-customer #changelist-filter {
     order: -1 !important;
+    align-self: flex-start !important;
+    height: auto !important;
+    max-height: none !important;
     width: 100% !important;
     max-width: 100% !important;
     flex: 0 0 auto !important;
-    display: flex !important;
-    flex-wrap: wrap !important;
-    align-items: flex-start !important;
-    gap: 20px !important;
-    padding: 14px 18px !important;
-}
-body.app-customers.model-customer #changelist-filter h2 {
-    width: 100%;
-    order: -1;
-}
-body.app-customers.model-customer #changelist-filter details {
-    border-bottom: none !important;
-    padding: 0 !important;
-    min-width: 140px;
-}
-body.app-customers.model-customer #changelist-filter summary {
-    font-size: 11px !important;
-    text-transform: uppercase;
-    color: var(--pp-text-muted) !important;
-}
-body.app-customers.model-customer #changelist-filter ul {
-    padding: 0 !important;
-}
-
-/* ===== CUSTOMER FILTER: single scrollable horizontal row ===== */
-body.app-customers.model-customer #changelist-filter {
     display: flex !important;
     flex-wrap: nowrap !important;
     align-items: flex-start !important;
     overflow-x: auto !important;
     gap: 28px !important;
     padding: 14px 20px !important;
-    max-width: 100%;
 }
 body.app-customers.model-customer #changelist-filter h2 {
-    display: none !important; /* "FILTER" label already shown above via .module h2 */
+    display: none !important;
 }
-
 body.app-customers.model-customer #changelist-filter h3,
 body.app-customers.model-customer #changelist-filter summary {
     font-size: 10.5px !important;
@@ -566,31 +542,30 @@ body.app-customers.model-customer #changelist-filter ul {
 body.app-customers.model-customer #changelist-filter li {
     padding: 1px 0 !important;
     white-space: nowrap;
-    border-left: none !important; /* removes the "All" pill/bar look */
 }
-
-/* Remove the selected-item bar/pill styling entirely - plain text like the rest */
-body.app-customers.model-customer #changelist-filter li.selected a {
-    color: var(--pp-blue) !important;
-    font-weight: 600;
-    background: none !important;
-    border: none !important;
-    padding: 0 !important;
-}
-body.app-customers.model-customer #changelist-filter li a {
-    color: var(--pp-text) !important;
+body.app-customers.model-customer #changelist-filter li a,
+body.app-customers.model-customer #changelist-filter li a:link,
+body.app-customers.model-customer #changelist-filter li a:visited {
+    color: var(--pp-text-muted) !important;
     font-size: 12px !important;
     background: none !important;
     border: none !important;
     padding: 0 !important;
+    text-decoration: none !important;
+    font-weight: 400 !important;
 }
-
+body.app-customers.model-customer #changelist-filter li.selected a {
+    color: var(--pp-blue) !important;
+    font-weight: 600 !important;
+}
+body.app-customers.model-customer #changelist-filter li a:hover {
+    color: var(--pp-blue) !important;
+    text-decoration: underline !important;
+}
 body.app-customers.model-customer #changelist-filter details {
     flex: 0 0 auto;
     margin: 0 !important;
 }
-
-/* Date range group: pinned first (leftmost) */
 body.app-customers.model-customer .rangefilter {
     order: -1 !important;
     display: flex;
