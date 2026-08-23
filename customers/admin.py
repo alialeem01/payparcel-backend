@@ -4,72 +4,83 @@ from rangefilter.filters import DateRangeFilter
 from .models import Customer, ServiceTypeList, RateTemplateEntry, TaxTemplateEntry, CourierPickupList
 
 
-@admin.register(PickupSheet)
-class PickupSheetAdmin(admin.ModelAdmin):
-    list_display = ('sheet_number', 'rider', 'shipper', 'loadsheet', 'total_pickup_parcel', 'user', 'branch', 'pickup_status', 'row_actions')
-    readonly_fields = ('sheet_number',)
-    search_fields = ('sheet_number',)
-    list_filter = ('pickup_status', 'branch')
-    actions = None  # removes the bulk action dropdown entirely
-
-    def row_actions(self, obj):
-        edit_url = reverse('admin:operations_pickupsheet_change', args=[obj.pk])
-        delete_url = reverse('admin:operations_pickupsheet_delete', args=[obj.pk])
-        return format_html(
-            '<a href="{}">Edit</a> | <a href="{}">Delete</a>',
-            edit_url, delete_url
-        )
-    row_actions.short_description = 'Actions'
+class ServiceTypeInline(admin.TabularInline):
+    model = ServiceTypeList
+    extra = 1
 
 
-@admin.register(Manifest)
-class ManifestAdmin(admin.ModelAdmin):
-    list_display = ('code', 'user', 'branch', 'origin', 'destination', 'mode_of_transportation', 'seal_no', 'total_weight', 'total_pcs', 'total_parcel', 'date', 'row_actions')
-    filter_horizontal = ('parcels',)
-    readonly_fields = ('code', 'date')
-    search_fields = ('code',)
-    list_filter = ('mode_of_transportation', 'branch')
-    actions = None
-
-    def save_related(self, request, form, formsets, change):
-        super().save_related(request, form, formsets, change)
-        # Auto-update linked parcels to "In Transit" status
-        for parcel in form.instance.parcels.all():
-            parcel.status = 'In Transit'
-            parcel.save()
-
-    def row_actions(self, obj):
-        edit_url = reverse('admin:operations_manifest_change', args=[obj.pk])
-        delete_url = reverse('admin:operations_manifest_delete', args=[obj.pk])
-        return format_html(
-            '<a href="{}">Edit</a> | <a href="{}">Delete</a>',
-            edit_url, delete_url
-        )
-    row_actions.short_description = 'Actions'
+class RateTemplateInline(admin.TabularInline):
+    model = RateTemplateEntry
+    extra = 1
 
 
-@admin.register(DeliverySheet)
-class DeliverySheetAdmin(admin.ModelAdmin):
-    list_display = ('ds_number', 'user', 'branch', 'rider', 'cn_list', 'sheet_status', 'origin', 'area', 'total_parcels', 'total_cod', 'date', 'row_actions')
-    filter_horizontal = ('parcels',)
-    readonly_fields = ('ds_number', 'date')
-    search_fields = ('ds_number',)
-    list_filter = ('sheet_status', 'branch')
-    actions = None
+class TaxTemplateInline(admin.TabularInline):
+    model = TaxTemplateEntry
+    extra = 1
 
-    def save_related(self, request, form, formsets, change):
-        super().save_related(request, form, formsets, change)
-        # Only mark Delivered if the sheet itself is marked Close (completed)
-        if form.instance.sheet_status == 'Close':
-            for parcel in form.instance.parcels.all():
-                parcel.status = 'Delivered'
-                parcel.save()
 
-    def row_actions(self, obj):
-        edit_url = reverse('admin:operations_deliverysheet_change', args=[obj.pk])
-        delete_url = reverse('admin:operations_deliverysheet_delete', args=[obj.pk])
-        return format_html(
-            '<a href="{}">Edit</a> | <a href="{}">Delete</a>',
-            edit_url, delete_url
-        )
-    row_actions.short_description = 'Actions'
+class CourierPickupInline(admin.TabularInline):
+    model = CourierPickupList
+    extra = 1
+
+
+@admin.register(Customer)
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ('customer_name', 'id', 'customer_brand_name', 'customer_cnic', 'customer_phone_number', 'sales_person', 'customer_branch', 'customer_status')
+    search_fields = ('customer_name', 'customer_brand_name', 'customer_cnic', 'customer_phone_number')
+
+    list_filter = (
+        ('customer_name', DropdownFilter),
+        ('sales_person', DropdownFilter),
+        ('customer_brand_name', DropdownFilter),
+        ('customer_branch', DropdownFilter),
+        ('customer_cnic', DropdownFilter),
+        ('customer_phone_number', DropdownFilter),
+        ('customer_bank_ibn_number', DropdownFilter),
+        'customer_status',
+        ('customer_created_at', DateRangeFilter),
+    )
+
+    fieldsets = (
+        ('Personal Details', {
+            'fields': (
+                ('customer_name', 'customer_display_name'),
+                ('customer_city', 'customer_branch'),
+                ('customer_user', 'customer_brand_name'),
+                ('customer_email', 'customer_cnic'),
+                ('customer_phone_number', 'customer_alternate_phone'),
+                ('sales_person', 'customer_status', 'return_details_show'),
+            )
+        }),
+        ('Display Settings', {
+            'fields': (
+                ('show_billing_section', 'show_balance', 'show_dc'),
+                'customer_product_details',
+                ('customer_address', 'customer_pickup_address'),
+            )
+        }),
+        ('Third Party Booking', {
+            'fields': (
+                ('third_party_booking_auto', 'third_party_booking', 'third_party_booking_type'),
+                ('third_party_booking_by', 'alternate_third_party_booking', 'alternate_third_party_booking_type'),
+                ('show_shipper_logo_in_label', 'shipper_allow_to_open', 'auto_update_pickup_status'),
+                ('show_third_party_label', 'live_tpl_tracking', 'show_tpl_tracking_cn'),
+                ('show_direct_tpl_status', 'select_courier_in_loadsheet', 'customer_prefix'),
+                ('shipper_brand_logo', 'default_intractions'),
+            )
+        }),
+        ('Rate Details', {
+            'fields': (
+                ('weight_calculate', 'additional_calculate', 'calculate_type', 'return_rate_apply', 'limited_service_type'),
+                ('zone_type', 'default_rate_template', 'default_tax_template'),
+            )
+        }),
+        ('Bank Details', {
+            'fields': (
+                ('customer_bank_title', 'customer_bank_name'),
+                ('customer_bank_ac', 'customer_bank_ibn_number'),
+            )
+        }),
+    )
+
+    inlines = [ServiceTypeInline, RateTemplateInline, TaxTemplateInline, CourierPickupInline]

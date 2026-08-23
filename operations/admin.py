@@ -1,7 +1,7 @@
 from django.contrib import admin
-from django_admin_listfilter_dropdown.filters import DropdownFilter
-from rangefilter.filters import DateRangeFilter
-from .models import Customer, ServiceTypeList, RateTemplateEntry, TaxTemplateEntry, CourierPickupList
+from django.utils.html import format_html
+from django.urls import reverse
+from .models import PickupSheet, Manifest, DeliverySheet
 
 
 @admin.register(PickupSheet)
@@ -73,4 +73,3 @@ class DeliverySheetAdmin(admin.ModelAdmin):
             edit_url, delete_url
         )
     row_actions.short_description = 'Actions'
-
