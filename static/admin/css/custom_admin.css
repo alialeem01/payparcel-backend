@@ -531,27 +531,22 @@ body.app-customers.model-customer #changelist-filter ul {
     padding: 0 !important;
 }
 
-/* ===== CUSTOMER FILTER: force uniform grid alignment ===== */
+/* ===== CUSTOMER FILTER: multi-column layout, keep each label+list glued together ===== */
 body.app-customers.model-customer #changelist-filter {
-    display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 20px 24px !important;
-    align-items: start !important;
+    display: block !important;
+    column-count: 4 !important;
+    column-gap: 32px !important;
+    padding: 20px 24px !important;
 }
 body.app-customers.model-customer #changelist-filter h2 {
-    grid-column: 1 / -1;
+    column-span: all;
+    margin-bottom: 10px !important;
 }
 
-/* Each filter block (both <h3>+<ul> style and <details> style) becomes a grid cell */
-body.app-customers.model-customer #changelist-filter > h3,
-body.app-customers.model-customer #changelist-filter > ul,
-body.app-customers.model-customer #changelist-filter details {
-    min-width: 0;
-}
-
-/* Normalize label style across both filter render types */
-body.app-customers.model-customer #changelist-filter h3,
-body.app-customers.model-customer #changelist-filter summary {
+/* keep each label glued to the list/details that follows it */
+body.app-customers.model-customer #changelist-filter h3 {
+    break-after: avoid-column;
+    break-inside: avoid-column;
     font-size: 11px !important;
     text-transform: uppercase;
     font-weight: 600;
@@ -560,7 +555,8 @@ body.app-customers.model-customer #changelist-filter summary {
     padding: 0 !important;
 }
 body.app-customers.model-customer #changelist-filter ul {
-    margin: 0 !important;
+    break-inside: avoid-column;
+    margin: 0 0 22px 0 !important;
     padding: 0 !important;
     list-style: none;
 }
@@ -568,12 +564,26 @@ body.app-customers.model-customer #changelist-filter li {
     padding: 2px 0 !important;
     white-space: nowrap;
 }
+body.app-customers.model-customer #changelist-filter details {
+    break-inside: avoid-column;
+    margin-bottom: 22px !important;
+}
+body.app-customers.model-customer #changelist-filter summary {
+    font-size: 11px !important;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--pp-text-muted) !important;
+    margin: 0 0 6px 0 !important;
+    padding: 0 !important;
+    cursor: pointer;
+}
 
-/* Date range block sits cleanly in its own cell */
+/* date range block */
 body.app-customers.model-customer .rangefilter {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    break-inside: avoid-column;
 }
 body.app-customers.model-customer .rangefilter input[type="text"] {
     width: 100% !important;
