@@ -565,3 +565,85 @@ html, body, #container, #main {
 .actions {
     display: none !important;
 }
+
+/* ===== SEARCH BAR: button inline, no magnifier icon ===== */
+#toolbar form#changelist-search {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+#toolbar form#changelist-search #searchbar {
+    flex: 1 1 auto !important;
+    margin: 0 !important;
+}
+#toolbar form#changelist-search input[type="submit"] {
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+    height: 36px;
+}
+/* Django renders the icon as a background-image on the label, not an <svg> */
+#toolbar #searchbar-label,
+#toolbar label[for="searchbar"] {
+    display: none !important;
+}
+
+/* ===== VERTICALLY CENTER "ADD" BUTTON IN TOP BAR ===== */
+.object-tools {
+    display: flex !important;
+    align-items: center !important;
+    height: 100%;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+#content-main > h1 {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    min-height: 40px;
+}
+
+/* ===== REMOVE HIGHLIGHT FROM ITEM COUNT ("1 pickup sheet") ===== */
+.paginator .this-page,
+p.paginator {
+    background: transparent !important;
+    color: var(--pp-text-muted) !important;
+}
+.paginator {
+    background: transparent !important;
+}
+.paginator span:first-child,
+.paginator > *:first-child {
+    background: transparent !important;
+    color: var(--pp-text-muted) !important;
+    padding: 0 !important;
+}
+
+/* ===== FILTER CONTAINER SPACING/ALIGNMENT ===== */
+#changelist-filter {
+    padding: 0 0 12px 0 !important;
+}
+#changelist-filter h2 {
+    margin: 0 0 6px 0 !important;
+}
+#changelist-filter details {
+    padding: 8px 16px !important;
+    border-bottom: 1px solid #f1f5f9;
+}
+#changelist-filter details:last-child {
+    border-bottom: none !important;
+}
+#changelist-filter summary {
+    padding: 0 0 6px 0 !important;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--pp-text) !important;
+}
+#changelist-filter ul {
+    margin: 0 !important;
+    padding: 0 0 0 4px !important;
+    list-style: none;
+}
+#changelist-filter li {
+    padding: 3px 0 !important;
+    line-height: 1.5;
+}
