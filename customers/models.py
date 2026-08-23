@@ -17,6 +17,7 @@ class Customer(models.Model):
     customer_alternate_phone = models.CharField(max_length=20, blank=True, null=True)
     sales_person = models.CharField(max_length=255, blank=True, null=True)
     customer_status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='Active')
+    customer_created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     return_details_show = models.CharField(max_length=3, choices=YES_NO, default='No')
 
     show_billing_section = models.CharField(max_length=3, choices=YES_NO, default='Yes')

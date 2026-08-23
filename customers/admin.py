@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter
+from django_admin_listfilter_dropdown.filters import DropdownFilter
 from rangefilter.filters import DateRangeFilter
 from .models import Customer, ServiceTypeList, RateTemplateEntry, TaxTemplateEntry, CourierPickupList
 
@@ -30,16 +30,15 @@ class CustomerAdmin(admin.ModelAdmin):
     search_fields = ('customer_name', 'customer_brand_name', 'customer_cnic', 'customer_phone_number')
 
     list_filter = (
-        ('id', DropdownFilter),
         ('customer_name', DropdownFilter),
-        ('sales_person', RelatedDropdownFilter),
+        ('sales_person', DropdownFilter),
         ('customer_brand_name', DropdownFilter),
-        ('customer_branch', RelatedDropdownFilter),
+        ('customer_branch', DropdownFilter),
         ('customer_cnic', DropdownFilter),
         ('customer_phone_number', DropdownFilter),
         ('customer_bank_ibn_number', DropdownFilter),
-        ('customer_status', DropdownFilter),
-        ('date_joined', DateRangeFilter),  # adjust field name below if different
+        'customer_status',
+        ('customer_created_at', DateRangeFilter),
     )
 
     fieldsets = (
