@@ -463,3 +463,49 @@ html, body, #container, #main {
     padding: 0 20px !important;
     box-sizing: border-box !important;
 }
+
+/* ===== REBALANCE FILTER + CONTENT LAYOUT ===== */
+.changelist-form-container {
+    display: flex !important;
+    flex-direction: row-reverse !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#changelist-filter {
+    flex: 0 0 180px !important;
+    width: 180px !important;
+    max-width: 180px !important;
+    margin-left: 0 !important;
+}
+
+.changelist-form-container > div:not(#changelist-filter) {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+}
+
+#content-main {
+    padding: 0 12px !important;
+}
+
+/* ===== FIX ACTION BAR SPACING ===== */
+.actions {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+}
+.actions select {
+    margin-right: 4px !important;
+}
+.actions .button {
+    margin-right: 10px !important;
+}
+.actions .action-counter {
+    margin-left: 6px !important;
+    color: var(--pp-text-muted) !important;
+    font-size: 12px !important;
+}
