@@ -373,3 +373,34 @@ a:hover { color: var(--pp-blue-dark); }
 #content-main.app-list .module .changelink {
     color: var(--pp-text-muted) !important;
 }
+
+/* ===== UTILIZE FULL PAGE WIDTH ===== */
+#content-main {
+    max-width: 100% !important;
+}
+
+.changelist-form-container {
+    max-width: 100%;
+}
+
+#changelist {
+    width: 100%;
+}
+
+/* Let table columns breathe instead of cramming + scrolling */
+#result_list th, #result_list td {
+    white-space: nowrap;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+}
+
+/* Remove forced horizontal scrollbar when content actually fits */
+.results {
+    overflow-x: auto !important;
+}
+
+/* Give the whole page slightly more breathing room on wide screens */
+#container {
+    max-width: 1800px;
+    margin: 0 auto;
+}
