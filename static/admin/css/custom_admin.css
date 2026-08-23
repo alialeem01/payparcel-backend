@@ -509,3 +509,59 @@ html, body, #container, #main {
     color: var(--pp-text-muted) !important;
     font-size: 12px !important;
 }
+/* ===== MOVE ADD BUTTON UP, ALIGN WITH TITLE ===== */
+.object-tools {
+    margin-top: -38px !important;
+    margin-bottom: 12px !important;
+    float: none !important;
+    display: flex;
+    justify-content: flex-end;
+}
+#content-main > h1,
+.module h1 {
+    display: flex;
+    align-items: center;
+}
+
+/* ===== SEARCH BAR: remove icon, inline with button ===== */
+#toolbar form {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+#toolbar #searchbar {
+    flex: 1 1 auto !important;
+    margin: 0 !important;
+}
+#toolbar input[type="submit"] {
+    flex: 0 0 auto !important;
+    margin: 0 !important;
+}
+/* hides the magnifying glass icon Django renders before the search box */
+#toolbar::before,
+#toolbar svg,
+#toolbar .search-icon,
+#changelist-search-icon {
+    display: none !important;
+}
+
+/* ===== FIX FILTER PANEL GAP / ALIGNMENT ===== */
+.changelist-form-container {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+#changelist-filter {
+    margin: 0 !important;
+}
+#main.grid {
+    grid-template-columns: 220px 1fr !important;
+    gap: 0 !important;
+}
+#nav-sidebar {
+    width: 220px !important;
+}
+
+/* ===== HIDE THE BULK ACTION DROPDOWN BAR ===== */
+.actions {
+    display: none !important;
+}
