@@ -375,16 +375,45 @@ a:hover { color: var(--pp-blue-dark); }
 }
 
 /* ===== UTILIZE FULL PAGE WIDTH ===== */
+html, body {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden;
+}
+
+#container {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#main.grid {
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-template-columns: 230px 1fr !important;
+}
+
 #content-main {
     max-width: 100% !important;
+    width: 100% !important;
+    margin: 16px 0 !important;
+    padding: 0 20px !important;
 }
 
 .changelist-form-container {
-    max-width: 100%;
+    max-width: 100% !important;
+    width: 100% !important;
 }
 
 #changelist {
-    width: 100%;
+    width: 100% !important;
+}
+
+#result_list, #changelist table {
+    width: 100% !important;
+    table-layout: auto !important;
 }
 
 /* Let table columns breathe instead of cramming + scrolling */
@@ -394,13 +423,7 @@ a:hover { color: var(--pp-blue-dark); }
     padding-right: 14px !important;
 }
 
-/* Remove forced horizontal scrollbar when content actually fits */
 .results {
     overflow-x: auto !important;
-}
-
-/* Give the whole page slightly more breathing room on wide screens */
-#container {
-    max-width: 1800px;
-    margin: 0 auto;
+    width: 100% !important;
 }
