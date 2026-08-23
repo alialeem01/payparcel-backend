@@ -567,34 +567,31 @@ div.breadcrumbs a:nth-child(2) + text {
     max-width: 100% !important;
 }
 
-/* ===== PERMANENT LAYOUT FIX: list view with filter sidebar ===== */
-#content.colMS,
-#content-main {
-    overflow: hidden !important;
+/* ===== PERMANENT LAYOUT FIX: list view with filter sidebar (verified via DOM inspection) ===== */
+.changelist-form-container {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    gap: 20px;
     width: 100% !important;
 }
 
 #changelist-filter {
-    float: right !important;
+    order: 2;
+    flex: 0 0 220px !important;
     width: 220px !important;
-    min-width: 220px !important;
     max-width: 220px !important;
-    margin-left: 20px !important;
-    position: static !important;
     box-sizing: border-box;
 }
 
 #changelist {
-    overflow: hidden !important;
+    order: 1;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
     width: auto !important;
-    margin-right: 0 !important;
 }
 
 #changelist table {
     width: 100% !important;
     table-layout: auto;
-}
-
-#toolbar, .actions {
-    clear: both;
 }
