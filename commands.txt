@@ -11,3 +11,5 @@ git add .
 git commit -m "Fix filter text visibility, hide sidebar headings, tighten spacing"
 git push
 
+python manage.py makemigrations
+python manage.py migrate

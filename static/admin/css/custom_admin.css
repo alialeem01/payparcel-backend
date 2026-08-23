@@ -455,3 +455,16 @@ select {
 .form-row .related-widget-wrapper select {
     height: auto !important;
 }
+
+/* ===== Fixed left sidebar ===== */
+#nav-sidebar {
+    position: sticky !important;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+}
+#main.grid {
+    display: grid !important;
+    grid-template-columns: 230px 1fr !important;
+    align-items: start;
+}
