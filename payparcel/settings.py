@@ -162,6 +162,8 @@ UNFOLD = {
     "SITE_URL": "/",
     "SHOW_HISTORY": True,
     "SHOW_VIEW_ON_SITE": True,
+    "THEME": "light",
+    "BORDER_RADIUS": "8px",
     "COLORS": {
         "primary": {
             "50": "239 246 255",
@@ -180,7 +182,35 @@ UNFOLD = {
     "SIDEBAR": {
         "show_search": True,
         "show_all_applications": False,
+        "navigation": [
+            {
+                "title": None,
+                "separator": False,
+                "items": [
+                    {
+                        "title": "Dashboard",
+                        "icon": "dashboard",
+                        "link": "/admin/",
+                    },
+                ],
+            },
+            {
+                "title": "App",
+                "separator": False,
+                "collapsible": False,
+                "items": [
+                    {"title": "Customers", "icon": "person", "link": "/admin/customers/customer/"},
+                    {"title": "Customer parcels", "icon": "inventory_2", "link": "/admin/parcels/customerparcel/"},
+                    {"title": "Pickup sheets", "icon": "local_shipping", "link": "/admin/operations/pickupsheet/"},
+                    {"title": "Loadsheets", "icon": "assignment", "link": "/admin/loadsheets/loadsheet/"},
+                    {"title": "Manifests", "icon": "description", "link": "/admin/operations/manifest/"},
+                    {"title": "Delivery sheets", "icon": "task", "link": "/admin/operations/deliverysheet/"},
+                    {"title": "Invoices", "icon": "receipt_long", "link": "/admin/invoices/invoice/"},
+                    {"title": "Destinations", "icon": "location_on", "link": "/admin/locations/destination/"},
+                    {"title": "Branchs", "icon": "store", "link": "/admin/locations/branch/"},
+                    {"title": "Status narrations", "icon": "notes", "link": "/admin/parcels/statusnarration/"},
+                ],
+            },
+        ],
     },
-    "BORDER_RADIUS": "8px",
-    "THEME": "light",
 }
