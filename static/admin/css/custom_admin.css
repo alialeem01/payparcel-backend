@@ -531,66 +531,102 @@ body.app-customers.model-customer #changelist-filter ul {
     padding: 0 !important;
 }
 
-/* ===== CUSTOMER FILTER: multi-column layout, keep each label+list glued together ===== */
+/* ===== CUSTOMER FILTER: single scrollable horizontal row ===== */
 body.app-customers.model-customer #changelist-filter {
-    display: block !important;
-    column-count: 4 !important;
-    column-gap: 32px !important;
-    padding: 20px 24px !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-start !important;
+    overflow-x: auto !important;
+    gap: 28px !important;
+    padding: 14px 20px !important;
+    max-width: 100%;
 }
 body.app-customers.model-customer #changelist-filter h2 {
-    column-span: all;
-    margin-bottom: 10px !important;
+    display: none !important; /* "FILTER" label already shown above via .module h2 */
 }
 
-/* keep each label glued to the list/details that follows it */
-body.app-customers.model-customer #changelist-filter h3 {
-    break-after: avoid-column;
-    break-inside: avoid-column;
-    font-size: 11px !important;
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--pp-text-muted) !important;
-    margin: 0 0 6px 0 !important;
-    padding: 0 !important;
-}
-body.app-customers.model-customer #changelist-filter ul {
-    break-inside: avoid-column;
-    margin: 0 0 22px 0 !important;
-    padding: 0 !important;
-    list-style: none;
-}
-body.app-customers.model-customer #changelist-filter li {
-    padding: 2px 0 !important;
-    white-space: nowrap;
-}
-body.app-customers.model-customer #changelist-filter details {
-    break-inside: avoid-column;
-    margin-bottom: 22px !important;
-}
+body.app-customers.model-customer #changelist-filter h3,
 body.app-customers.model-customer #changelist-filter summary {
-    font-size: 11px !important;
+    font-size: 10.5px !important;
     text-transform: uppercase;
     font-weight: 600;
     color: var(--pp-text-muted) !important;
-    margin: 0 0 6px 0 !important;
+    margin: 0 0 4px 0 !important;
     padding: 0 !important;
+    white-space: nowrap;
     cursor: pointer;
 }
+body.app-customers.model-customer #changelist-filter ul {
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none;
+    flex: 0 0 auto;
+    min-width: 90px;
+}
+body.app-customers.model-customer #changelist-filter li {
+    padding: 1px 0 !important;
+    white-space: nowrap;
+    border-left: none !important; /* removes the "All" pill/bar look */
+}
 
-/* date range block */
+/* Remove the selected-item bar/pill styling entirely - plain text like the rest */
+body.app-customers.model-customer #changelist-filter li.selected a {
+    color: var(--pp-blue) !important;
+    font-weight: 600;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+}
+body.app-customers.model-customer #changelist-filter li a {
+    color: var(--pp-text) !important;
+    font-size: 12px !important;
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+body.app-customers.model-customer #changelist-filter details {
+    flex: 0 0 auto;
+    margin: 0 !important;
+}
+
+/* Date range group: pinned first (leftmost) */
 body.app-customers.model-customer .rangefilter {
+    order: -1 !important;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    break-inside: avoid-column;
+    gap: 6px;
+    flex: 0 0 auto;
 }
 body.app-customers.model-customer .rangefilter input[type="text"] {
-    width: 100% !important;
+    width: 150px !important;
 }
 body.app-customers.model-customer .rangefilter .actions,
 body.app-customers.model-customer .rangefilter .search-buttons {
     display: flex;
-    gap: 8px;
-    margin-top: 4px;
+    gap: 6px;
+    margin-top: 2px;
+}
+
+/* ===== MOVE ADD BUTTON INTO BLUE BREADCRUMB BAR ===== */
+#content {
+    position: relative !important;
+}
+.object-tools {
+    position: absolute !important;
+    top: -46px !important;
+    right: 24px !important;
+    margin: 0 !important;
+    z-index: 20;
+}
+.object-tools .addlink {
+    background: rgba(255,255,255,0.15) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+    padding: 5px 12px !important;
+    border-radius: 6px;
+    font-size: 12px !important;
+}
+.object-tools .addlink:hover {
+    background: rgba(255,255,255,0.25) !important;
 }
