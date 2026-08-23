@@ -351,3 +351,25 @@ a:hover { color: var(--pp-blue-dark); }
 .dashboard .module { background: #ffffff !important; }
 .dashboard td a, .dashboard th a { font-weight: 500; color: var(--pp-text) !important; }
 .dashboard td a:hover { color: var(--pp-blue) !important; }
+
+/* ===== FORCE light mode specifically on dashboard homepage modules ===== */
+.dashboard .module,
+#content-main.app-list .module,
+#content-main.app-list .module table,
+#content-main.app-list .module tbody,
+#content-main.app-list .module tr,
+#content-main.app-list .module th,
+#content-main.app-list .module td {
+    background: #ffffff !important;
+    color: var(--pp-text) !important;
+}
+#content-main.app-list .module th a,
+#content-main.app-list .module td a {
+    color: var(--pp-blue) !important;
+}
+#content-main.app-list .module .addlink {
+    color: var(--pp-blue) !important;
+}
+#content-main.app-list .module .changelink {
+    color: var(--pp-text-muted) !important;
+}
