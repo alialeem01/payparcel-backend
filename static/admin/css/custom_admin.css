@@ -530,3 +530,57 @@ body.app-customers.model-customer #changelist-filter summary {
 body.app-customers.model-customer #changelist-filter ul {
     padding: 0 !important;
 }
+
+/* ===== CUSTOMER FILTER: force uniform grid alignment ===== */
+body.app-customers.model-customer #changelist-filter {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 20px 24px !important;
+    align-items: start !important;
+}
+body.app-customers.model-customer #changelist-filter h2 {
+    grid-column: 1 / -1;
+}
+
+/* Each filter block (both <h3>+<ul> style and <details> style) becomes a grid cell */
+body.app-customers.model-customer #changelist-filter > h3,
+body.app-customers.model-customer #changelist-filter > ul,
+body.app-customers.model-customer #changelist-filter details {
+    min-width: 0;
+}
+
+/* Normalize label style across both filter render types */
+body.app-customers.model-customer #changelist-filter h3,
+body.app-customers.model-customer #changelist-filter summary {
+    font-size: 11px !important;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--pp-text-muted) !important;
+    margin: 0 0 6px 0 !important;
+    padding: 0 !important;
+}
+body.app-customers.model-customer #changelist-filter ul {
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none;
+}
+body.app-customers.model-customer #changelist-filter li {
+    padding: 2px 0 !important;
+    white-space: nowrap;
+}
+
+/* Date range block sits cleanly in its own cell */
+body.app-customers.model-customer .rangefilter {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+body.app-customers.model-customer .rangefilter input[type="text"] {
+    width: 100% !important;
+}
+body.app-customers.model-customer .rangefilter .actions,
+body.app-customers.model-customer .rangefilter .search-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
