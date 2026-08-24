@@ -11,3 +11,8 @@ button[title="Toggle sidebar"],
     width: 260px !important;
     min-width: 260px !important;
 }
+
+.module.app-list caption:empty,
+.module.app-list h2:empty {
+    display: none !important;
+}
