@@ -12,7 +12,7 @@ python-decouple==3.8
 sqlparse==0.6.0
 tzdata==2026.3
 whitenoise==6.12.0
-django-admin-list-filter-dropdown
+django-unfold-admin-list-filter-dropdown
 django-admin-rangefilter
 openpyxl
 django-unfold

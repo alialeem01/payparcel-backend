@@ -1,10 +1,7 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin, TabularInline
-from unfold.contrib.filters.admin import (
-    FieldTextFilter,
-    ChoicesDropdownFilter,
-    RangeDateFilter,
-)
+from django_unfold_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter
+from unfold.contrib.filters.admin import ChoicesDropdownFilter, RangeDateFilter
 from .models import Customer, ServiceTypeList, RateTemplateEntry, TaxTemplateEntry, CourierPickupList
 
 
@@ -35,16 +32,16 @@ class CustomerAdmin(ModelAdmin):
     list_filter_submit = True  # adds a Submit button at the bottom of the filter panel
 
     list_filter = (
-        ('customer_name', FieldTextFilter),
-        ('sales_person', FieldTextFilter),
-        ('customer_brand_name', FieldTextFilter),
-        ('customer_branch', FieldTextFilter),
-        ('customer_cnic', FieldTextFilter),
-        ('customer_phone_number', FieldTextFilter),
-        ('customer_bank_ibn_number', FieldTextFilter),
-        ('customer_status', ChoicesDropdownFilter),
-        ('customer_created_at', RangeDateFilter),
-    )
+    ('customer_name', DropdownFilter),
+    ('sales_person', DropdownFilter),
+    ('customer_brand_name', DropdownFilter),
+    ('customer_branch', DropdownFilter),
+    ('customer_cnic', DropdownFilter),
+    ('customer_phone_number', DropdownFilter),
+    ('customer_bank_ibn_number', DropdownFilter),
+    ('customer_status', ChoicesDropdownFilter),
+    ('customer_created_at', RangeDateFilter),
+)
 
     fieldsets = (
         ('Personal Details', {
