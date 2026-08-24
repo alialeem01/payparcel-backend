@@ -10,9 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 from django.templatetags.static import static
-import os
-import dj_database_url
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 from decouple import config
+import dj_database_url
 
 from pathlib import Path
 
@@ -187,7 +188,34 @@ UNFOLD = {
         "show_search": True,
         "show_all_applications": False,
         "navigation": [
-            # ... (keep your existing navigation block from before)
+            {
+                "title": _("Dashboard"),
+                "separator": True,
+                "items": [
+                    {
+                        "title": _("Home"),
+                        "icon": "dashboard",
+                        "link": reverse_lazy("admin:index"),
+                    },
+                ],
+            },
+            {
+                "title": _("App"),
+                "separator": True,
+                "collapsible": False,
+                "items": [
+                    {"title": _("Customers"), "icon": "person", "link": reverse_lazy("admin:customers_customer_changelist")},
+                    {"title": _("Customer parcels"), "icon": "inventory_2", "link": reverse_lazy("admin:parcels_customerparcel_changelist")},
+                    {"title": _("Pickup sheets"), "icon": "local_shipping", "link": reverse_lazy("admin:operations_pickupsheet_changelist")},
+                    {"title": _("Loadsheets"), "icon": "assignment", "link": reverse_lazy("admin:loadsheets_loadsheet_changelist")},
+                    {"title": _("Manifests"), "icon": "description", "link": reverse_lazy("admin:operations_manifest_changelist")},
+                    {"title": _("Delivery sheets"), "icon": "task", "link": reverse_lazy("admin:operations_deliverysheet_changelist")},
+                    {"title": _("Invoices"), "icon": "receipt_long", "link": reverse_lazy("admin:invoices_invoice_changelist")},
+                    {"title": _("Destinations"), "icon": "location_on", "link": reverse_lazy("admin:locations_destination_changelist")},
+                    {"title": _("Branchs"), "icon": "store", "link": reverse_lazy("admin:locations_branch_changelist")},
+                    {"title": _("Status narrations"), "icon": "notes", "link": reverse_lazy("admin:parcels_statusnarration_changelist")},
+                ],
+            },
         ],
     },
 }
