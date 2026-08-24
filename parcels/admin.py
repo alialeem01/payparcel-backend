@@ -1,6 +1,7 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
-from unfold.contrib.filters.admin import ChoicesDropdownFilter, RelatedDropdownFilter
+from unfold.contrib.filters.admin import ChoicesDropdownFilter
+from django_unfold_admin_listfilter_dropdown.filters import DropdownFilter
 from .models import CustomerParcel, StatusNarration
 
 
@@ -12,11 +13,11 @@ class CustomerParcelAdmin(ModelAdmin):
     search_fields = ('cn', 'order_number', 'consignee', 'api_tracking_no')
     list_filter_submit = True
     list_filter = (
-        ('status', ChoicesDropdownFilter),
-        'active',
-        ('tpl_payment_status', ChoicesDropdownFilter),
-        ('destination', RelatedDropdownFilter),
-    )
+    ('status', ChoicesDropdownFilter),
+    'active',
+    ('tpl_payment_status', ChoicesDropdownFilter),
+    ('destination', DropdownFilter),
+)
     readonly_fields = ('cn', 'net_total', 'last_update', 'shipment_date')
 
     fieldsets = (
