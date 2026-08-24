@@ -16,3 +16,8 @@ button[title="Toggle sidebar"],
 .module.app-list h2:empty {
     display: none !important;
 }
+/* ===== WIDEN MAIN CONTENT - OVERRIDE TAILWIND'S container CLASS ===== */
+#content.container {
+    max-width: 100% !important;
+    width: 100% !important;
+}
