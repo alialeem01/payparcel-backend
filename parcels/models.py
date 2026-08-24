@@ -49,6 +49,7 @@ class CustomerParcel(models.Model):
     api_sp_type = models.CharField(max_length=100, choices=API_SP_TYPE_CHOICES, default='OVERNIGHT')
     api_tracking_no = models.CharField(max_length=100, blank=True, null=True)
     tpl_payment_status = models.CharField(max_length=10, choices=PAYMENT_STATUS, default='Unpaid')
+    customer_payment_status = models.CharField(max_length=10, choices=PAYMENT_STATUS, default='Unpaid')
 
     consignee = models.CharField(max_length=255, blank=True, null=True)
     consignee_phone = models.CharField(max_length=20, blank=True, null=True)
