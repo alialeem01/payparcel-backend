@@ -21,3 +21,12 @@ button[title="Toggle sidebar"],
     max-width: 100% !important;
     width: 100% !important;
 }
+
+/* ===== WIDEN TOP HEADER BAR - MATCH MAIN CONTENT WIDTH ===== */
+#header-inner {
+    max-width: 100% !important;
+}
+.bg-white.border-b.border-base-200 > .container {
+    max-width: 100% !important;
+    width: 100% !important;
+}
