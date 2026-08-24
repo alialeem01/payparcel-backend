@@ -31,7 +31,7 @@ def get_app_list(self, request, app_label=None):
     all_models.sort(key=sort_key)
 
     merged_app = {
-        'name': 'App',
+        'name': '',
         'app_label': 'app',
         'app_url': '#',
         'has_module_perms': True,
