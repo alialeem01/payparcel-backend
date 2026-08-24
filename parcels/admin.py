@@ -7,17 +7,18 @@ from .models import CustomerParcel, StatusNarration
 
 @admin.register(CustomerParcel)
 class CustomerParcelAdmin(ModelAdmin):
-    list_display = ('cn', 'shipper', 'order_number', 'status', 'customer_payment_status', 'destination', 
+    list_display = ('cn', 'shipper', 'order_number', 'status', 'customer_payment_status', 'destination',
                      'delivery_rider_service_provider', 'cod', 'net_total', 'branch', 'payment_status_display', 'active')
-    list_editable = ('status','customer_payment_status')
+    list_editable = ('status', 'customer_payment_status')
     search_fields = ('cn', 'order_number', 'consignee', 'api_tracking_no')
     list_filter_submit = True
     list_filter = (
-    ('status', ChoicesDropdownFilter),
-    'active',
-    ('tpl_payment_status', ChoicesDropdownFilter),
-    ('destination', DropdownFilter),
-)
+        ('status', ChoicesDropdownFilter),
+        'active',
+        ('customer_payment_status', ChoicesDropdownFilter),
+        ('tpl_payment_status', ChoicesDropdownFilter),
+        ('destination', DropdownFilter),
+    )
     readonly_fields = ('cn', 'net_total', 'last_update', 'shipment_date')
 
     fieldsets = (
@@ -25,7 +26,7 @@ class CustomerParcelAdmin(ModelAdmin):
             'fields': (
                 ('cn', 'shipper', 'destination'),
                 ('delivery_rider_service_provider', 'api_sp_type'),
-                ('api_tracking_no', 'tpl_payment_status'),
+                ('api_tracking_no', 'tpl_payment_status', 'customer_payment_status'),
                 ('consignee', 'consignee_phone'),
                 ('alternate_phone', 'order_number', 'issue_destination'),
                 ('cod', 'rts_cod', 'parcel_declared_value', 'discount'),
