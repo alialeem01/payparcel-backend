@@ -1,0 +1,13 @@
+/* Force sidebar to always stay expanded - hide the collapse toggle */
+[data-sidebar-toggle],
+button[title="Toggle sidebar"],
+.sidebar-toggle {
+    display: none !important;
+}
+
+/* Prevent sidebar from collapsing to icon-only width */
+#main-sidebar,
+[data-sidebar] {
+    width: 260px !important;
+    min-width: 260px !important;
+}
