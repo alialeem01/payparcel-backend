@@ -1,13 +1,20 @@
 from django.contrib import admin
+from unfold.admin import ModelAdmin
+from unfold.contrib.filters.admin import ChoicesDropdownFilter, FieldTextFilter
 from .models import Invoice
 
+
 @admin.register(Invoice)
-class InvoiceAdmin(admin.ModelAdmin):
+class InvoiceAdmin(ModelAdmin):
     list_display = ('invoice_number', 'status', 'date', 'customer', 'account_name', 'cod', 'flyer_charges', 'total_tax', 'delivery_charges', 'net_amount', 'parcel_from', 'parcel_to', 'total_parcel')
     filter_horizontal = ('parcels',)
     readonly_fields = ('invoice_number', 'date', 'cod', 'flyer_charges', 'delivery_charges')
     search_fields = ('invoice_number', 'customer__customer_name')
-    list_filter = ('status', 'account_name')
+    list_filter_submit = True
+    list_filter = (
+        ('status', ChoicesDropdownFilter),
+        ('account_name', FieldTextFilter),
+    )
 
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)

@@ -1,44 +1,49 @@
 from django.contrib import admin
-from django_admin_listfilter_dropdown.filters import DropdownFilter
-from rangefilter.filters import DateRangeFilter
+from unfold.admin import ModelAdmin, TabularInline
+from unfold.contrib.filters.admin import (
+    FieldTextFilter,
+    ChoicesDropdownFilter,
+    RangeDateFilter,
+)
 from .models import Customer, ServiceTypeList, RateTemplateEntry, TaxTemplateEntry, CourierPickupList
 
 
-class ServiceTypeInline(admin.TabularInline):
+class ServiceTypeInline(TabularInline):
     model = ServiceTypeList
     extra = 1
 
 
-class RateTemplateInline(admin.TabularInline):
+class RateTemplateInline(TabularInline):
     model = RateTemplateEntry
     extra = 1
 
 
-class TaxTemplateInline(admin.TabularInline):
+class TaxTemplateInline(TabularInline):
     model = TaxTemplateEntry
     extra = 1
 
 
-class CourierPickupInline(admin.TabularInline):
+class CourierPickupInline(TabularInline):
     model = CourierPickupList
     extra = 1
 
 
 @admin.register(Customer)
-class CustomerAdmin(admin.ModelAdmin):
+class CustomerAdmin(ModelAdmin):
     list_display = ('customer_name', 'id', 'customer_brand_name', 'customer_cnic', 'customer_phone_number', 'sales_person', 'customer_branch', 'customer_status')
     search_fields = ('customer_name', 'customer_brand_name', 'customer_cnic', 'customer_phone_number')
+    list_filter_submit = True  # adds a Submit button at the bottom of the filter panel
 
     list_filter = (
-        ('customer_name', DropdownFilter),
-        ('sales_person', DropdownFilter),
-        ('customer_brand_name', DropdownFilter),
-        ('customer_branch', DropdownFilter),
-        ('customer_cnic', DropdownFilter),
-        ('customer_phone_number', DropdownFilter),
-        ('customer_bank_ibn_number', DropdownFilter),
-        'customer_status',
-        ('customer_created_at', DateRangeFilter),
+        ('customer_name', FieldTextFilter),
+        ('sales_person', FieldTextFilter),
+        ('customer_brand_name', FieldTextFilter),
+        ('customer_branch', FieldTextFilter),
+        ('customer_cnic', FieldTextFilter),
+        ('customer_phone_number', FieldTextFilter),
+        ('customer_bank_ibn_number', FieldTextFilter),
+        ('customer_status', ChoicesDropdownFilter),
+        ('customer_created_at', RangeDateFilter),
     )
 
     fieldsets = (

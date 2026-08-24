@@ -1,13 +1,22 @@
 from django.contrib import admin
-from .models import CustomerParcel
+from unfold.admin import ModelAdmin
+from unfold.contrib.filters.admin import ChoicesDropdownFilter, RelatedDropdownFilter
+from .models import CustomerParcel, StatusNarration
+
 
 @admin.register(CustomerParcel)
-class CustomerParcelAdmin(admin.ModelAdmin):
+class CustomerParcelAdmin(ModelAdmin):
     list_display = ('cn', 'shipper', 'order_number', 'status', 'destination',
                      'delivery_rider_service_provider', 'cod', 'net_total', 'branch', 'payment_status_display', 'active')
     list_editable = ('status',)
     search_fields = ('cn', 'order_number', 'consignee', 'api_tracking_no')
-    list_filter = ('status', 'active', 'tpl_payment_status', 'destination')
+    list_filter_submit = True
+    list_filter = (
+        ('status', ChoicesDropdownFilter),
+        'active',
+        ('tpl_payment_status', ChoicesDropdownFilter),
+        ('destination', RelatedDropdownFilter),
+    )
     readonly_fields = ('cn', 'net_total', 'last_update', 'shipment_date')
 
     fieldsets = (
@@ -53,8 +62,7 @@ class CustomerParcelAdmin(admin.ModelAdmin):
         return obj.tpl_payment_status
     payment_status_display.short_description = 'Payment Status'
 
-from .models import StatusNarration
 
 @admin.register(StatusNarration)
-class StatusNarrationAdmin(admin.ModelAdmin):
+class StatusNarrationAdmin(ModelAdmin):
     list_display = ('status', 'narration')
