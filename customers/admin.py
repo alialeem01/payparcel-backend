@@ -106,10 +106,11 @@ class CustomerAdmin(ModelAdmin):
             )
         }),
         ('Rate Details', {
-            'fields': (
-                ('weight_calculate', 'additional_calculate', 'calculate_type', 'return_rate_apply', 'limited_service_type'),
-                ('zone_type', 'default_rate_template', 'default_tax_template'),
-            )
+    'fields': (
+        ('weight_calculate', 'additional_calculate', 'calculate_type'),
+        ('return_rate_apply', 'limited_service_type', 'zone_type'),
+        ('default_rate_template', 'default_tax_template'),
+             )
         }),
         ('Bank Details', {
             'fields': (
