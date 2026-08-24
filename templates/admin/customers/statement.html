@@ -1,0 +1,39 @@
+{% extends "unfold/layouts/base.html" %}
+{% block content %}
+<div class="p-4">
+    <h1 class="text-lg font-semibold mb-4">Statement — {{ customer.customer_name }}</h1>
+
+    <div class="overflow-x-auto border border-base-200 dark:border-base-800 rounded-default shadow-xs">
+        <table class="w-full border-separate border-spacing-0">
+            <thead>
+                <tr class="bg-primary-600 text-white text-xs uppercase">
+                    <th class="px-3 py-2 text-left">CN</th>
+                    <th class="px-3 py-2 text-left">Delivered</th>
+                    <th class="px-3 py-2 text-left">COD</th>
+                    <th class="px-3 py-2 text-left">Net Owed</th>
+                    <th class="px-3 py-2 text-left">Status</th>
+                    <th class="px-3 py-2 text-left">Running Balance</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                <tr class="border-t border-base-200 dark:border-base-800">
+                    <td class="px-3 py-2">{{ row.parcel.cn }}</td>
+                    <td class="px-3 py-2">{{ row.parcel.shipment_date|default:row.parcel.last_update }}</td>
+                    <td class="px-3 py-2">{{ row.parcel.cod }}</td>
+                    <td class="px-3 py-2">{{ row.net_owed }}</td>
+                    <td class="px-3 py-2">{{ row.parcel.customer_payment_status }}</td>
+                    <td class="px-3 py-2 font-semibold">{{ row.running_balance }}</td>
+                </tr>
+                {% empty %}
+                <tr><td class="px-3 py-2" colspan="6">No delivered parcels yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-4 text-lg font-semibold">
+        Total Balance Owed: {{ final_balance }}
+    </div>
+</div>
+{% endblock %}

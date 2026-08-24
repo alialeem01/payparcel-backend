@@ -5,7 +5,9 @@ from unfold.decorators import display
 from django_unfold_admin_listfilter_dropdown.filters import DropdownFilter
 from unfold.contrib.filters.admin import ChoicesDropdownFilter, RangeDateFilter
 from .models import Customer, ServiceTypeList, RateTemplateEntry, TaxTemplateEntry, CourierPickupList
-
+from django.urls import path
+from django.shortcuts import render, get_object_or_404
+from django.contrib.admin.views.decorators import staff_member_required
 
 class ServiceTypeInline(TabularInline):
     model = ServiceTypeList
@@ -38,6 +40,43 @@ class CustomerAdmin(ModelAdmin):
     )
     search_fields = ('customer_name', 'customer_brand_name', 'customer_cnic', 'customer_phone_number')
     list_filter_submit = True
+
+def get_urls(self):
+    urls = super().get_urls()
+    custom_urls = [
+        path(
+            '<int:customer_id>/statement/',
+            self.admin_site.admin_view(self.customer_statement_view),
+            name='customers_customer_statement',
+        ),
+    ]
+    return custom_urls + urls
+
+def customer_statement_view(self, request, customer_id):
+    customer = get_object_or_404(Customer, pk=customer_id)
+    parcels = customer.parcels.filter(status='Delivered').order_by('shipment_date', 'last_update')
+
+    rows = []
+    running_balance = 0
+    for p in parcels:
+        net_owed = p.cod - p.total_gst - p.total_feul_tax - p.delivery_charge
+        if p.customer_payment_status == 'Unpaid':
+            running_balance += net_owed
+        rows.append({
+            'parcel': p,
+            'net_owed': net_owed,
+            'running_balance': running_balance,
+        })
+
+    context = {
+        **self.admin_site.each_context(request),
+        'title': f'Statement — {customer.customer_name}',
+        'customer': customer,
+        'rows': rows,
+        'final_balance': running_balance,
+        'opts': self.model._meta,
+    }
+    return render(request, 'admin/customers/statement.html', context)
 
     list_filter = (
         ('customer_name', DropdownFilter),
@@ -72,10 +111,10 @@ class CustomerAdmin(ModelAdmin):
 
     @display(description='View Account')
     def view_account(self, obj):
-        from django.utils.html import format_html
-        from django.urls import reverse
-        url = reverse('admin:parcels_customerparcel_changelist') + f'?shipper__id__exact={obj.pk}'
-        return format_html('<a href="{}">View</a>', url)
+    from django.utils.html import format_html
+    from django.urls import reverse
+    url = reverse('admin:customers_customer_statement', args=[obj.pk])
+    return format_html('<a href="{}">View</a>', url)
 
     fieldsets = (
         ('Personal Details', {
