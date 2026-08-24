@@ -200,7 +200,7 @@ UNFOLD = {
                 ],
             },
             {
-                "title": _("App"),
+                "title":"",
                 "separator": True,
                 "collapsible": False,
                 "items": [
