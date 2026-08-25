@@ -6,9 +6,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from unfold.admin import ModelAdmin
 from unfold.contrib.filters.admin import ChoicesDropdownFilter
 from django_unfold_admin_listfilter_dropdown.filters import DropdownFilter
-from .models import PickupSheet, Manifest, DeliverySheet
 from parcels.models import PAKISTAN_CITIES
-
+from .models import PickupSheet, Manifest, DeliverySheet
 
 
 @admin.register(PickupSheet)
@@ -45,12 +44,9 @@ class PickupSheetAdmin(ModelAdmin):
             parcel_ids = request.POST.getlist('parcels')
 
             if not rider_id or not parcel_ids:
-            self.message_user(request, f'Pickup Sheet {sheet.sheet_number} created with {parcels.count()} order(s).')
-            if '_addanother' in request.POST:
+                self.message_user(request, 'Select a rider and at least one order.', level=messages.ERROR)
                 return redirect('admin:operations_pickupsheet_add')
-            if '_continue' in request.POST:
-                return redirect('admin:operations_pickupsheet_change', sheet.pk)
-                return redirect('admin:operations_pickupsheet_changelist')
+
             rider = Rider.objects.get(pk=rider_id)
             parcels = CustomerParcel.objects.filter(pk__in=parcel_ids, status='Order')
 
@@ -59,6 +55,11 @@ class PickupSheetAdmin(ModelAdmin):
             parcels.update(status='Ready to Pickup', assigned_rider=rider)
 
             self.message_user(request, f'Pickup Sheet {sheet.sheet_number} created with {parcels.count()} order(s).')
+
+            if '_addanother' in request.POST:
+                return redirect('admin:operations_pickupsheet_add')
+            if '_continue' in request.POST:
+                return redirect('admin:operations_pickupsheet_change', sheet.pk)
             return redirect('admin:operations_pickupsheet_changelist')
 
         unassigned_orders = CustomerParcel.objects.filter(status='Order').select_related('shipper')
@@ -95,12 +96,8 @@ class PickupSheetAdmin(ModelAdmin):
             parcel_ids = set(request.POST.getlist('parcels'))
 
             if not rider_id:
-                self.message_user(request, f'Pickup Sheet {sheet.sheet_number} updated.')
-            if '_addanother' in request.POST:
-                return redirect('admin:operations_pickupsheet_add')
-            if '_continue' in request.POST:
+                self.message_user(request, 'Select a rider.', level=messages.ERROR)
                 return redirect('admin:operations_pickupsheet_change', object_id)
-                return redirect('admin:operations_pickupsheet_changelist')
 
             rider = Rider.objects.get(pk=rider_id)
 
@@ -119,6 +116,11 @@ class PickupSheetAdmin(ModelAdmin):
             sheet.save()
 
             self.message_user(request, f'Pickup Sheet {sheet.sheet_number} updated.')
+
+            if '_addanother' in request.POST:
+                return redirect('admin:operations_pickupsheet_add')
+            if '_continue' in request.POST:
+                return redirect('admin:operations_pickupsheet_change', object_id)
             return redirect('admin:operations_pickupsheet_changelist')
 
         assigned_parcels = sheet.parcels.select_related('shipper').all()
