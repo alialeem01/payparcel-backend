@@ -9,6 +9,7 @@ from .models import CustomerParcel, StatusNarration
 class CustomerParcelAdmin(ModelAdmin):
     list_display = ('cn', 'shipper', 'order_number', 'status', 'customer_payment_status', 'destination',
                      'delivery_rider_service_provider', 'cod', 'net_total', 'branch', 'payment_status_display', 'active')
+    actions = ['assign_to_rider']
     list_editable = ('status', 'customer_payment_status')
     search_fields = ('cn', 'order_number', 'consignee', 'api_tracking_no')
     list_filter_submit = True
@@ -20,6 +21,45 @@ class CustomerParcelAdmin(ModelAdmin):
         ('destination', DropdownFilter),
     )
     readonly_fields = ('cn', 'net_total', 'last_update', 'shipment_date')
+
+   
+def assign_to_rider(self, request, queryset):
+    from django.contrib import messages
+    from django.shortcuts import render
+    from riders.models import Rider
+    from operations.models import PickupSheet
+
+    if queryset.exclude(status='Order').exists():
+        self.message_user(request, 'Only parcels with status "Order" can be assigned to a rider.', level=messages.ERROR)
+        return
+
+    if 'apply' in request.POST:
+        rider_id = request.POST.get('rider')
+        rider = Rider.objects.get(pk=rider_id)
+
+        shippers = set(queryset.values_list('shipper_id', flat=True))
+        sheet_shipper_id = shippers.pop() if len(shippers) == 1 else None
+
+        sheet = PickupSheet.objects.create(rider=rider, shipper_id=sheet_shipper_id)
+        sheet.parcels.set(queryset)
+
+        queryset.update(status='Ready to Pickup', assigned_rider=rider)
+
+        self.message_user(request, f'{queryset.count()} parcel(s) assigned to {rider.name}. Pickup Sheet {sheet.sheet_number} created.')
+        return
+
+    riders = Rider.objects.filter(is_active=True)
+    context = {
+        **self.admin_site.each_context(request),
+        'title': 'Assign to Rider',
+        'queryset': queryset,
+        'riders': riders,
+        'opts': self.model._meta,
+        'action_checkbox_name': 'admin-action-form',
+    }
+    return render(request, 'admin/parcels/assign_rider_action.html', context)
+
+assign_to_rider.short_description = 'Assign selected orders to a rider'
 
     fieldsets = (
         ('Parcel Details', {

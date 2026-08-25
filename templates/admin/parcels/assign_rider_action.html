@@ -1,0 +1,31 @@
+{% extends "unfold/layouts/base.html" %}
+{% block content %}
+<div class="p-4">
+    <h1 class="text-lg font-semibold mb-4">Assign to Rider</h1>
+    <p class="mb-4">Assigning {{ queryset.count }} parcel(s):</p>
+    <ul class="mb-4 list-disc pl-5">
+        {% for p in queryset %}
+            <li>{{ p.cn }} — {{ p.shipper.customer_name }}</li>
+        {% endfor %}
+    </ul>
+
+    <form method="post">
+        {% csrf_token %}
+        {% for obj in queryset %}
+            <input type="hidden" name="_selected_action" value="{{ obj.pk }}">
+        {% endfor %}
+        <input type="hidden" name="action" value="assign_to_rider">
+
+        <label class="block font-medium mb-2">Select Rider</label>
+        <select name="rider" required class="border border-base-200 rounded-default px-3 py-2 mb-4 w-full max-w-sm">
+            {% for rider in riders %}
+                <option value="{{ rider.pk }}">{{ rider.name }} ({{ rider.branch|default:"-" }})</option>
+            {% endfor %}
+        </select>
+
+        <div>
+            <button type="submit" name="apply" class="bg-primary-600 text-white px-4 py-2 rounded-default">Confirm Assignment</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

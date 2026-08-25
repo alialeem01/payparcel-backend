@@ -6,8 +6,8 @@ class PickupSheet(models.Model):
     STATUS_CHOICES = [('Uncomplete', 'Uncomplete'), ('Complete', 'Complete')]
 
     sheet_number = models.CharField(max_length=50, blank=True, editable=False)
-    rider = models.CharField(max_length=100, blank=True, null=True)
-    shipper = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='pickup_sheets')
+    rider = models.ForeignKey('riders.Rider', on_delete=models.SET_NULL, null=True, blank=True, related_name='pickup_sheets')
+    shipper = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='pickup_sheets', null=True, blank=True)
     parcels = models.ManyToManyField(CustomerParcel, related_name='pickup_sheets', blank=True)
     loadsheet = models.CharField(max_length=100, blank=True, null=True)
     user = models.CharField(max_length=100, blank=True, null=True, editable=False)
