@@ -168,6 +168,9 @@ UNFOLD = {
     "SHOW_VIEW_ON_SITE": True,
     "THEME": "light",
     "BORDER_RADIUS": "8px",
+    "SCRIPTS": [
+    lambda request: static("admin/js/unfold_overrides.js"),
+    ],
     "STYLES": [
         lambda request: static("admin/css/unfold_overrides.css"),
     ],
