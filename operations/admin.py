@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib import messages
 from django.utils.html import format_html
 from django.urls import reverse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from unfold.admin import ModelAdmin
 from unfold.contrib.filters.admin import ChoicesDropdownFilter
 from django_unfold_admin_listfilter_dropdown.filters import DropdownFilter
@@ -11,7 +11,7 @@ from .models import PickupSheet, Manifest, DeliverySheet
 
 @admin.register(PickupSheet)
 class PickupSheetAdmin(ModelAdmin):
-    list_display = ('sheet_number', 'rider', 'loadsheet', 'total_pickup_parcel', 'user', 'branch', 'pickup_status', 'row_actions')
+    list_display = ('sheet_number', 'rider', 'total_pickup_parcel', 'user', 'branch', 'pickup_status', 'row_actions')
     readonly_fields = ('sheet_number',)
     search_fields = ('sheet_number',)
     list_filter_submit = True
@@ -29,6 +29,10 @@ class PickupSheetAdmin(ModelAdmin):
             edit_url, delete_url
         )
     row_actions.short_description = 'Actions'
+
+    def delete_model(self, request, obj):
+        obj.parcels.update(status='Order', assigned_rider=None)
+        super().delete_model(request, obj)
 
     def add_view(self, request, form_url='', extra_context=None):
         from parcels.models import CustomerParcel
@@ -61,7 +65,6 @@ class PickupSheetAdmin(ModelAdmin):
             unassigned_orders = unassigned_orders.filter(city=selected_city)
 
         riders = Rider.objects.filter(is_active=True)
-
         next_sheet_number_preview = f"PS{__import__('datetime').date.today().year}{PickupSheet.objects.count() + 1}"
 
         context = {
@@ -75,6 +78,66 @@ class PickupSheetAdmin(ModelAdmin):
             'opts': self.model._meta,
         }
         return render(request, 'admin/operations/add_pickup_sheet.html', context)
+
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        from parcels.models import CustomerParcel
+        from riders.models import Rider
+
+        sheet = get_object_or_404(PickupSheet, pk=object_id)
+
+        if request.method == 'POST':
+            rider_id = request.POST.get('rider')
+            parcel_ids = set(request.POST.getlist('parcels'))
+
+            if not rider_id:
+                self.message_user(request, 'Select a rider.', level=messages.ERROR)
+                return redirect('admin:operations_pickupsheet_change', object_id)
+
+            rider = Rider.objects.get(pk=rider_id)
+
+            current_parcel_ids = set(str(pk) for pk in sheet.parcels.values_list('pk', flat=True))
+            removed_ids = current_parcel_ids - parcel_ids
+            added_ids = parcel_ids - current_parcel_ids
+
+            if removed_ids:
+                CustomerParcel.objects.filter(pk__in=removed_ids).update(status='Order', assigned_rider=None)
+
+            if added_ids:
+                CustomerParcel.objects.filter(pk__in=added_ids, status='Order').update(status='Ready to Pickup', assigned_rider=rider)
+
+            sheet.rider = rider
+            sheet.parcels.set(CustomerParcel.objects.filter(pk__in=parcel_ids))
+            sheet.save()
+
+            self.message_user(request, f'Pickup Sheet {sheet.sheet_number} updated.')
+            return redirect('admin:operations_pickupsheet_changelist')
+
+        assigned_parcels = sheet.parcels.select_related('shipper').all()
+        assigned_ids = set(str(pk) for pk in assigned_parcels.values_list('pk', flat=True))
+
+        unassigned_orders = CustomerParcel.objects.filter(status='Order').select_related('shipper')
+
+        selected_city = request.GET.get('city', '')
+        cities = unassigned_orders.exclude(city__isnull=True).exclude(city='').values_list('city', flat=True).distinct().order_by('city')
+        if selected_city:
+            unassigned_orders = unassigned_orders.filter(city=selected_city)
+
+        combined_orders = list(assigned_parcels) + [p for p in unassigned_orders if str(p.pk) not in assigned_ids]
+
+        riders = Rider.objects.filter(is_active=True)
+
+        context = {
+            **self.admin_site.each_context(request),
+            'title': f'Edit Pickup Sheet - {sheet.sheet_number}',
+            'sheet': sheet,
+            'orders': combined_orders,
+            'assigned_ids': assigned_ids,
+            'riders': riders,
+            'cities': cities,
+            'selected_city': selected_city,
+            'opts': self.model._meta,
+        }
+        return render(request, 'admin/operations/change_pickup_sheet.html', context)
 
 
 @admin.register(Manifest)

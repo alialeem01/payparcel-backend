@@ -4,6 +4,27 @@ from django.core.files.base import ContentFile
 from django.db import models
 from customers.models import Customer
 
+PAKISTAN_CITIES = [
+    ('Karachi', 'Karachi'), ('Lahore', 'Lahore'), ('Islamabad', 'Islamabad'), ('Rawalpindi', 'Rawalpindi'),
+    ('Faisalabad', 'Faisalabad'), ('Multan', 'Multan'), ('Peshawar', 'Peshawar'), ('Quetta', 'Quetta'),
+    ('Sialkot', 'Sialkot'), ('Gujranwala', 'Gujranwala'), ('Hyderabad', 'Hyderabad'), ('Bahawalpur', 'Bahawalpur'),
+    ('Sargodha', 'Sargodha'), ('Sukkur', 'Sukkur'), ('Larkana', 'Larkana'), ('Sheikhupura', 'Sheikhupura'),
+    ('Rahim Yar Khan', 'Rahim Yar Khan'), ('Jhang', 'Jhang'), ('Gujrat', 'Gujrat'), ('Mardan', 'Mardan'),
+    ('Kasur', 'Kasur'), ('Dera Ghazi Khan', 'Dera Ghazi Khan'), ('Sahiwal', 'Sahiwal'), ('Nawabshah', 'Nawabshah'),
+    ('Mingora', 'Mingora'), ('Okara', 'Okara'), ('Mirpur Khas', 'Mirpur Khas'), ('Chiniot', 'Chiniot'),
+    ('Kamoke', 'Kamoke'), ('Mandi Bahauddin', 'Mandi Bahauddin'), ('Jhelum', 'Jhelum'), ('Sadiqabad', 'Sadiqabad'),
+    ('Jacobabad', 'Jacobabad'), ('Shikarpur', 'Shikarpur'), ('Khanewal', 'Khanewal'), ('Hafizabad', 'Hafizabad'),
+    ('Kohat', 'Kohat'), ('Muzaffargarh', 'Muzaffargarh'), ('Khanpur', 'Khanpur'), ('Gojra', 'Gojra'),
+    ('Mandi Bahauddin', 'Mandi Bahauddin'), ('Abbottabad', 'Abbottabad'), ('Turbat', 'Turbat'), ('Dadu', 'Dadu'),
+    ('Bahawalnagar', 'Bahawalnagar'), ('Muridke', 'Muridke'), ('Pakpattan', 'Pakpattan'), ('Attock', 'Attock'),
+    ('Vehari', 'Vehari'), ('Nowshera', 'Nowshera'), ('Chakwal', 'Chakwal'), ('Swabi', 'Swabi'),
+    ('Dera Ismail Khan', 'Dera Ismail Khan'), ('Chishtian', 'Chishtian'), ('Daska', 'Daska'), ('Mansehra', 'Mansehra'),
+    ('Nankana Sahib', 'Nankana Sahib'), ('Wah Cantt', 'Wah Cantt'), ('Kot Addu', 'Kot Addu'), ('Toba Tek Singh', 'Toba Tek Singh'),
+    ('Ahmedpur East', 'Ahmedpur East'), ('Khairpur', 'Khairpur'), ('Chaman', 'Chaman'), ('Zhob', 'Zhob'),
+    ('Gwadar', 'Gwadar'), ('Khuzdar', 'Khuzdar'), ('Muzaffarabad', 'Muzaffarabad'), ('Mirpur (AJK)', 'Mirpur (AJK)'),
+    ('Gilgit', 'Gilgit'), ('Skardu', 'Skardu'), ('Charsadda', 'Charsadda'), ('Hangu', 'Hangu'),
+    ('Ferozwala', 'Ferozwala'), ('Burewala', 'Burewala'), ('Jaranwala', 'Jaranwala'), ('Kabirwala', 'Kabirwala'),
+]
 
 class CustomerParcel(models.Model):
     YES_NO = [('Yes', 'Yes'), ('No', 'No')]
@@ -50,7 +71,7 @@ class CustomerParcel(models.Model):
     cn = models.CharField(max_length=50, blank=True, editable=False)
     shipper = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='parcels')
     destination = models.CharField(max_length=100, blank=True, null=True)
-    city = models.CharField(max_length=100, blank=True, null=True)
+    city = models.CharField(max_length=100, choices=PAKISTAN_CITIES, blank=True, null=True)
     delivery_rider_service_provider = models.CharField(max_length=100, blank=True, null=True)
     api_sp_type = models.CharField(max_length=100, choices=API_SP_TYPE_CHOICES, default='OVERNIGHT')
     api_tracking_no = models.CharField(max_length=100, blank=True, null=True)
