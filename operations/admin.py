@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.urls import reverse
 from unfold.admin import ModelAdmin
-from unfold.contrib.filters.admin import FieldTextFilter, ChoicesDropdownFilter, RelatedDropdownFilter
+from unfold.contrib.filters.admin import ChoicesDropdownFilter
+from django_unfold_admin_listfilter_dropdown.filters import DropdownFilter
 from .models import PickupSheet, Manifest, DeliverySheet
 
 
@@ -14,7 +15,7 @@ class PickupSheetAdmin(ModelAdmin):
     list_filter_submit = True
     list_filter = (
         ('pickup_status', ChoicesDropdownFilter),
-        ('branch', RelatedDropdownFilter),
+        ('branch', DropdownFilter),
     )
     actions = None
 
@@ -36,8 +37,8 @@ class ManifestAdmin(ModelAdmin):
     search_fields = ('code',)
     list_filter_submit = True
     list_filter = (
-        ('mode_of_transportation', FieldTextFilter),
-        ('branch', RelatedDropdownFilter),
+        ('mode_of_transportation', DropdownFilter),
+        ('branch', DropdownFilter),
     )
     actions = None
 
@@ -66,7 +67,7 @@ class DeliverySheetAdmin(ModelAdmin):
     list_filter_submit = True
     list_filter = (
         ('sheet_status', ChoicesDropdownFilter),
-        ('branch', RelatedDropdownFilter),
+        ('branch', DropdownFilter),
     )
     actions = None
 
