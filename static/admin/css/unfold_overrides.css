@@ -1,32 +1,31 @@
-/* Force sidebar to always stay expanded - hide the collapse toggle */
+/* Force sidebar to always stay expanded */
 [data-sidebar-toggle],
 button[title="Toggle sidebar"],
 .sidebar-toggle {
     display: none !important;
 }
 
-/* Prevent sidebar from collapsing to icon-only width */
 #main-sidebar,
 [data-sidebar] {
     width: 260px !important;
     min-width: 260px !important;
 }
 
-.module.app-list caption:empty,
-.module.app-list h2:empty {
-    display: none !important;
+/* Fix low-contrast dropdown/select text */
+select {
+    color: #000 !important;
 }
-/* ===== WIDEN MAIN CONTENT - OVERRIDE TAILWIND'S container CLASS ===== */
-#content.container {
-    max-width: 100% !important;
-    width: 100% !important;
+select option {
+    color: #000 !important;
+    background-color: #fff !important;
+    font-weight: 500;
 }
-
-/* ===== WIDEN TOP HEADER BAR - MATCH MAIN CONTENT WIDTH ===== */
-#header-inner {
-    max-width: 100% !important;
+select option:disabled {
+    color: #333 !important;
+    opacity: 1 !important;
 }
-.bg-white.border-b.border-base-200 > .container {
-    max-width: 100% !important;
-    width: 100% !important;
+select option:checked,
+select option:hover {
+    background-color: #eff6ff !important;
+    color: #000 !important;
 }
