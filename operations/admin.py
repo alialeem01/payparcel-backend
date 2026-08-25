@@ -1,12 +1,12 @@
 from django.contrib import admin
+from django.contrib import messages
 from django.utils.html import format_html
 from django.urls import reverse
+from django.shortcuts import render, redirect
 from unfold.admin import ModelAdmin
 from unfold.contrib.filters.admin import ChoicesDropdownFilter
 from django_unfold_admin_listfilter_dropdown.filters import DropdownFilter
 from .models import PickupSheet, Manifest, DeliverySheet
-from django.shortcuts import render, redirect
-from django.contrib import messages
 
 
 @admin.register(PickupSheet)
@@ -30,39 +30,51 @@ class PickupSheetAdmin(ModelAdmin):
         )
     row_actions.short_description = 'Actions'
 
-def add_view(self, request, form_url='', extra_context=None):
-    from parcels.models import CustomerParcel
-    from riders.models import Rider
+    def add_view(self, request, form_url='', extra_context=None):
+        from parcels.models import CustomerParcel
+        from riders.models import Rider
 
-    if request.method == 'POST':
-        rider_id = request.POST.get('rider')
-        parcel_ids = request.POST.getlist('parcels')
+        if request.method == 'POST':
+            rider_id = request.POST.get('rider')
+            parcel_ids = request.POST.getlist('parcels')
 
-        if not rider_id or not parcel_ids:
-            self.message_user(request, 'Select a rider and at least one order.', level=messages.ERROR)
-            return redirect('admin:operations_pickupsheet_add')
+            if not rider_id or not parcel_ids:
+                self.message_user(request, 'Select a rider and at least one order.', level=messages.ERROR)
+                return redirect('admin:operations_pickupsheet_add')
 
-        rider = Rider.objects.get(pk=rider_id)
-        parcels = CustomerParcel.objects.filter(pk__in=parcel_ids, status='Order')
+            rider = Rider.objects.get(pk=rider_id)
+            parcels = CustomerParcel.objects.filter(pk__in=parcel_ids, status='Order')
 
-        sheet = PickupSheet.objects.create(rider=rider)
-        sheet.parcels.set(parcels)
-        parcels.update(status='Ready to Pickup', assigned_rider=rider)
+            sheet = PickupSheet.objects.create(rider=rider)
+            sheet.parcels.set(parcels)
+            parcels.update(status='Ready to Pickup', assigned_rider=rider)
 
-        self.message_user(request, f'Pickup Sheet {sheet.sheet_number} created with {parcels.count()} order(s).')
-        return redirect('admin:operations_pickupsheet_changelist')
+            self.message_user(request, f'Pickup Sheet {sheet.sheet_number} created with {parcels.count()} order(s).')
+            return redirect('admin:operations_pickupsheet_changelist')
 
-    unassigned_orders = CustomerParcel.objects.filter(status='Order').select_related('shipper')
-    riders = Rider.objects.filter(is_active=True)
+        unassigned_orders = CustomerParcel.objects.filter(status='Order').select_related('shipper')
 
-    context = {
-        **self.admin_site.each_context(request),
-        'title': 'Create Pickup Sheet',
-        'orders': unassigned_orders,
-        'riders': riders,
-        'opts': self.model._meta,
-    }
-    return render(request, 'admin/operations/add_pickup_sheet.html', context)
+        selected_city = request.GET.get('city', '')
+        cities = unassigned_orders.exclude(city__isnull=True).exclude(city='').values_list('city', flat=True).distinct().order_by('city')
+
+        if selected_city:
+            unassigned_orders = unassigned_orders.filter(city=selected_city)
+
+        riders = Rider.objects.filter(is_active=True)
+
+        next_sheet_number_preview = f"PS{__import__('datetime').date.today().year}{PickupSheet.objects.count() + 1}"
+
+        context = {
+            **self.admin_site.each_context(request),
+            'title': 'Create Pickup Sheet',
+            'orders': unassigned_orders,
+            'riders': riders,
+            'cities': cities,
+            'selected_city': selected_city,
+            'sheet_number_preview': next_sheet_number_preview,
+            'opts': self.model._meta,
+        }
+        return render(request, 'admin/operations/add_pickup_sheet.html', context)
 
 
 @admin.register(Manifest)

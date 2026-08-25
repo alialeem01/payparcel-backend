@@ -1,20 +1,26 @@
 {% extends "unfold/layouts/base.html" %}
 {% block content %}
 <div class="p-4">
-    <h1 class="text-lg font-semibold mb-4">Create Pickup Sheet</h1>
+    <h1 class="text-lg font-semibold mb-1">Create Pickup Sheet</h1>
+    <p class="text-sm text-base-500 mb-4">Sheet number (auto-generated): <strong>{{ sheet_number_preview }}</strong></p>
+
+    <form method="get" class="mb-6 flex items-end gap-3">
+        <div>
+            <label class="block font-medium mb-2">Filter by City</label>
+            <select name="city" onchange="this.form.submit()" class="border border-base-200 rounded-default px-3 py-2 w-64">
+                <option value="">-- All Cities --</option>
+                {% for city in cities %}
+                    <option value="{{ city }}" {% if city == selected_city %}selected{% endif %}>{{ city }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
 
     <form method="post">
         {% csrf_token %}
+        <input type="hidden" name="city" value="{{ selected_city }}">
 
-        <label class="block font-medium mb-2">Select Rider</label>
-        <select name="rider" required class="border border-base-200 rounded-default px-3 py-2 mb-6 w-full max-w-sm">
-            <option value="">-- Choose Rider --</option>
-            {% for rider in riders %}
-                <option value="{{ rider.pk }}">{{ rider.name }} ({{ rider.branch|default:"-" }})</option>
-            {% endfor %}
-        </select>
-
-        <label class="block font-medium mb-2">Select Orders</label>
+        <label class="block font-medium mb-2">Select Orders {% if selected_city %}in {{ selected_city }}{% endif %}</label>
         <div class="border border-base-200 rounded-default max-h-96 overflow-y-auto mb-6">
             <table class="w-full">
                 <thead>
@@ -22,7 +28,10 @@
                         <th class="px-3 py-2 text-left w-10"></th>
                         <th class="px-3 py-2 text-left">CN</th>
                         <th class="px-3 py-2 text-left">Customer</th>
+                        <th class="px-3 py-2 text-left">City</th>
                         <th class="px-3 py-2 text-left">Destination</th>
+                        <th class="px-3 py-2 text-left">Address</th>
+                        <th class="px-3 py-2 text-left">Weight</th>
                         <th class="px-3 py-2 text-left">COD</th>
                     </tr>
                 </thead>
@@ -34,15 +43,26 @@
                         </td>
                         <td class="px-3 py-2">{{ order.cn }}</td>
                         <td class="px-3 py-2">{{ order.shipper.customer_name }}</td>
+                        <td class="px-3 py-2">{{ order.city|default:"-" }}</td>
                         <td class="px-3 py-2">{{ order.destination|default:"-" }}</td>
+                        <td class="px-3 py-2">{{ order.address|default:"-"|truncatewords:6 }}</td>
+                        <td class="px-3 py-2">{{ order.parcel_weight }}</td>
                         <td class="px-3 py-2">{{ order.cod }}</td>
                     </tr>
                     {% empty %}
-                    <tr><td class="px-3 py-2" colspan="5">No unassigned orders right now.</td></tr>
+                    <tr><td class="px-3 py-2" colspan="8">No unassigned orders{% if selected_city %} in {{ selected_city }}{% endif %}.</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
+
+        <label class="block font-medium mb-2">Select Rider</label>
+        <select name="rider" required class="border border-base-200 rounded-default px-3 py-2 mb-6 w-full max-w-sm">
+            <option value="">-- Choose Rider --</option>
+            {% for rider in riders %}
+                <option value="{{ rider.pk }}">{{ rider.name }} ({{ rider.branch|default:"-" }})</option>
+            {% endfor %}
+        </select>
 
         <button type="submit" class="bg-primary-600 text-white px-4 py-2 rounded-default">Create Pickup Sheet</button>
     </form>

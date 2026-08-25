@@ -9,12 +9,12 @@ from .models import CustomerParcel, StatusNarration
 
 @admin.register(CustomerParcel)
 class CustomerParcelAdmin(ModelAdmin):
-    list_display = ('cn', 'shipper', 'order_number', 'status', 'customer_payment_status', 'destination',
+    list_display = ('cn', 'shipper', 'order_number', 'status', 'customer_payment_status', 'destination', 'city',
                      'delivery_rider_service_provider', 'cod', 'net_total', 'branch', 'payment_status_display', 'active')
     list_editable = ('status', 'customer_payment_status')
     search_fields = ('cn', 'order_number', 'consignee', 'api_tracking_no')
     list_filter_submit = True
-    list_filter = (
+    list_filter = ( ('city', DropdownFilter),
         ('status', ChoicesDropdownFilter),
         'active',
         ('customer_payment_status', ChoicesDropdownFilter),
@@ -27,7 +27,7 @@ class CustomerParcelAdmin(ModelAdmin):
     fieldsets = (
         ('Parcel Details', {
             'fields': (
-                ('cn', 'shipper', 'destination'),
+                ('cn', 'shipper', 'city', 'destination'),
                 ('delivery_rider_service_provider', 'api_sp_type'),
                 ('api_tracking_no', 'tpl_payment_status', 'customer_payment_status'),
                 ('assigned_rider', 'tracking_qr_code'),

@@ -8,7 +8,10 @@ class Rider(models.Model):
         related_name='rider_profile', null=True, blank=True
     )
     name = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    phone_number = models.CharField(max_length=20)
+    cnic_number = models.CharField(max_length=20, default='')
+    cnic_front_image = models.ImageField(upload_to='rider_cnic/', default='')
+    cnic_back_image = models.ImageField(upload_to='rider_cnic/', default='')
     branch = models.CharField(max_length=100, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
