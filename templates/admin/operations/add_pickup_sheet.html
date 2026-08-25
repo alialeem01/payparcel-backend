@@ -1,0 +1,50 @@
+{% extends "unfold/layouts/base.html" %}
+{% block content %}
+<div class="p-4">
+    <h1 class="text-lg font-semibold mb-4">Create Pickup Sheet</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <label class="block font-medium mb-2">Select Rider</label>
+        <select name="rider" required class="border border-base-200 rounded-default px-3 py-2 mb-6 w-full max-w-sm">
+            <option value="">-- Choose Rider --</option>
+            {% for rider in riders %}
+                <option value="{{ rider.pk }}">{{ rider.name }} ({{ rider.branch|default:"-" }})</option>
+            {% endfor %}
+        </select>
+
+        <label class="block font-medium mb-2">Select Orders</label>
+        <div class="border border-base-200 rounded-default max-h-96 overflow-y-auto mb-6">
+            <table class="w-full">
+                <thead>
+                    <tr class="bg-primary-600 text-white text-xs uppercase">
+                        <th class="px-3 py-2 text-left w-10"></th>
+                        <th class="px-3 py-2 text-left">CN</th>
+                        <th class="px-3 py-2 text-left">Customer</th>
+                        <th class="px-3 py-2 text-left">Destination</th>
+                        <th class="px-3 py-2 text-left">COD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr class="border-t border-base-200">
+                        <td class="px-3 py-2">
+                            <input type="checkbox" name="parcels" value="{{ order.pk }}">
+                        </td>
+                        <td class="px-3 py-2">{{ order.cn }}</td>
+                        <td class="px-3 py-2">{{ order.shipper.customer_name }}</td>
+                        <td class="px-3 py-2">{{ order.destination|default:"-" }}</td>
+                        <td class="px-3 py-2">{{ order.cod }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td class="px-3 py-2" colspan="5">No unassigned orders right now.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <button type="submit" class="bg-primary-600 text-white px-4 py-2 rounded-default">Create Pickup Sheet</button>
+    </form>
+</div>
+{% endblock %}

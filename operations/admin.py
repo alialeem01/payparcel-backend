@@ -5,11 +5,13 @@ from unfold.admin import ModelAdmin
 from unfold.contrib.filters.admin import ChoicesDropdownFilter
 from django_unfold_admin_listfilter_dropdown.filters import DropdownFilter
 from .models import PickupSheet, Manifest, DeliverySheet
+from django.shortcuts import render, redirect
+from django.contrib import messages
 
 
 @admin.register(PickupSheet)
 class PickupSheetAdmin(ModelAdmin):
-    list_display = ('sheet_number', 'rider', 'shipper', 'loadsheet', 'total_pickup_parcel', 'user', 'branch', 'pickup_status', 'row_actions')
+    list_display = ('sheet_number', 'rider', 'loadsheet', 'total_pickup_parcel', 'user', 'branch', 'pickup_status', 'row_actions')
     readonly_fields = ('sheet_number',)
     search_fields = ('sheet_number',)
     list_filter_submit = True
@@ -27,6 +29,40 @@ class PickupSheetAdmin(ModelAdmin):
             edit_url, delete_url
         )
     row_actions.short_description = 'Actions'
+
+def add_view(self, request, form_url='', extra_context=None):
+    from parcels.models import CustomerParcel
+    from riders.models import Rider
+
+    if request.method == 'POST':
+        rider_id = request.POST.get('rider')
+        parcel_ids = request.POST.getlist('parcels')
+
+        if not rider_id or not parcel_ids:
+            self.message_user(request, 'Select a rider and at least one order.', level=messages.ERROR)
+            return redirect('admin:operations_pickupsheet_add')
+
+        rider = Rider.objects.get(pk=rider_id)
+        parcels = CustomerParcel.objects.filter(pk__in=parcel_ids, status='Order')
+
+        sheet = PickupSheet.objects.create(rider=rider)
+        sheet.parcels.set(parcels)
+        parcels.update(status='Ready to Pickup', assigned_rider=rider)
+
+        self.message_user(request, f'Pickup Sheet {sheet.sheet_number} created with {parcels.count()} order(s).')
+        return redirect('admin:operations_pickupsheet_changelist')
+
+    unassigned_orders = CustomerParcel.objects.filter(status='Order').select_related('shipper')
+    riders = Rider.objects.filter(is_active=True)
+
+    context = {
+        **self.admin_site.each_context(request),
+        'title': 'Create Pickup Sheet',
+        'orders': unassigned_orders,
+        'riders': riders,
+        'opts': self.model._meta,
+    }
+    return render(request, 'admin/operations/add_pickup_sheet.html', context)
 
 
 @admin.register(Manifest)
