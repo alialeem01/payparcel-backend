@@ -1,10 +1,15 @@
+import qrcode
+from io import BytesIO
+from django.core.files.base import ContentFile
 from django.db import models
 from customers.models import Customer
+
 
 class CustomerParcel(models.Model):
     YES_NO = [('Yes', 'Yes'), ('No', 'No')]
     STATUS_CHOICES = [
         ('Order', 'Order'),
+        ('Ready to Pickup', 'Ready to Pickup'),
         ('Picked', 'Picked'),
         ('In Transit', 'In Transit'),
         ('Delivered', 'Delivered'),
@@ -50,6 +55,12 @@ class CustomerParcel(models.Model):
     api_tracking_no = models.CharField(max_length=100, blank=True, null=True)
     tpl_payment_status = models.CharField(max_length=10, choices=PAYMENT_STATUS, default='Unpaid')
     customer_payment_status = models.CharField(max_length=10, choices=PAYMENT_STATUS, default='Unpaid')
+
+    assigned_rider = models.ForeignKey(
+        'riders.Rider', on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='assigned_parcels'
+    )
+    tracking_qr_code = models.ImageField(upload_to='parcel_qr/', blank=True, null=True, editable=False)
 
     consignee = models.CharField(max_length=255, blank=True, null=True)
     consignee_phone = models.CharField(max_length=20, blank=True, null=True)
@@ -125,8 +136,16 @@ class CustomerParcel(models.Model):
             self.cn = f"PP{1000000 + (CustomerParcel.objects.count() + 1)}"
         super().save(*args, **kwargs)
 
+        if not self.tracking_qr_code:
+            qr_img = qrcode.make(self.cn)
+            buffer = BytesIO()
+            qr_img.save(buffer, format='PNG')
+            self.tracking_qr_code.save(f"{self.cn}_qr.png", ContentFile(buffer.getvalue()), save=False)
+            super().save(update_fields=['tracking_qr_code'])
+
     def __str__(self):
         return self.cn or f"Parcel #{self.pk}"
+
 
 class StatusNarration(models.Model):
     status = models.CharField(max_length=30, choices=CustomerParcel.STATUS_CHOICES, unique=True)

@@ -16,3 +16,4 @@ django-unfold-admin-list-filter-dropdown
 django-admin-rangefilter
 openpyxl
 django-unfold
+qrcode[pil]
