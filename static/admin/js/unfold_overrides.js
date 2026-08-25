@@ -1,4 +1,7 @@
 (function () {
+    localStorage.setItem('theme', 'light');
+    document.documentElement.classList.remove('dark');
+
     function setupDashboardShortcut() {
         document.addEventListener('click', function (e) {
             var el = e.target.closest('.material-symbols-outlined');
