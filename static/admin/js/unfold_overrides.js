@@ -23,3 +23,9 @@
         setupDashboardShortcut();
     }
 })();
+
+/* Force readable black text inside all select dropdowns and their option lists */
+select, select option {
+    color: #000 !important;
+    background-color: #fff !important;
+}

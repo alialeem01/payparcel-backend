@@ -45,9 +45,12 @@ class PickupSheetAdmin(ModelAdmin):
             parcel_ids = request.POST.getlist('parcels')
 
             if not rider_id or not parcel_ids:
-                self.message_user(request, 'Select a rider and at least one order.', level=messages.ERROR)
+            self.message_user(request, f'Pickup Sheet {sheet.sheet_number} created with {parcels.count()} order(s).')
+            if '_addanother' in request.POST:
                 return redirect('admin:operations_pickupsheet_add')
-
+            if '_continue' in request.POST:
+                return redirect('admin:operations_pickupsheet_change', sheet.pk)
+                return redirect('admin:operations_pickupsheet_changelist')
             rider = Rider.objects.get(pk=rider_id)
             parcels = CustomerParcel.objects.filter(pk__in=parcel_ids, status='Order')
 
@@ -92,8 +95,12 @@ class PickupSheetAdmin(ModelAdmin):
             parcel_ids = set(request.POST.getlist('parcels'))
 
             if not rider_id:
-                self.message_user(request, 'Select a rider.', level=messages.ERROR)
+                self.message_user(request, f'Pickup Sheet {sheet.sheet_number} updated.')
+            if '_addanother' in request.POST:
+                return redirect('admin:operations_pickupsheet_add')
+            if '_continue' in request.POST:
                 return redirect('admin:operations_pickupsheet_change', object_id)
+                return redirect('admin:operations_pickupsheet_changelist')
 
             rider = Rider.objects.get(pk=rider_id)
 
