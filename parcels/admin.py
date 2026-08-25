@@ -27,14 +27,17 @@ class CustomerParcelAdmin(ModelAdmin):
     fieldsets = (
         ('Parcel Details', {
             'fields': (
-                ('cn', 'shipper', 'city', 'destination'),
+                ('cn', 'shipper'),
+                ('city', 'destination'),
                 ('delivery_rider_service_provider', 'api_sp_type'),
                 ('api_tracking_no', 'tpl_payment_status', 'customer_payment_status'),
                 ('assigned_rider', 'tracking_qr_code'),
                 ('consignee', 'consignee_phone'),
                 ('alternate_phone', 'order_number', 'issue_destination'),
-                ('cod', 'rts_cod', 'parcel_declared_value', 'discount'),
-                ('service_type', 'parcel_weight', 'number_of_pieces', 'replace'),
+                ('cod', 'rts_cod'),
+                ('parcel_declared_value', 'discount'),
+                ('service_type', 'parcel_weight'),
+                ('number_of_pieces', 'replace'),
                 ('product', 'instructions'),
                 ('flyer_size', 'flyer_qty'),
                 'address',
@@ -43,7 +46,8 @@ class CustomerParcelAdmin(ModelAdmin):
                 ('active', 'status', 'reason'),
                 'proof_image',
                 ('delivery_date', 'delivery_time', 'share'),
-                ('order_from', 'store_order_number', 'loadsheet', 'customer_loadsheet'),
+                ('order_from', 'store_order_number'),
+                ('loadsheet', 'customer_loadsheet'),
                 ('last_update', 'shipment_date'),
                 ('branch', 'user'),
             )
@@ -51,7 +55,8 @@ class CustomerParcelAdmin(ModelAdmin):
         ('Total Charges', {
             'fields': (
                 'rate_calculation_mode',
-                ('total_gst', 'total_feul_tax', 'total_return', 'flyer_charges'),
+                ('total_gst', 'total_feul_tax'),
+                ('total_return', 'flyer_charges'),
                 ('third_party_charge', 'tpl_net_total'),
                 ('delivery_charge', 'net_total'),
             )

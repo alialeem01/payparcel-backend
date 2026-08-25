@@ -7,6 +7,8 @@ from unfold.admin import ModelAdmin
 from unfold.contrib.filters.admin import ChoicesDropdownFilter
 from django_unfold_admin_listfilter_dropdown.filters import DropdownFilter
 from .models import PickupSheet, Manifest, DeliverySheet
+from parcels.models import PAKISTAN_CITIES
+
 
 
 @admin.register(PickupSheet)
@@ -59,7 +61,7 @@ class PickupSheetAdmin(ModelAdmin):
         unassigned_orders = CustomerParcel.objects.filter(status='Order').select_related('shipper')
 
         selected_city = request.GET.get('city', '')
-        cities = unassigned_orders.exclude(city__isnull=True).exclude(city='').values_list('city', flat=True).distinct().order_by('city')
+        cities = [c[0] for c in PAKISTAN_CITIES]
 
         if selected_city:
             unassigned_orders = unassigned_orders.filter(city=selected_city)
@@ -118,7 +120,7 @@ class PickupSheetAdmin(ModelAdmin):
         unassigned_orders = CustomerParcel.objects.filter(status='Order').select_related('shipper')
 
         selected_city = request.GET.get('city', '')
-        cities = unassigned_orders.exclude(city__isnull=True).exclude(city='').values_list('city', flat=True).distinct().order_by('city')
+        cities = [c[0] for c in PAKISTAN_CITIES]
         if selected_city:
             unassigned_orders = unassigned_orders.filter(city=selected_city)
 
