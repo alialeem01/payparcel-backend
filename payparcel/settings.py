@@ -166,7 +166,6 @@ UNFOLD = {
     "SITE_URL": "/",
     "SHOW_HISTORY": True,
     "SHOW_VIEW_ON_SITE": True,
-    "THEME": "light",
     "BORDER_RADIUS": "8px",
     "SCRIPTS": [
     lambda request: static("admin/js/unfold_overrides.js"),

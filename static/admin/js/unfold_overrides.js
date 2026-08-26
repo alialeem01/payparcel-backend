@@ -1,11 +1,4 @@
 (function () {
-    try {
-        localStorage.removeItem('sidebarOpen');
-        localStorage.removeItem('theme');
-    } catch (e) {}
-})();
-
-(function () {
     function setupDashboardShortcut() {
         document.addEventListener('click', function (e) {
             var el = e.target.closest('.material-symbols-outlined');

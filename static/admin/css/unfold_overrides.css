@@ -29,3 +29,18 @@ select option:hover {
     background-color: #eff6ff !important;
     color: #000 !important;
 }
+
+/* ===== WIDEN MAIN CONTENT - OVERRIDE TAILWIND'S container CLASS ===== */
+#content.container {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+/* ===== WIDEN TOP HEADER BAR - MATCH MAIN CONTENT WIDTH ===== */
+#header-inner {
+    max-width: 100% !important;
+}
+.bg-white.border-b.border-base-200 > .container {
+    max-width: 100% !important;
+    width: 100% !important;
+}
