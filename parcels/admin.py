@@ -28,9 +28,8 @@ class CustomerParcelAdmin(ModelAdmin):
         ('Parcel Details', {
             'fields': (
                 ('cn', 'shipper'),
-                ('city'),
-                ('customer_payment_status'),
-                ('assigned_rider', 'tracking_qr_code'),
+                ('city', 'customer_payment_status'),
+                ('tracking_qr_code'),
                 ('consignee', 'consignee_phone'),
                 ('alternate_phone', 'order_number', 'issue_destination'),
                 ('cod', 'rts_cod'),
