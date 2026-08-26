@@ -102,3 +102,8 @@ label, .font-medium {
 h1 {
     font-size: 15px !important;
 }
+
+/* Force the actual visible sidebar box to match the reserved-space width exactly */
+#nav-sidebar {
+    width: 220px !important;
+}
