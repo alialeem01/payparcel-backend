@@ -60,3 +60,13 @@ select option:hover {
     background-color: #334155 !important;
     color: #fff !important;
 }
+
+/* Force sidebar wrapper to always stay visible, overriding Alpine's x-show toggle */
+[x-show="sidebarOpen"] {
+    display: block !important;
+}
+
+/* Hide both collapse-trigger icons so it can never be toggled closed */
+[x-on\:click="sidebarToggle()"] {
+    display: none !important;
+}
