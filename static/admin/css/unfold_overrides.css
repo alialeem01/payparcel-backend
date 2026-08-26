@@ -44,3 +44,19 @@ select option:hover {
     max-width: 100% !important;
     width: 100% !important;
 }
+
+/* Dark mode: white dropdown text, dark dropdown list background */
+.dark select {
+    color: #fff !important;
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+}
+.dark select option {
+    color: #fff !important;
+    background-color: #1e293b !important;
+}
+.dark select option:hover,
+.dark select option:checked {
+    background-color: #334155 !important;
+    color: #fff !important;
+}
