@@ -61,21 +61,6 @@ select option:hover {
     color: #fff !important;
 }
 
-/* Force sidebar wrapper to always stay visible, overriding Alpine's x-show toggle */
-[x-show="sidebarOpen"] {
-    display: block !important;
-}
-
-/* Hide both collapse-trigger icons so it can never be toggled closed */
-[x-on\:click="sidebarToggle()"] {
-    display: none !important;
-}
-
-/* Shrink sidebar width (matches Unfold's own defined minimum, keeps text readable) */
-[x-show="sidebarOpen"] {
-    width: 220px !important;
-}
-
 /* ===== COMPACT MODE: reduce padding/font-size to fit more content ===== */
 #result_list th, #result_list td,
 table th, table td {
@@ -101,9 +86,4 @@ label, .font-medium {
 
 h1 {
     font-size: 15px !important;
-}
-
-/* Force the actual visible sidebar box to match the reserved-space width exactly */
-#nav-sidebar {
-    width: 220px !important;
 }
