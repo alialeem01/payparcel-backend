@@ -4,19 +4,27 @@
     <title>Pickup Sheet {{ sheet.sheet_number }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body { font-family: sans-serif; max-width: 480px; margin: 40px auto; padding: 0 20px; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 0 0 30px; color: #1e293b; }
+        .header { background: #1d4ed8; color: #fff; padding: 20px; text-align: center; }
+        .header .brand { font-size: 20px; font-weight: 800; }
+        .content { padding: 20px; }
         li { margin-bottom: 8px; }
     </style>
 </head>
 <body>
-    <h2>Pickup Sheet: {{ sheet.sheet_number }}</h2>
-    <p>Status: {{ sheet.pickup_status }}</p>
-    <p>Rider: {{ sheet.rider.name|default:"-" }}</p>
-    <h3>Parcels ({{ parcels.count }})</h3>
-    <ul>
-        {% for p in parcels %}
-        <li>{{ p.cn }} — {{ p.status }}</li>
-        {% endfor %}
-    </ul>
+    <div class="header">
+        <div class="brand">PayParcel</div>
+    </div>
+    <div class="content">
+        <h2>Pickup Sheet: {{ sheet.sheet_number }}</h2>
+        <p>Status: {{ sheet.pickup_status }}</p>
+        <p>Rider: {{ sheet.rider.name|default:"-" }}</p>
+        <h3>Parcels ({{ parcels.count }})</h3>
+        <ul>
+            {% for p in parcels %}
+            <li>{{ p.cn }} — {{ p.status }}</li>
+            {% endfor %}
+        </ul>
+    </div>
 </body>
 </html>

@@ -3,34 +3,139 @@
 <head>
     <title>Pickup Sheet {{ sheet.sheet_number }}</title>
     <style>
-        body { font-family: sans-serif; font-size: 12px; max-width: 720px; margin: 16px auto; color: #111; }
-        h2 { margin-bottom: 4px; }
-        .meta { margin-bottom: 12px; }
-        .meta span { margin-right: 16px; }
-        .sheet-qr { text-align: center; margin: 12px 0; }
-        .sheet-qr img { width: 110px; height: 110px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-        th, td { border: 1px solid #999; padding: 6px 8px; text-align: left; vertical-align: middle; }
-        th { background: #eee; font-size: 11px; text-transform: uppercase; }
-        .qr-cell { width: 70px; text-align: center; }
-        .qr-cell img { width: 60px; height: 60px; }
+        @page { size: A4; margin: 12mm; }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 12px;
+            color: #1e293b;
+            margin: 0;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #1d4ed8;
+            padding-bottom: 10px;
+            margin-bottom: 14px;
+        }
+        .brand { font-size: 22px; font-weight: 800; color: #1d4ed8; letter-spacing: -0.5px; }
+        .brand-sub { font-size: 10px; color: #64748b; margin-top: 2px; }
+        .doc-title { text-align: right; }
+        .doc-title h1 { font-size: 16px; margin: 0; color: #1e293b; }
+        .doc-title .sheet-no { font-size: 13px; color: #1d4ed8; font-weight: 700; }
+
+        .meta-bar {
+            display: flex;
+            justify-content: space-between;
+            background: #f4f6f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-bottom: 14px;
+        }
+        .meta-item { text-align: center; }
+        .meta-item .label { font-size: 9px; text-transform: uppercase; color: #64748b; letter-spacing: 0.4px; }
+        .meta-item .value { font-size: 13px; font-weight: 700; color: #1e293b; margin-top: 2px; }
+
+        .sheet-qr-box {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-bottom: 16px;
+        }
+        .sheet-qr-box img { width: 80px; height: 80px; }
+        .sheet-qr-box .qr-label { font-size: 11px; color: #64748b; }
+        .sheet-qr-box .qr-label strong { display: block; font-size: 13px; color: #1e293b; margin-bottom: 2px; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+        thead th {
+            background: #1d4ed8;
+            color: #fff;
+            font-size: 9.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 7px 8px;
+            text-align: left;
+        }
+        tbody td {
+            border-bottom: 1px solid #e2e8f0;
+            padding: 7px 8px;
+            font-size: 11px;
+            vertical-align: middle;
+        }
+        tbody tr:nth-child(even) { background: #f8fafc; }
+        .qr-cell { width: 55px; text-align: center; }
+        .qr-cell img { width: 48px; height: 48px; }
+        .num { text-align: right; }
+
+        .totals-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 18px;
+            margin-top: 14px;
+            padding-top: 10px;
+            border-top: 2px solid #1d4ed8;
+        }
+        .totals-bar .total-item { text-align: right; }
+        .totals-bar .total-item .label { font-size: 9px; text-transform: uppercase; color: #64748b; }
+        .totals-bar .total-item .value { font-size: 14px; font-weight: 800; color: #1d4ed8; }
+
+        .footer {
+            margin-top: 20px;
+            padding-top: 8px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 9px;
+            color: #94a3b8;
+            text-align: center;
+        }
+
         @media print {
             body { margin: 0; }
         }
     </style>
 </head>
 <body onload="window.print()">
-    <h2>Pickup Sheet: {{ sheet.sheet_number }}</h2>
-    <div class="meta">
-        <span><strong>Rider:</strong> {{ sheet.rider.name|default:"-" }}</span>
-        <span><strong>Status:</strong> {{ sheet.pickup_status }}</span>
-        <span><strong>Date:</strong> {{ sheet.date|date:"d M Y" }}</span>
+    <div class="header">
+        <div>
+            <div class="brand">PayParcel</div>
+            <div class="brand-sub">Courier &amp; Logistics Management</div>
+        </div>
+        <div class="doc-title">
+            <h1>Pickup Sheet</h1>
+            <div class="sheet-no">{{ sheet.sheet_number }}</div>
+        </div>
+    </div>
+
+    <div class="meta-bar">
+        <div class="meta-item">
+            <div class="label">Rider</div>
+            <div class="value">{{ sheet.rider.name|default:"-" }}</div>
+        </div>
+        <div class="meta-item">
+            <div class="label">Status</div>
+            <div class="value">{{ sheet.pickup_status }}</div>
+        </div>
+        <div class="meta-item">
+            <div class="label">Date</div>
+            <div class="value">{{ sheet.date|date:"d M Y" }}</div>
+        </div>
+        <div class="meta-item">
+            <div class="label">Branch</div>
+            <div class="value">{{ sheet.branch|default:"-" }}</div>
+        </div>
     </div>
 
     {% if sheet.qr_code %}
-    <div class="sheet-qr">
+    <div class="sheet-qr-box">
         <img src="{{ sheet.qr_code.url }}" alt="Sheet QR">
-        <div>Scan to view full sheet</div>
+        <div class="qr-label">
+            <strong>Sheet Tracking QR</strong>
+            Scan to view full pickup sheet status
+        </div>
     </div>
     {% endif %}
 
@@ -41,6 +146,9 @@
                 <th>Customer</th>
                 <th>Pickup Address</th>
                 <th>Contact</th>
+                <th class="num">Qty</th>
+                <th class="num">Weight</th>
+                <th class="num">COD</th>
                 <th>QR</th>
             </tr>
         </thead>
@@ -51,6 +159,9 @@
                 <td>{{ p.shipper.customer_name }}</td>
                 <td>{{ p.shipper.customer_pickup_address|default:"-" }}</td>
                 <td>{{ p.shipper.customer_phone_number|default:"-" }}</td>
+                <td class="num">{{ p.number_of_pieces }}</td>
+                <td class="num">{{ p.parcel_weight }}</td>
+                <td class="num">{{ p.cod }}</td>
                 <td class="qr-cell">
                     {% if p.tracking_qr_code %}
                     <img src="{{ p.tracking_qr_code.url }}" alt="QR">
@@ -60,9 +171,32 @@
                 </td>
             </tr>
             {% empty %}
-            <tr><td colspan="5">No parcels on this sheet.</td></tr>
+            <tr><td colspan="8">No parcels on this sheet.</td></tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <div class="totals-bar">
+        <div class="total-item">
+            <div class="label">Total Parcels</div>
+            <div class="value">{{ totals.count }}</div>
+        </div>
+        <div class="total-item">
+            <div class="label">Total Qty</div>
+            <div class="value">{{ totals.quantity }}</div>
+        </div>
+        <div class="total-item">
+            <div class="label">Total Weight</div>
+            <div class="value">{{ totals.weight }}</div>
+        </div>
+        <div class="total-item">
+            <div class="label">Total COD</div>
+            <div class="value">{{ totals.cod }}</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        PayParcel · Generated {% now "d M Y, H:i" %}
+    </div>
 </body>
 </html>
