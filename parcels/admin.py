@@ -1,3 +1,5 @@
+from django.utils.html import format_html
+from django.urls import reverse
 from django.contrib import admin
 from django.contrib import messages
 from django.shortcuts import render
@@ -10,7 +12,7 @@ from .models import CustomerParcel, StatusNarration
 @admin.register(CustomerParcel)
 class CustomerParcelAdmin(ModelAdmin):
     list_display = ('cn', 'shipper', 'order_number', 'status', 'customer_payment_status', 'city',
-                 'cod', 'net_total', 'branch', 'active')
+                 'cod', 'net_total', 'branch', 'active', 'row_actions')
     list_editable = ('status', 'customer_payment_status')
     search_fields = ('cn', 'order_number', 'consignee', 'api_tracking_no')
     list_filter_submit = True
@@ -19,6 +21,11 @@ class CustomerParcelAdmin(ModelAdmin):
         'active',
         ('customer_payment_status', ChoicesDropdownFilter),
         ('city', DropdownFilter)
+    def row_actions(self, obj):
+        view_url = reverse('track_parcel', args=[obj.cn])
+        return format_html('<a href="{}" target="_blank">View</a>', view_url)
+    row_actions.short_description = 'Actions'
+
     )
     readonly_fields = ('cn', 'net_total', 'last_update', 'shipment_date', 'tracking_qr_code')
     actions = ['assign_to_rider']

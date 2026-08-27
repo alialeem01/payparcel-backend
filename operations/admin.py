@@ -25,9 +25,11 @@ class PickupSheetAdmin(ModelAdmin):
     def row_actions(self, obj):
         edit_url = reverse('admin:operations_pickupsheet_change', args=[obj.pk])
         delete_url = reverse('admin:operations_pickupsheet_delete', args=[obj.pk])
+        view_url = reverse('track_pickup_sheet', args=[obj.sheet_number])
+        print_url = reverse('print_pickup_sheet', args=[obj.sheet_number])
         return format_html(
-            '<a href="{}">Edit</a> | <a href="{}">Delete</a>',
-            edit_url, delete_url
+            '<a href="{}">Edit</a> | <a href="{}">Delete</a> | <a href="{}" target="_blank">View</a> | <a href="{}" target="_blank">Print</a>',
+            edit_url, delete_url, view_url, print_url
         )
     row_actions.short_description = 'Actions'
 
