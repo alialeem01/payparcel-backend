@@ -14,5 +14,6 @@
     <div class="status">{{ parcel.status }}</div>
     {% if narration %}<p class="narration">{{ narration }}</p>{% endif %}
     <p>City: {{ parcel.city|default:"-" }}</p>
+    <p>Delivery Address: {{ parcel.address|default:"-" }}</p>
 </body>
 </html>
