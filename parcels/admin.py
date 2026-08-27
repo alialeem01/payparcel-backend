@@ -9,7 +9,7 @@ from .models import CustomerParcel, StatusNarration
 
 @admin.register(CustomerParcel)
 class CustomerParcelAdmin(ModelAdmin):
-    list_display = ('cn', 'shipper', 'order_number', 'status', 'customer_payment_status', 'destination', 'city',
+    list_display = ('cn', 'shipper', 'order_number', 'status', 'customer_payment_status', 'city',
                      'delivery_rider_service_provider', 'cod', 'net_total', 'branch', 'payment_status_display', 'active')
     list_editable = ('status', 'customer_payment_status')
     search_fields = ('cn', 'order_number', 'consignee', 'api_tracking_no')
