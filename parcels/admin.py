@@ -10,7 +10,7 @@ from .models import CustomerParcel, StatusNarration
 @admin.register(CustomerParcel)
 class CustomerParcelAdmin(ModelAdmin):
     list_display = ('cn', 'shipper', 'order_number', 'status', 'customer_payment_status', 'city',
-                     'delivery_rider_service_provider', 'cod', 'net_total', 'branch', 'payment_status_display', 'active')
+                 'cod', 'net_total', 'branch', 'active')
     list_editable = ('status', 'customer_payment_status')
     search_fields = ('cn', 'order_number', 'consignee', 'api_tracking_no')
     list_filter_submit = True
@@ -18,7 +18,6 @@ class CustomerParcelAdmin(ModelAdmin):
         ('status', ChoicesDropdownFilter),
         'active',
         ('customer_payment_status', ChoicesDropdownFilter),
-        ('tpl_payment_status', ChoicesDropdownFilter),
         ('city', DropdownFilter)
     )
     readonly_fields = ('cn', 'net_total', 'last_update', 'shipment_date', 'tracking_qr_code')
@@ -67,9 +66,6 @@ class CustomerParcelAdmin(ModelAdmin):
         }),
     )
 
-    def payment_status_display(self, obj):
-        return obj.tpl_payment_status
-    payment_status_display.short_description = 'Payment Status'
 
     def assign_to_rider(self, request, queryset):
         from riders.models import Rider
