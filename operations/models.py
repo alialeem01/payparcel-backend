@@ -2,6 +2,7 @@ from django.db import models
 from customers.models import Customer
 from parcels.models import CustomerParcel
 
+
 class PickupSheet(models.Model):
     STATUS_CHOICES = [('Uncomplete', 'Uncomplete'), ('Complete', 'Complete')]
 
@@ -25,6 +26,18 @@ class PickupSheet(models.Model):
             from datetime import date
             self.sheet_number = f"PS{date.today().year}{PickupSheet.objects.count() + 1}"
         super().save(*args, **kwargs)
+
+        if not self.qr_code:
+            import qrcode
+            from io import BytesIO
+            from django.core.files.base import ContentFile
+            from django.conf import settings
+            tracking_url = f"{settings.SITE_BASE_URL}/track/pickupsheet/{self.sheet_number}/"
+            qr_img = qrcode.make(tracking_url)
+            buffer = BytesIO()
+            qr_img.save(buffer, format='PNG')
+            self.qr_code.save(f"{self.sheet_number}_qr.png", ContentFile(buffer.getvalue()), save=False)
+            super().save(update_fields=['qr_code'])
 
     def __str__(self):
         return self.sheet_number

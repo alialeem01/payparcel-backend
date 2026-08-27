@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Track Parcel {{ parcel.cn }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: sans-serif; max-width: 480px; margin: 40px auto; padding: 0 20px; }
+        .status { font-size: 22px; font-weight: bold; color: #1d4ed8; margin: 12px 0; }
+        .narration { color: #555; }
+    </style>
+</head>
+<body>
+    <h2>Tracking: {{ parcel.cn }}</h2>
+    <div class="status">{{ parcel.status }}</div>
+    {% if narration %}<p class="narration">{{ narration }}</p>{% endif %}
+    <p>Destination: {{ parcel.destination|default:"-" }}</p>
+</body>
+</html>

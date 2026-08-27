@@ -1,3 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from .models import PickupSheet
 
-# Create your views here.
+
+def track_pickup_sheet(request, sheet_number):
+    sheet = get_object_or_404(PickupSheet, sheet_number=sheet_number)
+    context = {
+        'sheet': sheet,
+        'parcels': sheet.parcels.all(),
+    }
+    return render(request, 'tracking/track_pickup_sheet.html', context)

@@ -242,3 +242,4 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': config('CLOUDINARY_API_SECRET'),
 }
 
+SITE_BASE_URL = config('SITE_BASE_URL', default='https://payparcel-backend.onrender.com')

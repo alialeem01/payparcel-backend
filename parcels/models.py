@@ -159,7 +159,9 @@ class CustomerParcel(models.Model):
         super().save(*args, **kwargs)
 
         if not self.tracking_qr_code:
-            qr_img = qrcode.make(self.cn)
+            from django.conf import settings
+            tracking_url = f"{settings.SITE_BASE_URL}/track/{self.cn}/"
+            qr_img = qrcode.make(tracking_url)
             buffer = BytesIO()
             qr_img.save(buffer, format='PNG')
             self.tracking_qr_code.save(f"{self.cn}_qr.png", ContentFile(buffer.getvalue()), save=False)

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pickup Sheet {{ sheet.sheet_number }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: sans-serif; max-width: 480px; margin: 40px auto; padding: 0 20px; }
+        li { margin-bottom: 8px; }
+    </style>
+</head>
+<body>
+    <h2>Pickup Sheet: {{ sheet.sheet_number }}</h2>
+    <p>Status: {{ sheet.pickup_status }}</p>
+    <p>Rider: {{ sheet.rider.name|default:"-" }}</p>
+    <h3>Parcels ({{ parcels.count }})</h3>
+    <ul>
+        {% for p in parcels %}
+        <li>{{ p.cn }} — {{ p.status }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
