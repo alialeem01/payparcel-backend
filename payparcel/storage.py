@@ -8,3 +8,4 @@ class SilentCollectstaticStorage(ManifestStaticFilesStorage):
                 print(f"Warning: skipping static post-process error for {name}: {processed}")
                 continue
             yield name, hashed_name, processed
+
