@@ -19,7 +19,7 @@ class CustomerParcelAdmin(ModelAdmin):
         'active',
         ('customer_payment_status', ChoicesDropdownFilter),
         ('tpl_payment_status', ChoicesDropdownFilter),
-        ('destination', DropdownFilter),
+        ('city', DropdownFilter)
     )
     readonly_fields = ('cn', 'net_total', 'last_update', 'shipment_date', 'tracking_qr_code')
     actions = ['assign_to_rider']

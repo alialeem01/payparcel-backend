@@ -28,7 +28,6 @@
                         <th class="px-3 py-2 text-left">CN</th>
                         <th class="px-3 py-2 text-left">Customer</th>
                         <th class="px-3 py-2 text-left">City</th>
-                        <th class="px-3 py-2 text-left">Destination</th>
                         <th class="px-3 py-2 text-left">Weight</th>
                         <th class="px-3 py-2 text-left">COD</th>
                     </tr>
@@ -42,7 +41,6 @@
                         <td class="px-3 py-2">{{ order.cn }}</td>
                         <td class="px-3 py-2">{{ order.shipper.customer_name }}</td>
                         <td class="px-3 py-2">{{ order.city|default:"-" }}</td>
-                        <td class="px-3 py-2">{{ order.destination|default:"-" }}</td>
                         <td class="px-3 py-2">{{ order.parcel_weight }}</td>
                         <td class="px-3 py-2">{{ order.cod }}</td>
                     </tr>

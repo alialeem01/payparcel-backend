@@ -13,6 +13,6 @@
     <h2>Tracking: {{ parcel.cn }}</h2>
     <div class="status">{{ parcel.status }}</div>
     {% if narration %}<p class="narration">{{ narration }}</p>{% endif %}
-    <p>Destination: {{ parcel.destination|default:"-" }}</p>
+    <p>City: {{ parcel.city|default:"-" }}</p>
 </body>
 </html>

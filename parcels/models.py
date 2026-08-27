@@ -70,7 +70,6 @@ class CustomerParcel(models.Model):
 
     cn = models.CharField(max_length=50, blank=True, editable=False)
     shipper = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='parcels')
-    destination = models.CharField(max_length=100, blank=True, null=True)
     city = models.CharField(max_length=100, choices=PAKISTAN_CITIES, blank=True, null=True)
     delivery_rider_service_provider = models.CharField(max_length=100, blank=True, null=True)
     api_sp_type = models.CharField(max_length=100, choices=API_SP_TYPE_CHOICES, default='OVERNIGHT')

@@ -13,3 +13,5 @@ git push
 
 python manage.py makemigrations
 python manage.py migrate
+
+localStorage.clear(); location.reload();
