@@ -17,3 +17,5 @@ django-admin-rangefilter
 openpyxl
 django-unfold
 qrcode[pil]
+cloudinary
+django-cloudinary-storage
