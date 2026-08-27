@@ -146,10 +146,10 @@ STORAGES = {
         'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage',
     },
     'staticfiles': {
-        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+        'BACKEND': 'payparcel.storage.SilentCollectstaticStorage',
     },
 }
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'payparcel.storage.SilentCollectstaticStorage'
 
 MEDIA_URL = '/media/'
 
