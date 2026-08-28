@@ -150,6 +150,7 @@
                 <th class="num">Weight</th>
                 <th class="num">COD</th>
                 <th>QR</th>
+                <th>Scan Status</th>
             </tr>
         </thead>
         <tbody>
@@ -159,9 +160,11 @@
                 <td>{{ p.shipper.customer_name }}</td>
                 <td>{{ p.shipper.customer_pickup_address|default:"-" }}</td>
                 <td>{{ p.shipper.customer_phone_number|default:"-" }}</td>
+                <td>{% if p.status == 'Order' or p.status == 'Ready for Pickup' %}Pending{% else %}Picked{% endif %}</td>
                 <td class="num">{{ p.number_of_pieces }}</td>
                 <td class="num">{{ p.parcel_weight }}</td>
                 <td class="num">{{ p.cod }}</td>
+                
                 <td class="qr-cell">
                     {% if p.tracking_qr_code %}
                     <img src="{{ p.tracking_qr_code.url }}" alt="QR">
@@ -171,18 +174,18 @@
                 </td>
             </tr>
             {% empty %}
-            <tr><td colspan="8">No parcels on this sheet.</td></tr>
+            <tr><td colspan="9">No parcels on this sheet.</td></tr>
             {% endfor %}
         </tbody>
     </table>
 
     <div class="totals-bar">
         <div class="total-item">
-            <div class="label">Total Parcels</div>
+            <div class="label">Assigned Pickups</div>
             <div class="value">{{ totals.count }}</div>
         </div>
         <div class="total-item">
-            <div class="label">Total Qty</div>
+            <div class="label">Total Quantity</div>
             <div class="value">{{ totals.quantity }}</div>
         </div>
         <div class="total-item">

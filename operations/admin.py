@@ -54,7 +54,7 @@ class PickupSheetAdmin(ModelAdmin):
 
             sheet = PickupSheet.objects.create(rider=rider)
             sheet.parcels.set(parcels)
-            parcels.update(status='Ready to Pickup', assigned_rider=rider)
+            parcels.update(status='Ready for Pickup', assigned_rider=rider)
 
             self.message_user(request, f'Pickup Sheet {sheet.sheet_number} created with {parcels.count()} order(s).')
 
@@ -111,7 +111,7 @@ class PickupSheetAdmin(ModelAdmin):
                 CustomerParcel.objects.filter(pk__in=removed_ids).update(status='Order', assigned_rider=None)
 
             if added_ids:
-                CustomerParcel.objects.filter(pk__in=added_ids, status='Order').update(status='Ready to Pickup', assigned_rider=rider)
+                CustomerParcel.objects.filter(pk__in=added_ids, status='Order').update(status='Ready for Pickup', assigned_rider=rider)
 
             sheet.rider = rider
             sheet.parcels.set(CustomerParcel.objects.filter(pk__in=parcel_ids))

@@ -91,7 +91,7 @@ class CustomerParcelAdmin(ModelAdmin):
             sheet = PickupSheet.objects.create(rider=rider, shipper_id=sheet_shipper_id)
             sheet.parcels.set(queryset)
 
-            queryset.update(status='Ready to Pickup', assigned_rider=rider)
+            queryset.update(status='Ready for Pickup', assigned_rider=rider)
 
             self.message_user(request, f'{queryset.count()} parcel(s) assigned to {rider.name}. Pickup Sheet {sheet.sheet_number} created.')
             return

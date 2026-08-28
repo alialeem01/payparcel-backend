@@ -262,3 +262,12 @@ def track_parcel(request, cn):
         'narration': narration.narration if narration else None,
     }
     return render(request, 'tracking/track_parcel.html', context)
+
+from django.shortcuts import redirect
+
+def confirm_pickup(request, cn):
+    parcel = get_object_or_404(CustomerParcel, cn=cn)
+    if request.method == 'POST' and parcel.status == 'Ready for Pickup':
+        parcel.status = 'Departed from Origin'
+        parcel.save()
+    return redirect('track_parcel', cn=cn)

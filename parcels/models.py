@@ -29,13 +29,13 @@ PAKISTAN_CITIES = [
 class CustomerParcel(models.Model):
     YES_NO = [('Yes', 'Yes'), ('No', 'No')]
     STATUS_CHOICES = [
-        ('Order', 'Order'),
-        ('Ready to Pickup', 'Ready to Pickup'),
-        ('Picked', 'Picked'),
-        ('In Transit', 'In Transit'),
-        ('Delivered', 'Delivered'),
-        ('Parcel Not Available', 'Parcel Not Available'),
-        ('Returned', 'Returned'),
+    ('Order', 'Order'),
+    ('Ready for Pickup', 'Ready for Pickup'),
+    ('Departed from Origin', 'Departed from Origin'),
+    ('In Transit', 'In Transit'),
+    ('Delivered', 'Delivered'),
+    ('Parcel Not Available', 'Parcel Not Available'),
+    ('Returned', 'Returned'),
     ]
     PAYMENT_STATUS = [('Paid', 'Paid'), ('Unpaid', 'Unpaid')]
     SHARE_CHOICES = [('No Share', 'No Share')]
