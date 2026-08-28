@@ -267,7 +267,19 @@ from django.shortcuts import redirect
 
 def confirm_pickup(request, cn):
     parcel = get_object_or_404(CustomerParcel, cn=cn)
-    if request.method == 'POST' and parcel.status == 'Ready for Pickup':
-        parcel.status = 'Departed from Origin'
-        parcel.save()
-    return redirect('track_parcel', cn=cn)
+
+    if request.method != 'POST':
+        return render(request, 'tracking/track_parcel.html', {
+            'parcel': parcel,
+            'narration': None,
+        })
+
+    if not parcel.pickup_sheets.exists():
+        return render(request, 'tracking/scan_result.html', {'success': False, 'message': 'Parcel is not assigned to a Pickup Sheet.'})
+
+    if parcel.status != 'Ready for Pickup':
+        return render(request, 'tracking/scan_result.html', {'success': False, 'message': 'Invalid or duplicate scan. This parcel is not pending pickup.'})
+
+    parcel.status = 'Departed from Origin'
+    parcel.save()
+    return render(request, 'tracking/scan_result.html', {'success': True, 'message': f'Pickup confirmed for {parcel.cn}.'})

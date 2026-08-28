@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scan Result</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; max-width: 400px; margin: 60px auto; text-align: center; color: #1e293b; }
+        .icon { font-size: 48px; }
+        .success { color: #16a34a; }
+        .error { color: #dc2626; }
+    </style>
+</head>
+<body>
+    <div class="icon {% if success %}success{% else %}error{% endif %}">{% if success %}✓{% else %}✕{% endif %}</div>
+    <p>{{ message }}</p>
+</body>
+</html>

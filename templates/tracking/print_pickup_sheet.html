@@ -32,24 +32,11 @@
             border: 1px solid #e2e8f0;
             border-radius: 6px;
             padding: 10px 14px;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
         }
         .meta-item { text-align: center; }
         .meta-item .label { font-size: 9px; text-transform: uppercase; color: #64748b; letter-spacing: 0.4px; }
         .meta-item .value { font-size: 13px; font-weight: 700; color: #1e293b; margin-top: 2px; }
-
-        .sheet-qr-box {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            padding: 10px 14px;
-            margin-bottom: 16px;
-        }
-        .sheet-qr-box img { width: 80px; height: 80px; }
-        .sheet-qr-box .qr-label { font-size: 11px; color: #64748b; }
-        .sheet-qr-box .qr-label strong { display: block; font-size: 13px; color: #1e293b; margin-bottom: 2px; }
 
         table { width: 100%; border-collapse: collapse; margin-top: 4px; }
         thead th {
@@ -68,8 +55,6 @@
             vertical-align: middle;
         }
         tbody tr:nth-child(even) { background: #f8fafc; }
-        .qr-cell { width: 55px; text-align: center; }
-        .qr-cell img { width: 48px; height: 48px; }
         .num { text-align: right; }
 
         .totals-bar {
@@ -123,58 +108,31 @@
             <div class="label">Date</div>
             <div class="value">{{ sheet.date|date:"d M Y" }}</div>
         </div>
-        <div class="meta-item">
-            <div class="label">Branch</div>
-            <div class="value">{{ sheet.branch|default:"-" }}</div>
-        </div>
     </div>
-
-    {% if sheet.qr_code %}
-    <div class="sheet-qr-box">
-        <img src="{{ sheet.qr_code.url }}" alt="Sheet QR">
-        <div class="qr-label">
-            <strong>Sheet Tracking QR</strong>
-            Scan to view full pickup sheet status
-        </div>
-    </div>
-    {% endif %}
 
     <table>
         <thead>
             <tr>
-                <th>Parcel #</th>
                 <th>Customer</th>
                 <th>Pickup Address</th>
                 <th>Contact</th>
                 <th class="num">Qty</th>
                 <th class="num">Weight</th>
-                <th class="num">COD</th>
-                <th>QR</th>
-                <th>Scan Status</th>
+                <th>Pickup Status</th>
             </tr>
         </thead>
         <tbody>
             {% for p in parcels %}
             <tr>
-                <td>{{ p.cn }}</td>
                 <td>{{ p.shipper.customer_name }}</td>
                 <td>{{ p.shipper.customer_pickup_address|default:"-" }}</td>
                 <td>{{ p.shipper.customer_phone_number|default:"-" }}</td>
-                <td>{% if p.status == 'Order' or p.status == 'Ready for Pickup' %}Pending{% else %}Picked{% endif %}</td>
                 <td class="num">{{ p.number_of_pieces }}</td>
                 <td class="num">{{ p.parcel_weight }}</td>
-                <td class="num">{{ p.cod }}</td>
-                
-                <td class="qr-cell">
-                    {% if p.tracking_qr_code %}
-                    <img src="{{ p.tracking_qr_code.url }}" alt="QR">
-                    {% else %}
-                    -
-                    {% endif %}
-                </td>
+                <td>{% if p.status == 'Ready for Pickup' %}Pending{% else %}Collected{% endif %}</td>
             </tr>
             {% empty %}
-            <tr><td colspan="9">No parcels on this sheet.</td></tr>
+            <tr><td colspan="6">No pickups on this sheet.</td></tr>
             {% endfor %}
         </tbody>
     </table>
@@ -185,16 +143,8 @@
             <div class="value">{{ totals.count }}</div>
         </div>
         <div class="total-item">
-            <div class="label">Total Quantity</div>
-            <div class="value">{{ totals.quantity }}</div>
-        </div>
-        <div class="total-item">
             <div class="label">Total Weight</div>
             <div class="value">{{ totals.weight }}</div>
-        </div>
-        <div class="total-item">
-            <div class="label">Total COD</div>
-            <div class="value">{{ totals.cod }}</div>
         </div>
     </div>
 

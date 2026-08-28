@@ -8,7 +8,12 @@
         .header { background: #1d4ed8; color: #fff; padding: 20px; text-align: center; }
         .header .brand { font-size: 20px; font-weight: 800; }
         .content { padding: 20px; }
-        li { margin-bottom: 8px; }
+        .card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+        .card .name { font-weight: 700; }
+        .card .row { display: flex; justify-content: space-between; font-size: 13px; color: #475569; margin-top: 4px; }
+        .status-tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-top: 6px; }
+        .pending { background: #fef3c7; color: #92400e; }
+        .collected { background: #dcfce7; color: #166534; }
     </style>
 </head>
 <body>
@@ -17,14 +22,20 @@
     </div>
     <div class="content">
         <h2>Pickup Sheet: {{ sheet.sheet_number }}</h2>
-        <p>Status: {{ sheet.pickup_status }}</p>
-        <p>Rider: {{ sheet.rider.name|default:"-" }}</p>
-        <h3>Parcels ({{ parcels.count }})</h3>
-        <ul>
-            {% for p in parcels %}
-            <li>{{ p.cn }} — {{ p.status }}</li>
-            {% endfor %}
-        </ul>
+        <p>Rider: {{ sheet.rider.name|default:"-" }} · {{ sheet.date|date:"d M Y" }}</p>
+
+        {% for p in parcels %}
+        <div class="card">
+            <div class="name">{{ p.shipper.customer_name }}</div>
+            <div class="row"><span>Address</span><span>{{ p.shipper.customer_pickup_address|default:"-" }}</span></div>
+            <div class="row"><span>Contact</span><span>{{ p.shipper.customer_phone_number|default:"-" }}</span></div>
+            <div class="row"><span>Qty</span><span>{{ p.number_of_pieces }}</span></div>
+            <div class="row"><span>Weight</span><span>{{ p.parcel_weight }}</span></div>
+            <span class="status-tag {% if p.status == 'Ready for Pickup' %}pending{% else %}collected{% endif %}">
+                {% if p.status == 'Ready for Pickup' %}Pending{% else %}Collected{% endif %}
+            </span>
+        </div>
+        {% endfor %}
     </div>
 </body>
 </html>
