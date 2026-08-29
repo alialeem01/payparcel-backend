@@ -192,8 +192,6 @@ class ManifestAdmin(ModelAdmin):
             edit_url, delete_url
         )
     row_actions.short_description = 'Actions'
-
-
 @admin.register(DeliverySheet)
 class DeliverySheetAdmin(ModelAdmin):
     list_display = ('ds_number', 'tracking_number', 'shipper', 'rider', 'pickup_sheet', 'sheet_status', 'total_parcels', 'total_weight', 'total_cod', 'date', 'row_actions')
@@ -203,18 +201,17 @@ class DeliverySheetAdmin(ModelAdmin):
     list_filter_submit = True
     list_filter = (
         ('sheet_status', ChoicesDropdownFilter),
-        
-    def has_add_permission(self, request):
-        return False
-
     )
     actions = None
 
+    def has_add_permission(self, request):
+        return False
+
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
-        if form.instance.sheet_status == 'Close':
+        if form.instance.sheet_status == 'Picked Up':
             for parcel in form.instance.parcels.all():
-                parcel.status = 'Delivered'
+                parcel.status = 'Out for Delivery'
                 parcel.save()
 
     def row_actions(self, obj):
