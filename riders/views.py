@@ -22,20 +22,17 @@ def rider_login(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def rider_pickup_sheets(request):
+def rider_delivery_sheets(request):
     rider = request.user.rider_profile
-    sheets = rider.pickup_sheets.all()
+    sheets = DeliverySheet.objects.filter(rider=rider, sheet_status='Picked Up')
     data = [{
-        'sheet_number': s.sheet_number,
-        'date': s.date,
-        'status': s.pickup_status,
-        'parcels': [{
-            'customer': p.shipper.customer_name,
-            'address': p.shipper.customer_pickup_address,
-            'contact': p.shipper.customer_phone_number,
-            'quantity': p.number_of_pieces,
-            'weight': str(p.parcel_weight),
-        } for p in s.parcels.all()]
+        'ds_number': s.ds_number,
+        'tracking_number': s.tracking_number,
+        'shipper': s.shipper.customer_name,
+        'address': s.shipper.customer_pickup_address,
+        'contact': s.shipper.customer_phone_number,
+        'status': s.sheet_status,
+        'parcels': [{'cn': p.cn, 'quantity': p.number_of_pieces, 'weight': str(p.parcel_weight), 'cod': str(p.cod)} for p in s.parcels.all()],
     } for s in sheets]
     return Response(data)
 
@@ -54,10 +51,12 @@ def scan_delivery_sheet(request, tracking_number):
     if ds.sheet_status != 'Pending':
         return Response({'error': 'Already scanned or inactive'}, status=409)
 
-    ds.sheet_status = 'Picked Up'
-    ds.scanned_at = timezone.now()
-    ds.save()
-    ds.parcels.update(status='Out for Delivery')
+        from django.db import transaction
+        with transaction.atomic():
+            ds.sheet_status = 'Picked Up'
+            ds.scanned_at = timezone.now()
+            ds.save()
+            ds.parcels.update(status='Out for Delivery')
 
     return Response({
         'ds_number': ds.ds_number,
