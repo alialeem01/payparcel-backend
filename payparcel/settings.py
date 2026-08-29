@@ -222,7 +222,6 @@ UNFOLD = {
                     {"title": _("Customers"), "icon": "person", "link": reverse_lazy("admin:customers_customer_changelist")},
                     {"title": _("Customer parcels"), "icon": "inventory_2", "link": reverse_lazy("admin:parcels_customerparcel_changelist")},
                     {"title": _("Pickup sheets"), "icon": "local_shipping", "link": reverse_lazy("admin:operations_pickupsheet_changelist")},
-                    {"title": _("Loadsheets"), "icon": "assignment", "link": reverse_lazy("admin:loadsheets_loadsheet_changelist")},
                     {"title": _("Manifests"), "icon": "description", "link": reverse_lazy("admin:operations_manifest_changelist")},
                     {"title": _("Delivery sheets"), "icon": "task", "link": reverse_lazy("admin:operations_deliverysheet_changelist")},
                     {"title": _("Invoices"), "icon": "receipt_long", "link": reverse_lazy("admin:invoices_invoice_changelist")},
