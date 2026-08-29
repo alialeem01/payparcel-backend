@@ -22,6 +22,26 @@ def rider_login(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
+def rider_pickup_sheets(request):
+    rider = request.user.rider_profile
+    sheets = rider.pickup_sheets.all()
+    data = [{
+        'sheet_number': s.sheet_number,
+        'date': s.date,
+        'status': s.pickup_status,
+        'parcels': [{
+            'customer': p.shipper.customer_name,
+            'address': p.shipper.customer_pickup_address,
+            'contact': p.shipper.customer_phone_number,
+            'quantity': p.number_of_pieces,
+            'weight': str(p.parcel_weight),
+        } for p in s.parcels.all()]
+    } for s in sheets]
+    return Response(data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def rider_delivery_sheets(request):
     rider = request.user.rider_profile
     sheets = DeliverySheet.objects.filter(rider=rider, sheet_status='Picked Up')
