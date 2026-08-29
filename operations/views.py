@@ -35,3 +35,8 @@ def print_delivery_sheet(request, tracking_number):
     ds = get_object_or_404(DeliverySheet, tracking_number=tracking_number)
     context = {'ds': ds, 'parcels': ds.parcels.all()}
     return render(request, 'tracking/print_delivery_sheet.html', context)
+
+def view_delivery_sheet(request, tracking_number):
+    ds = get_object_or_404(DeliverySheet, tracking_number=tracking_number)
+    context = {'ds': ds, 'parcels': ds.parcels.all()}
+    return render(request, 'tracking/view_delivery_sheet.html', context)

@@ -199,6 +199,7 @@ class ManifestAdmin(ModelAdmin):
             edit_url, delete_url
         )
     row_actions.short_description = 'Actions'
+
 @admin.register(DeliverySheet)
 class DeliverySheetAdmin(ModelAdmin):
     list_display = ('ds_number', 'tracking_number', 'shipper', 'rider', 'pickup_sheet', 'sheet_status', 'total_parcels', 'total_weight', 'total_cod', 'date', 'row_actions')
@@ -211,7 +212,7 @@ class DeliverySheetAdmin(ModelAdmin):
     )
     actions = None
 
-    def has_add_permission(self, request):
+    def has_delete_permission(self, request, obj=None):
         return False
 
     def has_change_permission(self, request, obj=None):
@@ -225,10 +226,6 @@ class DeliverySheetAdmin(ModelAdmin):
                 parcel.save()
 
     def row_actions(self, obj):
-        delete_url = reverse('admin:operations_deliverysheet_delete', args=[obj.pk])
-        view_url = reverse('track_pickup_sheet', args=[obj.pickup_sheet.sheet_number]) if obj.pickup_sheet else '#'
-        return format_html(
-            '<a href="{}">View</a> | <a href="{}">Delete</a>',
-            view_url, delete_url
-        )
-    row_actions.short_description = 'Actions'
+    view_url = reverse('view_delivery_sheet', args=[obj.tracking_number])
+    return format_html('<a href="{}">View</a>', view_url)
+row_actions.short_description = 'Actions'
