@@ -96,8 +96,8 @@ class CustomerParcelAdmin(ModelAdmin):
 
             shippers = set(queryset.values_list('shipper_id', flat=True))
             for shipper_id in shippers:
-                ds = DeliverySheet.objects.create(shipper_id=shipper_id, rider=rider, pickup_sheet=sheet)
-                ds.parcels.set(queryset.filter(shipper_id=shipper_id))
+                ds, created = DeliverySheet.objects.get_or_create(pickup_sheet=sheet, shipper_id=shipper_id, defaults={'rider': rider})
+                ds.parcels.add(*queryset.filter(shipper_id=shipper_id))
 
 
 

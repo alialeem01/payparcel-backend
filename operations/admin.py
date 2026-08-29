@@ -58,8 +58,8 @@ class PickupSheetAdmin(ModelAdmin):
             
             shippers = set(parcels.values_list('shipper_id', flat=True))
             for shipper_id in shippers:
-                ds = DeliverySheet.objects.create(shipper_id=shipper_id, rider=rider, pickup_sheet=sheet)
-                ds.parcels.set(parcels.filter(shipper_id=shipper_id))
+                ds, created = DeliverySheet.objects.get_or_create(pickup_sheet=sheet, shipper_id=shipper_id, defaults={'rider': rider})
+                ds.parcels.add(*parcels.filter(shipper_id=shipper_id))
 
             self.message_user(request, f'Pickup Sheet {sheet.sheet_number} created with {parcels.count()} order(s).')
 
@@ -121,8 +121,8 @@ class PickupSheetAdmin(ModelAdmin):
 
                 shippers = set(added_parcels.values_list('shipper_id', flat=True))
                 for shipper_id in shippers:
-                    ds = DeliverySheet.objects.create(shipper_id=shipper_id, rider=rider, pickup_sheet=sheet)
-                    ds.parcels.set(added_parcels.filter(shipper_id=shipper_id))
+                    ds, created = DeliverySheet.objects.get_or_create(pickup_sheet=sheet, shipper_id=shipper_id, defaults={'rider': rider})
+                    ds.parcels.add(*added_parcels.filter(shipper_id=shipper_id))
 
             sheet.rider = rider
             sheet.parcels.set(CustomerParcel.objects.filter(pk__in=parcel_ids))
@@ -204,6 +204,9 @@ class DeliverySheetAdmin(ModelAdmin):
     list_filter = (
         ('sheet_status', ChoicesDropdownFilter),
         
+    def has_add_permission(self, request):
+    return False
+
     )
     actions = None
 
