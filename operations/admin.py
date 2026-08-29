@@ -29,7 +29,7 @@ class PickupSheetAdmin(ModelAdmin):
         view_url = reverse('track_pickup_sheet', args=[obj.sheet_number])
         print_url = reverse('print_pickup_sheet', args=[obj.sheet_number])
         return format_html(
-            '<a href="{}">Edit</a> | <a href="{}">Delete</a> | <a href="{}" target="_blank">View</a> | <a href="{}" target="_blank">Print</a>',
+            '<a href="{}">Edit</a> | <a href="{}">Delete</a> | <a href="{}">View</a> | <a href="{}" target="_blank">Print</a>',
             edit_url, delete_url, view_url, print_url
         )
     row_actions.short_description = 'Actions'
@@ -114,6 +114,8 @@ class PickupSheetAdmin(ModelAdmin):
 
             if removed_ids:
                 CustomerParcel.objects.filter(pk__in=removed_ids).update(status='Order', assigned_rider=None)
+                for ds in DeliverySheet.objects.filter(pickup_sheet=sheet):
+                ds.parcels.remove(*CustomerParcel.objects.filter(pk__in=removed_ids))
 
             if added_ids:
                 added_parcels = CustomerParcel.objects.filter(pk__in=added_ids, status='Order')
@@ -121,8 +123,13 @@ class PickupSheetAdmin(ModelAdmin):
 
                 shippers = set(added_parcels.values_list('shipper_id', flat=True))
                 for shipper_id in shippers:
-                    ds, created = DeliverySheet.objects.get_or_create(pickup_sheet=sheet, shipper_id=shipper_id, defaults={'rider': rider})
+                    ds, created = DeliverySheet.objects.get_or_create(
+                        pickup_sheet=sheet, shipper_id=shipper_id, defaults={'rider': rider}
+                    )
                     ds.parcels.add(*added_parcels.filter(shipper_id=shipper_id))
+                    if not created:
+                        ds.rider = rider
+                        ds.save()
 
             sheet.rider = rider
             sheet.parcels.set(CustomerParcel.objects.filter(pk__in=parcel_ids))
@@ -207,6 +214,9 @@ class DeliverySheetAdmin(ModelAdmin):
     def has_add_permission(self, request):
         return False
 
+    def has_change_permission(self, request, obj=None):
+        return False
+
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
         if form.instance.sheet_status == 'Picked Up':
@@ -215,10 +225,10 @@ class DeliverySheetAdmin(ModelAdmin):
                 parcel.save()
 
     def row_actions(self, obj):
-        edit_url = reverse('admin:operations_deliverysheet_change', args=[obj.pk])
         delete_url = reverse('admin:operations_deliverysheet_delete', args=[obj.pk])
+        view_url = reverse('track_pickup_sheet', args=[obj.pickup_sheet.sheet_number]) if obj.pickup_sheet else '#'
         return format_html(
-            '<a href="{}">Edit</a> | <a href="{}">Delete</a>',
-            edit_url, delete_url
+            '<a href="{}">View</a> | <a href="{}">Delete</a>',
+            view_url, delete_url
         )
     row_actions.short_description = 'Actions'
