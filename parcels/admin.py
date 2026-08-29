@@ -74,7 +74,7 @@ class CustomerParcelAdmin(ModelAdmin):
 
     def assign_to_rider(self, request, queryset):
         from riders.models import Rider
-        from operations.models import PickupSheet
+        from operations.models import PickupSheet, DeliverySheet
 
         if queryset.exclude(status='Order').exists():
             self.message_user(request, 'Only parcels with status "Order" can be assigned to a rider.', level=messages.ERROR)
@@ -87,10 +87,21 @@ class CustomerParcelAdmin(ModelAdmin):
             shippers = set(queryset.values_list('shipper_id', flat=True))
             sheet_shipper_id = shippers.pop() if len(shippers) == 1 else None
 
+            from operations.models import PickupSheet, DeliverySheet
+
             sheet = PickupSheet.objects.create(rider=rider, shipper_id=sheet_shipper_id)
             sheet.parcels.set(queryset)
 
             queryset.update(status='Ready for Pickup', assigned_rider=rider)
+
+            shippers = set(queryset.values_list('shipper_id', flat=True))
+            for shipper_id in shippers:
+                ds = DeliverySheet.objects.create(shipper_id=shipper_id, rider=rider, pickup_sheet=sheet)
+                ds.parcels.set(queryset.filter(shipper_id=shipper_id))
+
+
+
+
 
             self.message_user(request, f'{queryset.count()} parcel(s) assigned to {rider.name}. Pickup Sheet {sheet.sheet_number} created.')
             return

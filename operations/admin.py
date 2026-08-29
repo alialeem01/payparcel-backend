@@ -8,6 +8,7 @@ from unfold.contrib.filters.admin import ChoicesDropdownFilter
 from django_unfold_admin_listfilter_dropdown.filters import DropdownFilter
 from parcels.models import PAKISTAN_CITIES
 from .models import PickupSheet, Manifest, DeliverySheet
+from .models import DeliverySheet
 
 
 @admin.register(PickupSheet)
@@ -54,7 +55,7 @@ class PickupSheetAdmin(ModelAdmin):
 
             sheet = PickupSheet.objects.create(rider=rider)
             sheet.parcels.set(parcels)
-            from .models import DeliverySheet
+            
             shippers = set(parcels.values_list('shipper_id', flat=True))
             for shipper_id in shippers:
                 ds = DeliverySheet.objects.create(shipper_id=shipper_id, rider=rider, pickup_sheet=sheet)
@@ -115,7 +116,13 @@ class PickupSheetAdmin(ModelAdmin):
                 CustomerParcel.objects.filter(pk__in=removed_ids).update(status='Order', assigned_rider=None)
 
             if added_ids:
-                CustomerParcel.objects.filter(pk__in=added_ids, status='Order').update(status='Ready for Pickup', assigned_rider=rider)
+                added_parcels = CustomerParcel.objects.filter(pk__in=added_ids, status='Order')
+                added_parcels.update(status='Ready for Pickup', assigned_rider=rider)
+
+                shippers = set(added_parcels.values_list('shipper_id', flat=True))
+                for shipper_id in shippers:
+                    ds = DeliverySheet.objects.create(shipper_id=shipper_id, rider=rider, pickup_sheet=sheet)
+                    ds.parcels.set(added_parcels.filter(shipper_id=shipper_id))
 
             sheet.rider = rider
             sheet.parcels.set(CustomerParcel.objects.filter(pk__in=parcel_ids))
