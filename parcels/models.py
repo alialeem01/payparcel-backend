@@ -31,7 +31,7 @@ class CustomerParcel(models.Model):
     STATUS_CHOICES = [
     ('Order', 'Order'),
     ('Ready for Pickup', 'Ready for Pickup'),
-    ('Departed from Origin', 'Departed from Origin'),
+    ('Out for Delivery', 'Out for Delivery'),
     ('In Transit', 'In Transit'),
     ('Delivered', 'Delivered'),
     ('Parcel Not Available', 'Parcel Not Available'),
@@ -124,9 +124,7 @@ class CustomerParcel(models.Model):
 
     order_from = models.CharField(max_length=100, blank=True, null=True)
     store_order_number = models.CharField(max_length=100, blank=True, null=True)
-    loadsheet = models.CharField(max_length=100, blank=True, null=True)
-    customer_loadsheet = models.CharField(max_length=100, blank=True, null=True)
-
+    
     last_update = models.DateTimeField(auto_now=True)
     shipment_date = models.DateTimeField(blank=True, null=True)
 

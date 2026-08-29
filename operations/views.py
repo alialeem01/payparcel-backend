@@ -28,3 +28,10 @@ def print_pickup_sheet(request, sheet_number):
         'totals': totals,
     }
     return render(request, 'tracking/print_pickup_sheet.html', context)
+
+from .models import DeliverySheet
+
+def print_delivery_sheet(request, tracking_number):
+    ds = get_object_or_404(DeliverySheet, tracking_number=tracking_number)
+    context = {'ds': ds, 'parcels': ds.parcels.all()}
+    return render(request, 'tracking/print_delivery_sheet.html', context)

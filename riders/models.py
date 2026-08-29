@@ -12,6 +12,7 @@ class Rider(models.Model):
     cnic_number = models.CharField(max_length=20, default='')
     cnic_front_image = models.ImageField(upload_to='rider_cnic/', default='')
     cnic_back_image = models.ImageField(upload_to='rider_cnic/', default='')
+    vehicle_number = models.CharField(max_length=50, blank=True, null=True)
     branch = models.CharField(max_length=100, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -54,7 +54,6 @@ INSTALLED_APPS = [
     'customers',
     'locations',
     'parcels',
-    'loadsheets',
     'invoices',
     'operations',
     'riders'

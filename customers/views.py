@@ -3,6 +3,10 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 from .serializers import RegisterSerializer
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
+
 
 @api_view(['POST'])
 def register_customer(request):
@@ -96,3 +100,30 @@ def billing_summary(request):
         'delivery_flyer_charges': delivery_flyer_charges,
         'invoices': invoice_list,
     })
+
+from operations.models import DeliverySheet
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def customer_delivery_sheets(request):
+    try:
+        customer = Customer.objects.get(customer_user=request.user.username)
+    except Customer.DoesNotExist:
+        return Response({'error': 'Customer profile not found'}, status=404)
+
+    sheets = DeliverySheet.objects.filter(shipper=customer)
+    data = [{
+        'ds_number': s.ds_number,
+        'tracking_number': s.tracking_number,
+        'date': s.date,
+        'status': s.sheet_status,
+        'rider_name': s.rider.name if s.rider else None,
+        'rider_contact': s.rider.phone_number if s.rider else None,
+        'rider_vehicle': s.rider.vehicle_number if s.rider else None,
+        'total_parcels': s.total_parcels,
+        'total_weight': s.total_weight,
+        'total_cod': s.total_cod,
+        'qr_url': s.qr_code.url if s.qr_code else None,
+        'print_url': f'/track/deliverysheet/{s.tracking_number}/print/',
+    } for s in sheets]
+    return Response(data)

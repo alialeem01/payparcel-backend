@@ -1,29 +1,13 @@
 from rest_framework import serializers
-from customers.models import Customer
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .models import CustomerParcel
+from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Sum, Count
+from customers.models import Customer
+from .models import CustomerParcel, StatusNarration
 from .serializers import TrackingSerializer
 
-@api_view(['GET'])
-def track_parcel(request, cn):
-    try:
-        parcel = CustomerParcel.objects.get(cn=cn)
-        serializer = TrackingSerializer(parcel)
-        data = serializer.data
-        try:
-            narration = StatusNarration.objects.get(status=parcel.status)
-            data['status_message'] = narration.narration
-        except StatusNarration.DoesNotExist:
-            data['status_message'] = ''
-        return Response(data)
-    except CustomerParcel.DoesNotExist:
-        return Response({'error': 'Tracking ID not found'}, status=404)
-
-
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import permission_classes
-from customers.models import Customer
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -36,12 +20,14 @@ def list_my_orders(request):
     except Customer.DoesNotExist:
         return Response({'error': 'Customer profile not found'}, status=404)
 
+
 class BookOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerParcel
         fields = ['consignee', 'consignee_phone', 'alternate_phone', 'address',
-                   'destination', 'cod', 'parcel_weight', 'number_of_pieces',
-                   'service_type', 'product', 'instructions', 'flyer_size']
+                  'city', 'cod', 'parcel_weight', 'number_of_pieces',
+                  'service_type', 'product', 'instructions', 'flyer_size']
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -57,8 +43,6 @@ def book_order(request):
         return Response({'message': 'Order booked successfully', 'cn': parcel.cn}, status=201)
     return Response(serializer.errors, status=400)
 
-from django.db.models import Sum, Count, Q
-from datetime import datetime
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -70,7 +54,6 @@ def dashboard_summary(request):
 
     qs = CustomerParcel.objects.filter(shipper=customer)
 
-    # Optional date filtering
     date_from = request.GET.get('from')
     date_to = request.GET.get('to')
     if date_from:
@@ -100,7 +83,8 @@ def dashboard_summary(request):
             'pending': count_amount('Order'),
             'delivered': count_amount('Delivered'),
             'not_arrived': count_amount('Order'),
-            'arrived': count_amount('Picked'),
+            'ready_for_pickup': count_amount('Ready for Pickup'),
+            'out_for_delivery': count_amount('Out for Delivery'),
             'ready_to_return': count_amount('Returned'),
             'rts': count_amount('Returned'),
         },
@@ -110,12 +94,11 @@ def dashboard_summary(request):
     }
     return Response(data)
 
-import openpyxl
-from django.core.files.uploadedfile import InMemoryUploadedFile
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def bulk_book_orders(request):
+    import openpyxl
     try:
         customer = Customer.objects.get(customer_user=request.user.username)
     except Customer.DoesNotExist:
@@ -127,7 +110,7 @@ def bulk_book_orders(request):
 
     wb = openpyxl.load_workbook(file)
     sheet = wb.active
-    rows = list(sheet.iter_rows(min_row=2, values_only=True))  # skip header row
+    rows = list(sheet.iter_rows(min_row=2, values_only=True))
 
     if len(rows) > 100:
         return Response({'error': 'Bulk Booking Limit is 100'}, status=400)
@@ -138,9 +121,6 @@ def bulk_book_orders(request):
         if not row or not row[0]:
             continue
         try:
-            # Expected column order: Receiver Name, Receiver Phone, Alt Receiver Phone,
-            # Order ID, Service Type, Destination City, Address, COD Amount, Product,
-            # Instructions, Parcel Weight, Pcs
             parcel = CustomerParcel.objects.create(
                 shipper=customer,
                 consignee=row[0],
@@ -148,7 +128,7 @@ def bulk_book_orders(request):
                 alternate_phone=row[2] or '',
                 order_number=row[3] or '',
                 service_type=row[4] or 'COD',
-                destination=row[5],
+                city=row[5],
                 address=row[6],
                 cod=row[7] or 0,
                 product=row[8] or '',
@@ -162,6 +142,7 @@ def bulk_book_orders(request):
 
     return Response({'created': created, 'errors': errors, 'total_created': len(created)}, status=201)
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def parcel_report(request):
@@ -174,7 +155,7 @@ def parcel_report(request):
 
     cn = request.GET.get('cn')
     service_type = request.GET.get('service_type')
-    destination = request.GET.get('destination')
+    city = request.GET.get('city')
     status_filter = request.GET.get('status')
     active = request.GET.get('active')
     consignee_phone = request.GET.get('consignee_phone')
@@ -185,8 +166,8 @@ def parcel_report(request):
         qs = qs.filter(cn__icontains=cn)
     if service_type:
         qs = qs.filter(service_type=service_type)
-    if destination:
-        qs = qs.filter(destination__icontains=destination)
+    if city:
+        qs = qs.filter(city__icontains=city)
     if status_filter:
         qs = qs.filter(status=status_filter)
     if active:
@@ -211,7 +192,7 @@ def parcel_report(request):
             'service_type': p.service_type,
             'consignee': p.consignee,
             'consignee_phone': p.consignee_phone,
-            'destination': p.destination,
+            'city': p.city,
             'status': p.status,
             'address': p.address,
             'parcel_weight': float(p.parcel_weight or 0),
@@ -226,33 +207,6 @@ def parcel_report(request):
         'total_pieces': total_pieces,
     })
 
-from loadsheets.models import Loadsheet
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def loadsheet_list(request):
-    try:
-        customer = Customer.objects.get(customer_user=request.user.username)
-    except Customer.DoesNotExist:
-        return Response({'error': 'Customer profile not found'}, status=404)
-
-    sheets = Loadsheet.objects.filter(customer=customer).order_by('-loadsheet_date')
-    data = [{
-        'loadsheet_no': ls.loadsheet_no,
-        'customer': customer.customer_name,
-        'total_weight': ls.total_weight,
-        'total_consignee': ls.total_consignee,
-        'total_pieces': ls.total_pieces,
-        'total_cod': ls.total_cod,
-        'created_by': ls.created_by,
-        'loadsheet_date': ls.loadsheet_date,
-    } for ls in sheets]
-
-    return Response({'results': data})
-
-from django.shortcuts import render, get_object_or_404
-from .models import CustomerParcel, StatusNarration
-
 
 def track_parcel(request, cn):
     parcel = get_object_or_404(CustomerParcel, cn=cn)
@@ -263,23 +217,4 @@ def track_parcel(request, cn):
     }
     return render(request, 'tracking/track_parcel.html', context)
 
-from django.shortcuts import redirect
 
-def confirm_pickup(request, cn):
-    parcel = get_object_or_404(CustomerParcel, cn=cn)
-
-    if request.method != 'POST':
-        return render(request, 'tracking/track_parcel.html', {
-            'parcel': parcel,
-            'narration': None,
-        })
-
-    if not parcel.pickup_sheets.exists():
-        return render(request, 'tracking/scan_result.html', {'success': False, 'message': 'Parcel is not assigned to a Pickup Sheet.'})
-
-    if parcel.status != 'Ready for Pickup':
-        return render(request, 'tracking/scan_result.html', {'success': False, 'message': 'Invalid or duplicate scan. This parcel is not pending pickup.'})
-
-    parcel.status = 'Departed from Origin'
-    parcel.save()
-    return render(request, 'tracking/scan_result.html', {'success': True, 'message': f'Pickup confirmed for {parcel.cn}.'})

@@ -54,7 +54,11 @@ class PickupSheetAdmin(ModelAdmin):
 
             sheet = PickupSheet.objects.create(rider=rider)
             sheet.parcels.set(parcels)
-            parcels.update(status='Ready for Pickup', assigned_rider=rider)
+            from .models import DeliverySheet
+            shippers = set(parcels.values_list('shipper_id', flat=True))
+            for shipper_id in shippers:
+                ds = DeliverySheet.objects.create(shipper_id=shipper_id, rider=rider, pickup_sheet=sheet)
+                ds.parcels.set(parcels.filter(shipper_id=shipper_id))
 
             self.message_user(request, f'Pickup Sheet {sheet.sheet_number} created with {parcels.count()} order(s).')
 

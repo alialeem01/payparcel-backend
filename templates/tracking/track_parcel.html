@@ -27,13 +27,7 @@
         <div class="row"><span class="label">City</span><span class="value">{{ parcel.city|default:"-" }}</span></div>
         <div class="row"><span class="label">Delivery Address</span><span class="value">{{ parcel.address|default:"-" }}</span></div>
     
-        {% if parcel.status == 'Ready for Pickup' %}
-        <form method="post" action="{% url 'confirm_pickup' parcel.cn %}" style="margin-top:16px;">
-        {% csrf_token %}
-        <button type="submit" style="background:#1d4ed8;color:#fff;border:none;padding:10px 16px;border-radius:6px;font-weight:600;width:100%;">Confirm Pickup</button>
-        </form>
-        {% endif %}
-    
+            
     </div>
 </body>
 </html>

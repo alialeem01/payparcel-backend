@@ -46,7 +46,6 @@ class CustomerParcelAdmin(ModelAdmin):
                 'proof_image',
                 ('delivery_date', 'delivery_time', 'share'),
                 ('order_from', 'store_order_number'),
-                ('loadsheet', 'customer_loadsheet'),
                 ('last_update', 'shipment_date'),
                 ('branch', 'user'),
             )
