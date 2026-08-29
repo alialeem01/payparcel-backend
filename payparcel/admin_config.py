@@ -4,7 +4,6 @@ CUSTOM_ORDER = [
     'customer',       # 01 Customers
     'customerparcel',  # 03 Customer Parcels
     'pickupsheet',     # 03 Pickup Sheet
-    'loadsheet',       # 04 Loadsheet
     'manifest',        # 04 Manifest
     'deliverysheet',   # 06 Delivery Sheet
     'invoice',         # 07 Customer Payment Invoices

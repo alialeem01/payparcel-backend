@@ -84,9 +84,9 @@ class DeliverySheet(models.Model):
 
     ds_number = models.CharField(max_length=50, blank=True, editable=False, unique=True)
     tracking_number = models.CharField(max_length=50, blank=True, editable=False, unique=True)
-    shipper = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='delivery_sheets')
+    shipper = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='delivery_sheets', null=True, blank=True)
     rider = models.ForeignKey('riders.Rider', on_delete=models.SET_NULL, null=True, blank=True, related_name='delivery_sheets')
-    pickup_sheet = models.ForeignKey(PickupSheet, on_delete=models.CASCADE, related_name='delivery_sheets')
+    pickup_sheet = models.ForeignKey(PickupSheet, on_delete=models.CASCADE, related_name='delivery_sheets', null=True, blank=True)
     parcels = models.ManyToManyField(CustomerParcel, related_name='delivery_sheets', blank=True)
     sheet_status = models.CharField(max_length=10, choices=SHEET_STATUS_CHOICES, default='Pending')
     qr_code = models.ImageField(upload_to='delivery_qr/', blank=True, null=True, editable=False)
