@@ -226,6 +226,6 @@ class DeliverySheetAdmin(ModelAdmin):
                 parcel.save()
 
     def row_actions(self, obj):
-    view_url = reverse('view_delivery_sheet', args=[obj.tracking_number])
-    return format_html('<a href="{}">View</a>', view_url)
-row_actions.short_description = 'Actions'
+        view_url = reverse('view_delivery_sheet', args=[obj.tracking_number])
+        return format_html('<a href="{}">View</a>', view_url)
+    row_actions.short_description = 'Actions'
