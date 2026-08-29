@@ -18,7 +18,7 @@ class PickupSheetAdmin(ModelAdmin):
     list_filter_submit = True
     list_filter = (
         ('pickup_status', ChoicesDropdownFilter),
-        ('branch', DropdownFilter),
+        
     )
     actions = None
 
@@ -166,15 +166,16 @@ class ManifestAdmin(ModelAdmin):
     list_filter_submit = True
     list_filter = (
         ('mode_of_transportation', DropdownFilter),
-        ('branch', DropdownFilter),
+        
     )
     actions = None
 
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
-        for parcel in form.instance.parcels.all():
-            parcel.status = 'In Transit'
-            parcel.save()
+        if form.instance.sheet_status == 'Picked Up':
+            for parcel in form.instance.parcels.all():
+                parcel.status = 'Out for Delivery'
+                parcel.save()
 
     def row_actions(self, obj):
         edit_url = reverse('admin:operations_manifest_change', args=[obj.pk])
@@ -188,14 +189,14 @@ class ManifestAdmin(ModelAdmin):
 
 @admin.register(DeliverySheet)
 class DeliverySheetAdmin(ModelAdmin):
-    list_display = ('ds_number', 'user', 'branch', 'rider', 'cn_list', 'sheet_status', 'origin', 'area', 'total_parcels', 'total_cod', 'date', 'row_actions')
+    list_display = ('ds_number', 'tracking_number', 'shipper', 'rider', 'pickup_sheet', 'sheet_status', 'total_parcels', 'total_weight', 'total_cod', 'date', 'row_actions')
     filter_horizontal = ('parcels',)
-    readonly_fields = ('ds_number', 'date')
+    readonly_fields = ('ds_number', 'tracking_number', 'qr_code', 'date')
     search_fields = ('ds_number',)
     list_filter_submit = True
     list_filter = (
         ('sheet_status', ChoicesDropdownFilter),
-        ('branch', DropdownFilter),
+        
     )
     actions = None
 
