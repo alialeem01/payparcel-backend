@@ -115,7 +115,7 @@ class PickupSheetAdmin(ModelAdmin):
             if removed_ids:
                 CustomerParcel.objects.filter(pk__in=removed_ids).update(status='Order', assigned_rider=None)
                 for ds in DeliverySheet.objects.filter(pickup_sheet=sheet):
-                ds.parcels.remove(*CustomerParcel.objects.filter(pk__in=removed_ids))
+                    ds.parcels.remove(*CustomerParcel.objects.filter(pk__in=removed_ids))
 
             if added_ids:
                 added_parcels = CustomerParcel.objects.filter(pk__in=added_ids, status='Order')
