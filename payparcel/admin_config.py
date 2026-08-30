@@ -4,11 +4,10 @@ CUSTOM_ORDER = [
     'customer',       # 01 Customers
     'customerparcel',  # 03 Customer Parcels
     'pickupsheet',     # 03 Pickup Sheet
-    'deliverysheet',   # 04 Delivery Sheet
-    'invoice',         # 05 Customer Payment Invoices
-    'branch',          # 06 Branches
-    'Groups',          # 07 Groups
-    'Users',           # 08 Users
+    'deliverysheet',   # 06 Delivery Sheet
+    'invoice',         # 07 Customer Payment Invoices
+    'branch',          # 08 Branches
+    
 ]
 
 def get_app_list(self, request, app_label=None):
