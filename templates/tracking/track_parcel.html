@@ -22,8 +22,7 @@
     <div class="content">
         <h2>Tracking: {{ parcel.cn }}</h2>
         <div class="status">{{ parcel.status }}</div>
-        {% if narration %}<p class="narration">{{ narration }}</p>{% endif %}
-
+        
         <div class="row"><span class="label">City</span><span class="value">{{ parcel.city|default:"-" }}</span></div>
         <div class="row"><span class="label">Delivery Address</span><span class="value">{{ parcel.address|default:"-" }}</span></div>
     

@@ -7,7 +7,7 @@ from unfold.admin import ModelAdmin
 from unfold.contrib.filters.admin import ChoicesDropdownFilter
 from django_unfold_admin_listfilter_dropdown.filters import DropdownFilter
 from parcels.models import PAKISTAN_CITIES
-from .models import PickupSheet, Manifest, DeliverySheet
+from .models import PickupSheet, DeliverySheet
 from .models import DeliverySheet
 
 
@@ -29,7 +29,7 @@ class PickupSheetAdmin(ModelAdmin):
         view_url = reverse('track_pickup_sheet', args=[obj.sheet_number])
         print_url = reverse('print_pickup_sheet', args=[obj.sheet_number])
         return format_html(
-            '<a href="{}">Edit</a> | <a href="{}">Delete</a> | <a href="{}">View</a> | <a href="{}" target="_blank">Print</a>',
+            '<a href="{}">Edit</a> | <a href="{}">Delete</a> | <a href="{}">View</a> | <a href="{}">Print</a>',
             edit_url, delete_url, view_url, print_url
         )
     row_actions.short_description = 'Actions'
@@ -170,35 +170,6 @@ class PickupSheetAdmin(ModelAdmin):
         }
         return render(request, 'admin/operations/change_pickup_sheet.html', context)
 
-
-@admin.register(Manifest)
-class ManifestAdmin(ModelAdmin):
-    list_display = ('code', 'user', 'branch', 'origin', 'destination', 'mode_of_transportation', 'seal_no', 'total_weight', 'total_pcs', 'total_parcel', 'date', 'row_actions')
-    filter_horizontal = ('parcels',)
-    readonly_fields = ('code', 'date')
-    search_fields = ('code',)
-    list_filter_submit = True
-    list_filter = (
-        ('mode_of_transportation', DropdownFilter),
-        
-    )
-    actions = None
-
-    def save_related(self, request, form, formsets, change):
-        super().save_related(request, form, formsets, change)
-        if form.instance.sheet_status == 'Picked Up':
-            for parcel in form.instance.parcels.all():
-                parcel.status = 'Out for Delivery'
-                parcel.save()
-
-    def row_actions(self, obj):
-        edit_url = reverse('admin:operations_manifest_change', args=[obj.pk])
-        delete_url = reverse('admin:operations_manifest_delete', args=[obj.pk])
-        return format_html(
-            '<a href="{}">Edit</a> | <a href="{}">Delete</a>',
-            edit_url, delete_url
-        )
-    row_actions.short_description = 'Actions'
 
 @admin.register(DeliverySheet)
 class DeliverySheetAdmin(ModelAdmin):

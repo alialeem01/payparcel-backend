@@ -86,3 +86,22 @@ def scan_delivery_sheet(request, tracking_number):
         'contact': ds.shipper.customer_phone_number,
         'parcels': [{'cn': p.cn, 'quantity': p.number_of_pieces, 'weight': str(p.parcel_weight), 'cod': str(p.cod)} for p in ds.parcels.all()],
     })
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def scan_parcel_delivery(request, cn):
+    rider = request.user.rider_profile
+    from parcels.models import CustomerParcel
+    try:
+        parcel = CustomerParcel.objects.get(cn=cn)
+    except CustomerParcel.DoesNotExist:
+        return Response({'error': 'Invalid QR'}, status=404)
+
+    if parcel.assigned_rider_id != rider.id:
+        return Response({'error': 'Not assigned to this rider'}, status=403)
+    if parcel.status != 'Out for Delivery':
+        return Response({'error': 'Invalid or duplicate scan'}, status=409)
+
+    parcel.status = 'Delivered'
+    parcel.save()
+    return Response({'cn': parcel.cn, 'status': parcel.status})

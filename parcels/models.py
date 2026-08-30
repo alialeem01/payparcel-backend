@@ -29,14 +29,14 @@ PAKISTAN_CITIES = [
 class CustomerParcel(models.Model):
     YES_NO = [('Yes', 'Yes'), ('No', 'No')]
     STATUS_CHOICES = [
-    ('Order', 'Order'),
-    ('Ready for Pickup', 'Ready for Pickup'),
-    ('Out for Delivery', 'Out for Delivery'),
-    ('In Transit', 'In Transit'),
-    ('Delivered', 'Delivered'),
-    ('Parcel Not Available', 'Parcel Not Available'),
-    ('Returned', 'Returned'),
+        ('Order', 'Order'),
+        ('Ready for Pickup', 'Ready for Pickup'),
+        ('Out for Delivery', 'Out for Delivery'),
+        ('Delivered', 'Delivered'),
+        ('Parcel Not Available', 'Parcel Not Available'),
+        ('Returned', 'Returned'),
     ]
+
     PAYMENT_STATUS = [('Paid', 'Paid'), ('Unpaid', 'Unpaid')]
     SHARE_CHOICES = [('No Share', 'No Share')]
     RATE_MODE = [('Automatic', 'Automatic'), ('Manual', 'Manual')]
@@ -166,11 +166,3 @@ class CustomerParcel(models.Model):
 
     def __str__(self):
         return self.cn or f"Parcel #{self.pk}"
-
-
-class StatusNarration(models.Model):
-    status = models.CharField(max_length=30, choices=CustomerParcel.STATUS_CHOICES, unique=True)
-    narration = models.TextField(help_text="Customer-facing message shown for this status")
-
-    def __str__(self):
-        return self.status

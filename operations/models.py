@@ -43,42 +43,6 @@ class PickupSheet(models.Model):
         return self.sheet_number
 
 
-class Manifest(models.Model):
-    TRANSPORT_CHOICES = [('By Road', 'By Road'), ('By Air', 'By Air')]
-
-    code = models.CharField(max_length=50, blank=True, editable=False)
-    user = models.CharField(max_length=100, blank=True, null=True)
-    branch = models.CharField(max_length=100, blank=True, null=True)
-    origin = models.CharField(max_length=100, blank=True, null=True)
-    destination = models.CharField(max_length=100, blank=True, null=True)
-    mode_of_transportation = models.CharField(max_length=20, choices=TRANSPORT_CHOICES, default='By Road')
-    seal_no = models.CharField(max_length=50, blank=True, null=True)
-    remarks = models.CharField(max_length=255, blank=True, null=True)
-    parcels = models.ManyToManyField(CustomerParcel, related_name='manifests', blank=True)
-    date = models.DateTimeField(auto_now_add=True)
-
-    @property
-    def total_weight(self):
-        return sum(float(p.parcel_weight or 0) for p in self.parcels.all())
-
-    @property
-    def total_pcs(self):
-        return sum(p.number_of_pieces or 0 for p in self.parcels.all())
-
-    @property
-    def total_parcel(self):
-        return self.parcels.count()
-
-    def save(self, *args, **kwargs):
-        if not self.code:
-            from datetime import date
-            self.code = f"MF{date.today().year}{Manifest.objects.count() + 1}"
-        super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.code
-
-
 class DeliverySheet(models.Model):
     SHEET_STATUS_CHOICES = [('Pending', 'Pending'), ('Picked Up', 'Picked Up'), ('Cancelled', 'Cancelled')]
 
@@ -92,6 +56,9 @@ class DeliverySheet(models.Model):
     qr_code = models.ImageField(upload_to='delivery_qr/', blank=True, null=True, editable=False)
     scanned_at = models.DateTimeField(null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('pickup_sheet', 'shipper')
 
     @property
     def total_parcels(self):

@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Sum, Count
 from customers.models import Customer
-from .models import CustomerParcel, StatusNarration
+from .models import CustomerParcel
 from .serializers import TrackingSerializer
 
 
@@ -210,11 +210,5 @@ def parcel_report(request):
 
 def track_parcel(request, cn):
     parcel = get_object_or_404(CustomerParcel, cn=cn)
-    narration = StatusNarration.objects.filter(status=parcel.status).first()
-    context = {
-        'parcel': parcel,
-        'narration': narration.narration if narration else None,
-    }
+    context = {'parcel': parcel}
     return render(request, 'tracking/track_parcel.html', context)
-
-

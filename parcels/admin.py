@@ -6,7 +6,7 @@ from django.shortcuts import render
 from unfold.admin import ModelAdmin
 from unfold.contrib.filters.admin import ChoicesDropdownFilter
 from django_unfold_admin_listfilter_dropdown.filters import DropdownFilter
-from .models import CustomerParcel, StatusNarration
+from .models import CustomerParcel
 
 
 @admin.register(CustomerParcel)
@@ -69,7 +69,7 @@ class CustomerParcelAdmin(ModelAdmin):
 
     def row_actions(self, obj):
         view_url = reverse('track_parcel', args=[obj.cn])
-        return format_html('<a href="{}" target="_blank">View</a>', view_url)
+        return format_html('<a href="{}">View</a>', view_url)
     row_actions.short_description = 'Actions'
 
     def assign_to_rider(self, request, queryset):
@@ -118,8 +118,3 @@ class CustomerParcelAdmin(ModelAdmin):
         return render(request, 'admin/parcels/assign_rider_action.html', context)
 
     assign_to_rider.short_description = 'Assign selected orders to a rider'
-
-
-@admin.register(StatusNarration)
-class StatusNarrationAdmin(ModelAdmin):
-    list_display = ('status', 'narration')
