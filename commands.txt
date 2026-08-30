@@ -3,15 +3,19 @@ cd D:\
 mkdir payparcel-project
 cd payparcel-project
 
+
 python -m venv venv
 venv\Scripts\activate
 pip install django
 
-git add .
-git commit -m "Fix filter text visibility, hide sidebar headings, tighten spacing"
-git push
+git add parcels/models.py    templates/admin/operations/add_pickup_sheet.html    templates/admin/operations/change_pickup_sheet.html   templates/tracking/track_parcel.html
+git commit -m "remove destination"
+git push origin main
 
 python manage.py makemigrations
 python manage.py migrate
 
 localStorage.clear(); location.reload();
+
+
+        parcels/models.py    templates/admin/operations/add_pickup_sheet.html    templates/admin/operations/change_pickup_sheet.html   templates/tracking/track_parcel.html
