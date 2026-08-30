@@ -1,0 +1,76 @@
+{% extends "unfold/layouts/base.html" %}
+{% block content %}
+<div class="p-4">
+    <h1 class="text-lg font-semibold mb-4">{{ title }}</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <label class="block font-medium mb-2">Group Name</label>
+        <input type="text" name="name" value="{{ group_name }}" required
+               class="border border-base-200 rounded-default px-3 py-2 mb-6 w-full max-w-sm">
+
+        <label class="block font-medium mb-2">Presets</label>
+        <div class="flex gap-3 mb-6">
+            <button type="button" onclick="applyPreset('admin')" class="px-3 py-2 border border-base-200 rounded-default bg-primary-600 text-white">Admin — Full Access</button>
+            <button type="button" onclick="applyPreset('manager')" class="px-3 py-2 border border-base-200 rounded-default">Manager — Operational</button>
+            <button type="button" onclick="applyPreset('rider')" class="px-3 py-2 border border-base-200 rounded-default">Rider — Rider Only</button>
+            <button type="button" onclick="clearAll()" class="px-3 py-2 border border-base-200 rounded-default text-red-600">Clear All</button>
+        </div>
+
+        <label class="block font-medium mb-2">Permissions by Module</label>
+        <div class="space-y-3 mb-6">
+            {% for app, perms in grouped_permissions.items %}
+            <div class="border border-base-200 rounded-default">
+                <div class="bg-base-100 px-3 py-2 font-semibold text-sm uppercase flex justify-between items-center">
+                    {{ app }}
+                    <span>
+                        <a href="#" onclick="toggleApp('{{ app }}', true); return false;" class="text-xs mr-2">Select all</a>
+                        <a href="#" onclick="toggleApp('{{ app }}', false); return false;" class="text-xs">Clear</a>
+                    </span>
+                </div>
+                <div class="p-3 grid grid-cols-2 gap-2">
+                    {% for perm in perms %}
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" name="permissions" value="{{ perm.id }}" data-app="{{ app }}"
+                               {% if perm.checked %}checked{% endif %}>
+                        {{ perm.name }}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="submit-row sticky bottom-0 bg-white dark:bg-base-900 border-t border-base-200 dark:border-base-800 flex gap-3 justify-end px-4 py-3 -mx-4 mt-6">
+            <button type="submit" class="font-medium inline-flex items-center gap-1 rounded-default justify-center px-3 py-2 border border-base-200 bg-primary-600 text-white hover:bg-primary-600/80">
+                Save
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+const managerApps = {{ manager_apps|safe }};
+const riderApps = {{ rider_apps|safe }};
+
+function clearAll() {
+    document.querySelectorAll('input[name="permissions"]').forEach(cb => cb.checked = false);
+}
+
+function toggleApp(app, state) {
+    document.querySelectorAll('input[data-app="' + app + '"]').forEach(cb => cb.checked = state);
+}
+
+function applyPreset(preset) {
+    clearAll();
+    if (preset === 'admin') {
+        document.querySelectorAll('input[name="permissions"]').forEach(cb => cb.checked = true);
+    } else if (preset === 'manager') {
+        managerApps.forEach(app => toggleApp(app, true));
+    } else if (preset === 'rider') {
+        riderApps.forEach(app => toggleApp(app, true));
+    }
+}
+</script>
+{% endblock %}

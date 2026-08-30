@@ -5,6 +5,8 @@ from parcels.views import track_parcel
 from operations.views import track_pickup_sheet, print_pickup_sheet, print_delivery_sheet
 from riders.views import rider_login, rider_pickup_sheets, scan_delivery_sheet, rider_delivery_sheets
 from operations.views import view_delivery_sheet
+from riders.views import scan_parcel_delivery
+import payparcel.group_admin
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -18,4 +20,5 @@ urlpatterns = [
     path('track/pickupsheet/<str:sheet_number>/print/', print_pickup_sheet, name='print_pickup_sheet'),
     path('track/deliverysheet/<str:tracking_number>/print/', print_delivery_sheet, name='print_delivery_sheet'),
     path('deliverysheet/<str:tracking_number>/view/', view_delivery_sheet, name='view_delivery_sheet'),    
+    path('api/rider/scan-delivery-parcel/<str:cn>/', scan_parcel_delivery),
 ]
