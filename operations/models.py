@@ -59,6 +59,9 @@ class DeliverySheet(models.Model):
 
     class Meta:
         unique_together = ('pickup_sheet', 'shipper')
+        permissions = [
+            ('can_scan_delivery_sheet', 'Can scan Delivery Sheet QR'),
+        ]
 
     @property
     def total_parcels(self):

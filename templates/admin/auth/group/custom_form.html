@@ -10,29 +10,41 @@
         <input type="text" name="name" value="{{ group_name }}" required
                class="border border-base-200 rounded-default px-3 py-2 mb-6 w-full max-w-sm">
 
-        <label class="block font-medium mb-2">Presets</label>
+        <label class="block font-medium mb-2">Role Preset</label>
         <div class="flex gap-3 mb-6">
-            <button type="button" onclick="applyPreset('admin')" class="px-3 py-2 border border-base-200 rounded-default bg-primary-600 text-white">Admin — Full Access</button>
-            <button type="button" onclick="applyPreset('manager')" class="px-3 py-2 border border-base-200 rounded-default">Manager — Operational</button>
-            <button type="button" onclick="applyPreset('rider')" class="px-3 py-2 border border-base-200 rounded-default">Rider — Rider Only</button>
+            <button type="button" id="preset-admin" onclick="applyPreset('admin')" class="preset-btn px-3 py-2 border-2 border-base-200 rounded-default">Admin</button>
+            <button type="button" id="preset-manager" onclick="applyPreset('manager')" class="preset-btn px-3 py-2 border-2 border-base-200 rounded-default">Manager</button>
+            <button type="button" id="preset-rider" onclick="applyPreset('rider')" class="preset-btn px-3 py-2 border-2 border-base-200 rounded-default">Rider</button>
             <button type="button" onclick="clearAll()" class="px-3 py-2 border border-base-200 rounded-default text-red-600">Clear All</button>
         </div>
 
-        <label class="block font-medium mb-2">Permissions by Module</label>
         <div class="space-y-3 mb-6">
-            {% for app, perms in grouped_permissions.items %}
+            {% for app, mods in grouped_modules.items %}
             <div class="border border-base-200 rounded-default">
-                <div class="bg-base-100 px-3 py-2 font-semibold text-sm uppercase flex justify-between items-center">
-                    {{ app }}
-                    <span>
-                        <a href="#" onclick="toggleApp('{{ app }}', true); return false;" class="text-xs mr-2">Select all</a>
-                        <a href="#" onclick="toggleApp('{{ app }}', false); return false;" class="text-xs">Clear</a>
-                    </span>
-                </div>
-                <div class="p-3 grid grid-cols-2 gap-2">
-                    {% for perm in perms %}
+                <div class="bg-base-100 px-3 py-2 font-semibold text-sm uppercase">{{ app }}</div>
+                <div class="p-3 flex flex-wrap gap-6">
+                    <label class="flex items-center gap-2 text-sm font-medium">
+                        <input type="checkbox" class="module-read" data-app="{{ app }}"
+                               onchange="toggleGroup(this, {{ mods.view|length }})"
+                               {% if mods.view|length > 0 and mods.view|length == mods.view|length %}{% endif %}>
+                        Read
+                    </label>
+                    <label class="flex items-center gap-2 text-sm font-medium">
+                        <input type="checkbox" class="module-write" data-app="{{ app }}"
+                               onchange="toggleGroup(this, {{ mods.write|length }})">
+                        Write
+                    </label>
+                    {% for perm in mods.view %}
+                    <input type="checkbox" name="permissions" value="{{ perm.id }}" data-app="{{ app }}" data-kind="view"
+                           {% if perm.checked %}checked{% endif %} class="hidden-perm" style="display:none">
+                    {% endfor %}
+                    {% for perm in mods.write %}
+                    <input type="checkbox" name="permissions" value="{{ perm.id }}" data-app="{{ app }}" data-kind="write"
+                           {% if perm.checked %}checked{% endif %} class="hidden-perm" style="display:none">
+                    {% endfor %}
+                    {% for perm in mods.custom %}
                     <label class="flex items-center gap-2 text-sm">
-                        <input type="checkbox" name="permissions" value="{{ perm.id }}" data-app="{{ app }}"
+                        <input type="checkbox" name="permissions" value="{{ perm.id }}" data-codename="{{ perm.codename }}"
                                {% if perm.checked %}checked{% endif %}>
                         {{ perm.name }}
                     </label>
@@ -51,15 +63,34 @@
 </div>
 
 <script>
-const managerApps = {{ manager_apps|safe }};
-const riderApps = {{ rider_apps|safe }};
+const operationalApps = {{ operational_apps|safe }};
+const riderPerms = {{ rider_perms|safe }};
+
+function syncReadWriteCheckboxes() {
+    document.querySelectorAll('.module-read').forEach(cb => {
+        const app = cb.dataset.app;
+        const perms = document.querySelectorAll(`.hidden-perm[data-app="${app}"][data-kind="view"]`);
+        cb.checked = perms.length > 0 && Array.from(perms).every(p => p.checked);
+    });
+    document.querySelectorAll('.module-write').forEach(cb => {
+        const app = cb.dataset.app;
+        const perms = document.querySelectorAll(`.hidden-perm[data-app="${app}"][data-kind="write"]`);
+        cb.checked = perms.length > 0 && Array.from(perms).every(p => p.checked);
+    });
+}
+syncReadWriteCheckboxes();
+
+function toggleGroup(checkbox) {
+    const app = checkbox.dataset.app;
+    const kind = checkbox.classList.contains('module-read') ? 'view' : 'write';
+    document.querySelectorAll(`.hidden-perm[data-app="${app}"][data-kind="${kind}"]`).forEach(p => p.checked = checkbox.checked);
+    updateActivePreset();
+}
 
 function clearAll() {
     document.querySelectorAll('input[name="permissions"]').forEach(cb => cb.checked = false);
-}
-
-function toggleApp(app, state) {
-    document.querySelectorAll('input[data-app="' + app + '"]').forEach(cb => cb.checked = state);
+    syncReadWriteCheckboxes();
+    updateActivePreset();
 }
 
 function applyPreset(preset) {
@@ -67,10 +98,46 @@ function applyPreset(preset) {
     if (preset === 'admin') {
         document.querySelectorAll('input[name="permissions"]').forEach(cb => cb.checked = true);
     } else if (preset === 'manager') {
-        managerApps.forEach(app => toggleApp(app, true));
+        document.querySelectorAll('.hidden-perm').forEach(cb => {
+            if (operationalApps.includes(cb.dataset.app)) cb.checked = true;
+        });
     } else if (preset === 'rider') {
-        riderApps.forEach(app => toggleApp(app, true));
+        document.querySelectorAll('input[data-codename]').forEach(cb => {
+            if (riderPerms.includes(cb.dataset.codename)) cb.checked = true;
+        });
     }
+    syncReadWriteCheckboxes();
+    updateActivePreset();
 }
+
+function currentPresetMatches(preset) {
+    const all = Array.from(document.querySelectorAll('input[name="permissions"]'));
+    const checked = all.filter(cb => cb.checked).map(cb => cb.value).sort();
+    let expected = [];
+    if (preset === 'admin') {
+        expected = all.map(cb => cb.value).sort();
+    } else if (preset === 'manager') {
+        expected = all.filter(cb => operationalApps.includes(cb.dataset.app)).map(cb => cb.value).sort();
+    } else if (preset === 'rider') {
+        expected = all.filter(cb => riderPerms.includes(cb.dataset.codename)).map(cb => cb.value).sort();
+    }
+    return JSON.stringify(checked) === JSON.stringify(expected);
+}
+
+function updateActivePreset() {
+    ['admin', 'manager', 'rider'].forEach(p => {
+        const btn = document.getElementById('preset-' + p);
+        if (currentPresetMatches(p)) {
+            btn.classList.add('border-primary-600', 'bg-primary-600', 'text-white');
+        } else {
+            btn.classList.remove('border-primary-600', 'bg-primary-600', 'text-white');
+        }
+    });
+}
+
+document.querySelectorAll('input[name="permissions"]').forEach(cb => {
+    cb.addEventListener('change', () => { syncReadWriteCheckboxes(); updateActivePreset(); });
+});
+updateActivePreset();
 </script>
 {% endblock %}

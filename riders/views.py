@@ -61,6 +61,8 @@ def rider_delivery_sheets(request):
 @permission_classes([IsAuthenticated])
 def scan_delivery_sheet(request, tracking_number):
     rider = request.user.rider_profile
+    if not request.user.has_perm('operations.can_scan_delivery_sheet'):
+        return Response({'error': 'Permission denied'}, status=403)
     try:
         ds = DeliverySheet.objects.get(tracking_number=tracking_number)
     except DeliverySheet.DoesNotExist:
@@ -91,6 +93,8 @@ def scan_delivery_sheet(request, tracking_number):
 @permission_classes([IsAuthenticated])
 def scan_parcel_delivery(request, cn):
     rider = request.user.rider_profile
+    if not request.user.has_perm('parcels.can_scan_parcel_delivery'):
+        return Response({'error': 'Permission denied'}, status=403)
     from parcels.models import CustomerParcel
     try:
         parcel = CustomerParcel.objects.get(cn=cn)
@@ -105,3 +109,4 @@ def scan_parcel_delivery(request, cn):
     parcel.status = 'Delivered'
     parcel.save()
     return Response({'cn': parcel.cn, 'status': parcel.status})
+

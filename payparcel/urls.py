@@ -7,6 +7,7 @@ from riders.views import rider_login, rider_pickup_sheets, scan_delivery_sheet, 
 from operations.views import view_delivery_sheet
 from riders.views import scan_parcel_delivery
 import payparcel.group_admin
+import payparcel.user_admin
 
 urlpatterns = [
     path('admin/', admin.site.urls),

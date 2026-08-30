@@ -166,3 +166,9 @@ class CustomerParcel(models.Model):
 
     def __str__(self):
         return self.cn or f"Parcel #{self.pk}"
+
+    class Meta:
+        permissions = [
+            ('can_scan_parcel_delivery', 'Can scan Parcel QR for delivery'),
+        ]
+
