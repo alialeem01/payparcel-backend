@@ -230,7 +230,7 @@ UNFOLD = {
             },
 
             {
-                "title": _("User Settings"),
+                "title": _("People & Permissions"),
                 "separator": True,
                 "collapsible": False,
                 "items": [
