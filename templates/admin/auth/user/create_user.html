@@ -1,0 +1,62 @@
+{% extends "unfold/layouts/base.html" %}
+{% block content %}
+<div class="p-4">
+    <h1 class="text-lg font-semibold mb-4">Create User</h1>
+
+    {% if not selected_type %}
+    <label class="block font-medium mb-2">Select User Type</label>
+    <div class="flex gap-3 flex-wrap">
+        {% for g in groups %}
+        <a href="?type={{ g.name }}" class="px-4 py-2 border border-base-200 rounded-default hover:bg-base-100">{{ g.name }}</a>
+        {% endfor %}
+        <a href="?type=Rider" class="px-4 py-2 border border-base-200 rounded-default hover:bg-base-100">Rider</a>
+    </div>
+
+    {% else %}
+    <p class="text-sm text-base-500 mb-4">Creating: <strong>{{ selected_type }}</strong> — <a href="?" class="text-primary-600">change type</a></p>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="type" value="{{ selected_type }}">
+
+        <label class="block font-medium mb-2">Username</label>
+        <input type="text" name="username" required class="border border-base-200 rounded-default px-3 py-2 mb-4 w-full max-w-sm">
+
+        {% if selected_type != "Rider" %}
+        <label class="block font-medium mb-2">Email</label>
+        <input type="email" name="email" required class="border border-base-200 rounded-default px-3 py-2 mb-4 w-full max-w-sm">
+        {% endif %}
+
+        <label class="block font-medium mb-2">Password</label>
+        <input type="password" name="password" required autocomplete="new-password"
+               class="border border-base-200 rounded-default px-3 py-2 mb-4 w-full max-w-sm text-important bg-white dark:bg-base-900 dark:text-font-default-dark">
+
+        {% if selected_type == "Rider" %}
+        <label class="block font-medium mb-2">Full Name</label>
+        <input type="text" name="name" required class="border border-base-200 rounded-default px-3 py-2 mb-4 w-full max-w-sm">
+
+        <label class="block font-medium mb-2">Phone Number</label>
+        <input type="text" name="phone_number" required class="border border-base-200 rounded-default px-3 py-2 mb-4 w-full max-w-sm">
+
+        <label class="block font-medium mb-2">CNIC Number</label>
+        <input type="text" name="cnic_number" required class="border border-base-200 rounded-default px-3 py-2 mb-4 w-full max-w-sm">
+
+        <label class="block font-medium mb-2">CNIC Front Image</label>
+        <input type="file" name="cnic_front_image" required class="mb-4">
+
+        <label class="block font-medium mb-2">CNIC Back Image</label>
+        <input type="file" name="cnic_back_image" required class="mb-4">
+
+        <label class="block font-medium mb-2">Branch</label>
+        <input type="text" name="branch" class="border border-base-200 rounded-default px-3 py-2 mb-4 w-full max-w-sm">
+        {% endif %}
+
+        <div class="submit-row sticky bottom-0 bg-white dark:bg-base-900 border-t border-base-200 dark:border-base-800 flex gap-3 justify-end px-4 py-3 -mx-4 mt-6">
+            <button type="submit" class="font-medium inline-flex items-center gap-1 rounded-default justify-center px-3 py-2 border border-base-200 bg-primary-600 text-white hover:bg-primary-600/80">
+                Create
+            </button>
+        </div>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}
