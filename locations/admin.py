@@ -1,22 +1,7 @@
 from django.contrib import admin
 from unfold.admin import ModelAdmin
 from unfold.contrib.filters.admin import ChoicesDropdownFilter
-from .models import Destination, Branch
-
-
-@admin.register(Destination)
-class DestinationAdmin(ModelAdmin):
-    list_display = ('name', 'short_name', 'location', 'zone', 'date', 'status')
-    search_fields = ('name', 'short_name')
-    list_filter_submit = True
-    list_filter = (
-        ('status', ChoicesDropdownFilter),
-        ('zone', ChoicesDropdownFilter),
-    )
-    change_form_template = 'admin/locations/destination/change_form.html'
-    add_form_template = 'admin/locations/destination/change_form.html'
-    fields = ('name', 'address', 'short_name', 'zone', 'status', 'location')
-
+from .models import Branch
 
 @admin.register(Branch)
 class BranchAdmin(ModelAdmin):
