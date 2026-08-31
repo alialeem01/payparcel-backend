@@ -214,6 +214,19 @@ UNFOLD = {
                     },
                 ],
             },
+
+            {
+                "title": _("Employee & User Settings"),
+                "separator": True,
+                "collapsible": False,
+                "items": [
+                    {"title": _("Riders"), "icon": "two_wheeler", "link": reverse_lazy("admin:riders_rider_changelist"), "permission": lambda r: r.user.has_perm('riders.view_rider')},
+                    {"title": _("Users"), "icon": "manage_accounts", "link": reverse_lazy("admin:auth_user_changelist"), "permission": lambda r: r.user.is_superuser},
+                    {"title": _("Groups"), "icon": "shield_person", "link": reverse_lazy("admin:auth_group_changelist"), "permission": lambda r: r.user.is_superuser},
+                ],
+            },
+
+
             {
                 "title":"",
                 "separator": True,

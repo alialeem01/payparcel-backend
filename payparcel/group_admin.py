@@ -6,7 +6,7 @@ from unfold.admin import ModelAdmin
 
 OPERATIONAL_APPS = ['customers', 'parcels', 'operations', 'invoices', 'locations']
 RIDER_CUSTOM_PERMS = ['can_scan_delivery_sheet', 'can_scan_parcel_delivery']
-EXCLUDED_APPS = ['admin', 'contenttypes', 'sessions', 'auth']
+EXCLUDED_APPS = ['admin', 'contenttypes', 'sessions', 'auth', 'loadsheets']
 
 
 class CustomGroupAdmin(ModelAdmin):

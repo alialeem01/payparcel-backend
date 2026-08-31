@@ -18,11 +18,11 @@
             <button type="button" onclick="clearAll()" class="px-3 py-2 border border-base-200 rounded-default text-red-600">Clear All</button>
         </div>
 
-        <div class="space-y-3 mb-6">
+        <div class="space-y-1 mb-6">
             {% for app, mods in grouped_modules.items %}
-            <div class="border border-base-200 rounded-default">
-                <div class="bg-base-100 px-3 py-2 font-semibold text-sm uppercase">{{ app }}</div>
-                <div class="p-3 flex flex-wrap gap-6">
+            <div class="border-b border-base-200">
+                <div class="px-3 pt-2 pb-1 font-semibold text-xs uppercase text-base-500">{{ app }}</div>
+                <div class="px-3 pb-2 flex flex-wrap gap-4">
                     <label class="flex items-center gap-2 text-sm font-medium">
                         <input type="checkbox" class="module-read" data-app="{{ app }}"
                                onchange="toggleGroup(this, {{ mods.view|length }})"

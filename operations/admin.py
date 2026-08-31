@@ -184,7 +184,11 @@ class DeliverySheetAdmin(ModelAdmin):
     actions = None
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return request.user.is_superuser
+
+    def get_queryset(self, request):
+        self._request = request
+        return super().get_queryset(request)
 
     def has_change_permission(self, request, obj=None):
         return False
@@ -198,5 +202,9 @@ class DeliverySheetAdmin(ModelAdmin):
 
     def row_actions(self, obj):
         view_url = reverse('view_delivery_sheet', args=[obj.tracking_number])
+        request = getattr(self, '_request', None)
+        if request and request.user.is_superuser:
+            delete_url = reverse('admin:operations_deliverysheet_delete', args=[obj.pk])
+            return format_html('<a href="{}">View</a> | <a href="{}">Delete</a>', view_url, delete_url)
         return format_html('<a href="{}">View</a>', view_url)
     row_actions.short_description = 'Actions'
