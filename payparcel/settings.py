@@ -205,10 +205,10 @@ UNFOLD = {
         "navigation": [
             {
                 "title": _("Dashboard"),
-                "separator": True,
+                "separator": False,
                 "items": [
                     {
-                        "title": _("Home"),
+                        "title": _("Dashboard"),
                         "icon": "dashboard",
                         "link": reverse_lazy("admin:index"),
                     },
