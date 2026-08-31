@@ -232,7 +232,7 @@ UNFOLD = {
             {
                 "title": _("People & Permissions"),
                 "separator": True,
-                "collapsible": False,
+                "collapsible": True,
                 "items": [
                     {"title": _("Riders"), "icon": "two_wheeler", "link": reverse_lazy("admin:riders_rider_changelist"), "permission": lambda r: r.user.has_perm('riders.view_rider')},
                     {"title": _("Users"), "icon": "manage_accounts", "link": reverse_lazy("admin:auth_user_changelist"), "permission": lambda r: r.user.is_superuser},
