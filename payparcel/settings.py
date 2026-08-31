@@ -250,3 +250,5 @@ CLOUDINARY_STORAGE = {
 }
 
 SITE_BASE_URL = config('SITE_BASE_URL', default='https://payparcel-backend.onrender.com')
+
+MASTER_ADMIN_USERNAME = config('MASTER_ADMIN_USERNAME', default='')

@@ -86,6 +86,15 @@ class CustomGroupAdmin(ModelAdmin):
         }
         return render(request, 'admin/auth/group/custom_form.html', context)
 
+    def has_add_permission(self, request):
+        return request.user.is_superuser
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.is_superuser
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.is_superuser
+
 
 admin.site.unregister(Group)
 admin.site.register(Group, CustomGroupAdmin)

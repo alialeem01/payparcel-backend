@@ -17,3 +17,12 @@ class RiderAdmin(ModelAdmin):
             linked_user_ids = Rider.objects.exclude(pk=request.resolver_match.kwargs.get('object_id')).values_list('user_id', flat=True)
             kwargs['queryset'] = User.objects.filter(is_staff=False).exclude(pk__in=linked_user_ids)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
