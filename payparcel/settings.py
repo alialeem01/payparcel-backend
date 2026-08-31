@@ -216,18 +216,6 @@ UNFOLD = {
             },
 
             {
-                "title": _("Employee & User Settings"),
-                "separator": True,
-                "collapsible": False,
-                "items": [
-                    {"title": _("Riders"), "icon": "two_wheeler", "link": reverse_lazy("admin:riders_rider_changelist"), "permission": lambda r: r.user.has_perm('riders.view_rider')},
-                    {"title": _("Users"), "icon": "manage_accounts", "link": reverse_lazy("admin:auth_user_changelist"), "permission": lambda r: r.user.is_superuser},
-                    {"title": _("Groups"), "icon": "shield_person", "link": reverse_lazy("admin:auth_group_changelist"), "permission": lambda r: r.user.is_superuser},
-                ],
-            },
-
-
-            {
                 "title":"",
                 "separator": True,
                 "collapsible": False,
@@ -238,6 +226,17 @@ UNFOLD = {
                     {"title": _("Delivery sheets"), "icon": "task", "link": reverse_lazy("admin:operations_deliverysheet_changelist"), "permission": lambda r: r.user.has_perm('operations.view_deliverysheet')},
                     {"title": _("Invoices"), "icon": "receipt_long", "link": reverse_lazy("admin:invoices_invoice_changelist"), "permission": lambda r: r.user.has_perm('invoices.view_invoice')},
                     {"title": _("Branchs"), "icon": "store", "link": reverse_lazy("admin:locations_branch_changelist"), "permission": lambda r: r.user.has_perm('locations.view_branch')},
+                ],
+            },
+
+            {
+                "title": _("Employee & User Settings"),
+                "separator": True,
+                "collapsible": False,
+                "items": [
+                    {"title": _("Riders"), "icon": "two_wheeler", "link": reverse_lazy("admin:riders_rider_changelist"), "permission": lambda r: r.user.has_perm('riders.view_rider')},
+                    {"title": _("Users"), "icon": "manage_accounts", "link": reverse_lazy("admin:auth_user_changelist"), "permission": lambda r: r.user.is_superuser},
+                    {"title": _("Groups"), "icon": "shield_person", "link": reverse_lazy("admin:auth_group_changelist"), "permission": lambda r: r.user.is_superuser},
                 ],
             },
         ],
