@@ -204,7 +204,7 @@ UNFOLD = {
         "show_all_applications": False,
         "navigation": [
             {
-                "title": _("Dashboard"),
+                "title": _(""),
                 "separator": False,
                 "items": [
                     {
