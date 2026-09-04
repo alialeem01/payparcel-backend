@@ -173,6 +173,8 @@ class CustomerAdmin(ModelAdmin):
         url = reverse('admin:customers_customer_statement', args=[obj.pk])
         return format_html('<a href="{}">View</a>', url)
 
+    readonly_fields = ('credentials_link',)
+
     fieldsets = (
         ('Personal Details', {
             'fields': (
@@ -181,7 +183,7 @@ class CustomerAdmin(ModelAdmin):
                 ('customer_user', 'customer_brand_name'),
                 ('customer_email', 'customer_cnic'),
                 ('customer_phone_number', 'customer_alternate_phone'),
-                ('sales_person', 'customer_status', 'return_details_show'),
+                ('sales_person', 'customer_status', 'return_details_show', 'credentials_link'),
             )
         }),
         ('Display Settings', {
