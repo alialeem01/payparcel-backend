@@ -182,8 +182,7 @@ class CustomerAdmin(ModelAdmin):
                 ('customer_email', 'customer_cnic'),
                 ('customer_phone_number', 'customer_alternate_phone'),
                 ('sales_person', 'customer_status', 'return_details_show'),
-                ('sales_person', 'customer_status', 'return_details_show'),
-                ('credentials_link'),
+                ('sales_person', 'customer_status', 'return_details_show'),   
             )
 
             readonly_fields = ('credentials_link',)
