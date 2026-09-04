@@ -20,6 +20,9 @@ class CustomUserAdmin(UserAdmin, ModelAdmin):
         qs = super().get_queryset(request)
         if request.user.username != settings.MASTER_ADMIN_USERNAME:
             qs = qs.exclude(username=settings.MASTER_ADMIN_USERNAME)
+        from customers.models import Customer
+        customer_usernames = Customer.objects.values_list('customer_user', flat=True)
+        qs = qs.exclude(username__in=customer_usernames, is_staff=False)
         return qs
 
     def has_change_permission(self, request, obj=None):

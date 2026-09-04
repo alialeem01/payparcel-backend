@@ -1,13 +1,15 @@
 from django.contrib import admin
 from django.db.models import Sum, F
 from django.urls import path, reverse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.html import format_html
 from unfold.admin import ModelAdmin, TabularInline
 from unfold.decorators import display
 from django_unfold_admin_listfilter_dropdown.filters import DropdownFilter
 from unfold.contrib.filters.admin import ChoicesDropdownFilter, RangeDateFilter
 from .models import Customer, ServiceTypeList, RateTemplateEntry, TaxTemplateEntry, CourierPickupList
+from django.contrib.auth.models import User
+from django import forms
 
 
 class ServiceTypeInline(TabularInline):
@@ -41,6 +43,62 @@ class CustomerAdmin(ModelAdmin):
     )
     search_fields = ('customer_name', 'customer_brand_name', 'customer_cnic', 'customer_phone_number')
     list_filter_submit = True
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                '<int:customer_id>/statement/',
+                self.admin_site.admin_view(self.customer_statement_view),
+                name='customers_customer_statement',
+            ),
+            path(
+                '<int:customer_id>/reset-credentials/',
+                self.admin_site.admin_view(self.reset_credentials_view),
+                name='customers_customer_reset_credentials',
+            ),
+        ]
+        return custom_urls + urls
+
+    def reset_credentials_view(self, request, customer_id):
+        customer = get_object_or_404(Customer, pk=customer_id)
+        try:
+            user = User.objects.get(username=customer.customer_user)
+        except User.DoesNotExist:
+            user = None
+
+        if request.method == 'POST':
+            new_username = request.POST.get('username', '').strip()
+            new_password = request.POST.get('password', '').strip()
+
+            if user and new_username and new_username != user.username:
+                user.username = new_username
+                user.email = new_username
+                user.save()
+                customer.customer_user = new_username
+                customer.customer_email = new_username
+                customer.save()
+
+            if user and new_password:
+                user.set_password(new_password)
+                user.save()
+
+            self.message_user(request, 'Login credentials updated.')
+            return redirect('admin:customers_customer_change', customer_id)
+
+        context = {
+            **self.admin_site.each_context(request),
+            'title': f'Login Credentials - {customer.customer_name}',
+            'customer': customer,
+            'current_username': user.username if user else customer.customer_user,
+            'opts': self.model._meta,
+        }
+        return render(request, 'admin/customers/reset_credentials.html', context)
+
+    @display(description='Login Credentials')
+    def credentials_link(self, obj):
+        url = reverse('admin:customers_customer_reset_credentials', args=[obj.pk])
+        return format_html('<a href="{}">Manage Login</a>', url)
 
     list_filter = (
         ('customer_name', DropdownFilter),
@@ -124,7 +182,11 @@ class CustomerAdmin(ModelAdmin):
                 ('customer_email', 'customer_cnic'),
                 ('customer_phone_number', 'customer_alternate_phone'),
                 ('sales_person', 'customer_status', 'return_details_show'),
+                ('sales_person', 'customer_status', 'return_details_show'),
+                ('credentials_link'),
             )
+
+            readonly_fields = ('credentials_link',)
         }),
         ('Display Settings', {
             'fields': (
