@@ -12,6 +12,7 @@ class Rider(models.Model):
     cnic_number = models.CharField(max_length=20, default='')
     cnic_front_image = models.ImageField(upload_to='rider_cnic/', default='')
     cnic_back_image = models.ImageField(upload_to='rider_cnic/', default='')
+    vehicle_type = models.CharField(max_length=50, blank=True, null=True)
     vehicle_number = models.CharField(max_length=50, blank=True, null=True)
     branch = models.CharField(max_length=100, blank=True, null=True)
     is_active = models.BooleanField(default=True)
@@ -19,3 +20,4 @@ class Rider(models.Model):
 
     def __str__(self):
         return self.name
+        

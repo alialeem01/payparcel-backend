@@ -20,8 +20,10 @@ def list_my_orders(request):
     except Customer.DoesNotExist:
         return Response({'error': 'Customer profile not found'}, status=404)
 
+from .models import PAKISTAN_CITIES
 
 class BookOrderSerializer(serializers.ModelSerializer):
+    city = serializers.ChoiceField(choices=PAKISTAN_CITIES, required=True)
     class Meta:
         model = CustomerParcel
         fields = ['consignee', 'consignee_phone', 'alternate_phone', 'address',

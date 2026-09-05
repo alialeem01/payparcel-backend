@@ -6,7 +6,7 @@ from .models import Rider
 
 @admin.register(Rider)
 class RiderAdmin(ModelAdmin):
-    list_display = ('name', 'phone_number', 'cnic_number', 'branch', 'is_active', 'created_at')
+    list_display = ('name', 'is_active', 'cnic_number', 'phone_number', 'vehicle_type', 'vehicle_number', 'branch')
     search_fields = ('name', 'phone_number', 'cnic_number')
     list_filter = ('is_active',)
     fields = ('name', 'phone_number', 'cnic_number', 'cnic_front_image', 'cnic_back_image', 'branch', 'is_active', 'user')

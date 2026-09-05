@@ -13,7 +13,8 @@ class TrackingSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomerParcel
         fields = ['cn', 'status', 'destination', 'consignee', 'consignee_phone',
-                   'order_number', 'service_type', 'shipment_date', 'shipper_name', 'delivery_date']
+                    'order_number', 'service_type', 'shipment_date', 'shipper_name',
+                    'delivery_date', 'created_at', 'city', 'tracking_qr_code']
 
     def get_status(self, obj):
         return obj.status or ''
@@ -32,3 +33,12 @@ class TrackingSerializer(serializers.ModelSerializer):
 
     def get_service_type(self, obj):
         return obj.service_type or ''
+
+    tracking_qr_code = serializers.SerializerMethodField()
+    city = serializers.SerializerMethodField()
+
+    def get_tracking_qr_code(self, obj):
+        return obj.tracking_qr_code.url if obj.tracking_qr_code else None
+
+    def get_city(self, obj):
+        return obj.city or ''

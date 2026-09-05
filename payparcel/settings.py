@@ -252,3 +252,11 @@ CLOUDINARY_STORAGE = {
 SITE_BASE_URL = config('SITE_BASE_URL', default='https://payparcel-backend.onrender.com')
 
 MASTER_ADMIN_USERNAME = config('MASTER_ADMIN_USERNAME', default='')
+
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=8),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+}

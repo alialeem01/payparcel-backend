@@ -8,6 +8,7 @@ from operations.views import view_delivery_sheet
 from riders.views import scan_parcel_delivery
 import payparcel.group_admin
 import payparcel.user_admin
+from rest_framework_simplejwt.views import TokenRefreshView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -22,4 +23,5 @@ urlpatterns = [
     path('track/deliverysheet/<str:tracking_number>/print/', print_delivery_sheet, name='print_delivery_sheet'),
     path('deliverysheet/<str:tracking_number>/view/', view_delivery_sheet, name='view_delivery_sheet'),    
     path('api/rider/scan-delivery-parcel/<str:cn>/', scan_parcel_delivery),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
