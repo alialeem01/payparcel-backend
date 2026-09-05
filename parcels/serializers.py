@@ -19,7 +19,7 @@ class TrackingSerializer(serializers.ModelSerializer):
         return obj.status or ''
 
     def get_destination(self, obj):
-        return obj.destination or ''
+        return obj.city or ''
 
     def get_consignee(self, obj):
         return obj.consignee or ''
